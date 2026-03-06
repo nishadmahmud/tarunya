@@ -17,13 +17,13 @@ export default function MobileBottomNav() {
         <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-brand-green-dark border-t border-white/10 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] backdrop-blur-sm">
             <div className="flex justify-around items-center py-1.5 px-2">
                 {/* Home */}
-                <Link href="/" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
+                <Link href="#" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
                     <FiHome size={19} />
                     <span className="text-[9px] font-bold">হোম</span>
                 </Link>
 
                 {/* Categories */}
-                <Link href="/category" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/category') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
+                <Link href="#" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/category') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
                     <FiGrid size={19} />
                     <span className="text-[9px] font-bold">বিভাগ</span>
                 </Link>
@@ -41,7 +41,7 @@ export default function MobileBottomNav() {
 
                 {/* Profile / Login */}
                 {user ? (
-                    <Link href="/profile" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/profile') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
+                    <Link href="#" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/profile') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
                         <FiUser size={19} />
                         <span className="text-[9px] font-bold">প্রোফাইল</span>
                     </Link>

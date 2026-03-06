@@ -22,7 +22,7 @@ export default function Footer({ categories = [] }) {
 
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-1">
-                        <Link href="/" className="inline-block mb-4">
+                        <Link href="#" className="inline-block mb-4">
                             <Image
                                 src="/Tarunno Logo Board.png"
                                 alt="তারুণ্য প্রকাশন"
@@ -54,7 +54,7 @@ export default function Footer({ categories = [] }) {
                                 { label: "বিশেষ অফার", href: "/special-offers" },
                             ].map(item => (
                                 <li key={item.href}>
-                                    <Link href={item.href} className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">{item.label}</Link>
+                                    <Link href="#" className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">{item.label}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -66,7 +66,7 @@ export default function Footer({ categories = [] }) {
                         <ul className="space-y-2.5">
                             {displayCategories.map((cat, idx) => (
                                 <li key={cat.id || idx}>
-                                    <Link href={`/category/${cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}`} className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">
+                                    <Link href="#" className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">
                                         {cat.name}
                                     </Link>
                                 </li>
@@ -80,11 +80,11 @@ export default function Footer({ categories = [] }) {
                         <ul className="space-y-3">
                             <li className="flex items-start gap-2.5 text-white/50 text-xs md:text-sm">
                                 <FiPhone size={14} className="mt-0.5 text-brand-gold flex-shrink-0" />
-                                <a href="tel:01979456721" className="hover:text-brand-gold transition-colors">০১৯৭৯৪৫৬৭২১</a>
+                                <a href="#" className="hover:text-brand-gold transition-colors">০১৯৭৯৪৫৬৭২১</a>
                             </li>
                             <li className="flex items-start gap-2.5 text-white/50 text-xs md:text-sm">
                                 <FiMail size={14} className="mt-0.5 text-brand-gold flex-shrink-0" />
-                                <a href="mailto:info@tarunnyoprokashon.com" className="hover:text-brand-gold transition-colors">info@tarunnyoprokashon.com</a>
+                                <a href="#" className="hover:text-brand-gold transition-colors">info@tarunnyoprokashon.com</a>
                             </li>
                             <li className="flex items-start gap-2.5 text-white/50 text-xs md:text-sm">
                                 <FiMapPin size={14} className="mt-0.5 text-brand-gold flex-shrink-0" />
@@ -98,8 +98,8 @@ export default function Footer({ categories = [] }) {
                 <div className="py-4 md:py-5 flex flex-col md:flex-row justify-between items-center gap-2">
                     <p className="text-white/30 text-[10px] md:text-xs">&copy; {new Date().getFullYear()} তারুণ্য প্রকাশন। সর্বস্বত্ব সংরক্ষিত।</p>
                     <div className="flex gap-4">
-                        <Link href="/privacy" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">গোপনীয়তা নীতি</Link>
-                        <Link href="/terms" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">শর্তাবলী</Link>
+                        <Link href="#" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">গোপনীয়তা নীতি</Link>
+                        <Link href="#" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">শর্তাবলী</Link>
                     </div>
                 </div>
             </div>

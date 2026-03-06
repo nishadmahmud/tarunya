@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
     const slug = product.id ? `${nameSlug}-${product.id}` : nameSlug;
 
     return (
-        <Link href={`/product/${slug}`} className="bg-white rounded-xl flex flex-col hover:shadow-lg transition-all duration-300 group overflow-hidden relative block border border-gray-100 hover:border-brand-green/20">
+        <Link href="#" className="bg-white rounded-xl flex flex-col hover:shadow-lg transition-all duration-300 group overflow-hidden relative block border border-gray-100 hover:border-brand-green/20">
 
             {/* Discount Badge */}
             {product.discount && (

@@ -1,6 +1,6 @@
 export const metadata = {
-    title: 'Contact Us | Pochondo Shop',
-    description: 'Get in touch with Pochondo Shop. We are here to help you with your tech needs.',
+    title: 'Contact Us | Tarunno Shop',
+    description: 'Get in touch with Tarunno Shop. We are here to help you with your tech needs.',
 };
 
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
@@ -28,7 +28,7 @@ export default function ContactPage() {
                                 {[
                                     { label: 'Address', value: 'Dhaka, Bangladesh', icon: <MapPin className="w-6 h-6" /> },
                                     { label: 'Phone', value: '+880 1234 567890', icon: <Phone className="w-6 h-6" /> },
-                                    { label: 'Email', value: 'support@pochondoshop.com', icon: <Mail className="w-6 h-6" /> },
+                                    { label: 'Email', value: 'support@Tarunno Prokashon.com', icon: <Mail className="w-6 h-6" /> },
                                     { label: 'Working Hours', value: 'Sat - Thu: 10AM - 8PM', icon: <Clock className="w-6 h-6" /> },
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">

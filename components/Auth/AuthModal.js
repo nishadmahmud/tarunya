@@ -140,38 +140,38 @@ const AuthModal = () => {
                 <div className="pt-8 px-6 text-center">
                     <h2 className="text-2xl font-extrabold text-gray-900 mb-1">
                         {authModalMode === "login"
-                            ? "Welcome Back"
-                            : "Create Account"}
+                            ? "স্বাগতম"
+                            : "নতুন অ্যাকাউন্ট খুলুন"}
                     </h2>
                     <p className="text-sm text-gray-500 mb-6">
                         {authModalMode === "login"
-                            ? "Sign in to access your account"
-                            : "Join pochondoshop today"}
+                            ? "আপনার অ্যাকাউন্টে প্রবেশ করুন"
+                            : "তারুণ্য প্রকাশনে যুক্ত হোন"}
                     </p>
 
                     <div className="flex border-b border-gray-200 mb-6">
                         <button
                             className={`flex-1 pb-3 text-sm font-semibold transition-all relative ${authModalMode === "login"
-                                ? "text-brand-purple"
+                                ? "text-brand-green"
                                 : "text-gray-500 hover:text-gray-700"
                                 }`}
                             onClick={() => setAuthModalMode("login")}
                         >
-                            Login
+                            লগইন
                             {authModalMode === "login" && (
-                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple rounded-t-full" />
+                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-green rounded-t-full" />
                             )}
                         </button>
                         <button
                             className={`flex-1 pb-3 text-sm font-semibold transition-all relative ${authModalMode === "register"
-                                ? "text-brand-purple"
+                                ? "text-brand-green"
                                 : "text-gray-500 hover:text-gray-700"
                                 }`}
                             onClick={() => setAuthModalMode("register")}
                         >
-                            Register
+                            রেজিস্টার
                             {authModalMode === "register" && (
-                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple rounded-t-full" />
+                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-green rounded-t-full" />
                             )}
                         </button>
                     </div>
@@ -181,7 +181,7 @@ const AuthModal = () => {
                 <div className="px-6 pb-8 max-h-[60vh] overflow-y-auto">
                     {/* Error */}
                     {error && (
-                        <div className="mb-4 p-3 bg-purple-50 border border-purple-100 rounded-xl flex items-start gap-2">
+                        <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2">
                             <svg
                                 className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"
                                 fill="none"
@@ -195,7 +195,7 @@ const AuthModal = () => {
                                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 />
                             </svg>
-                            <p className="text-sm text-purple-600">{error}</p>
+                            <p className="text-sm text-red-600">{error}</p>
                         </div>
                     )}
 
@@ -204,7 +204,7 @@ const AuthModal = () => {
                         <form onSubmit={handleLoginSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">
-                                    Email
+                                    ইমেইল
                                 </label>
                                 <input
                                     type="email"
@@ -212,15 +212,15 @@ const AuthModal = () => {
                                     value={loginData.email}
                                     onChange={handleLoginChange}
                                     required
-                                    placeholder="Enter your email"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900"
+                                    placeholder="আপনার ইমেইল লিখুন"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900"
                                     style={{ fontSize: "16px" }}
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">
-                                    Password
+                                    পাসওয়ার্ড
                                 </label>
                                 <div className="relative">
                                     <input
@@ -229,8 +229,8 @@ const AuthModal = () => {
                                         value={loginData.password}
                                         onChange={handleLoginChange}
                                         required
-                                        placeholder="Enter your password"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900 pr-11"
+                                        placeholder="আপনার পাসওয়ার্ড লিখুন"
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900 pr-11"
                                         style={{ fontSize: "16px" }}
                                     />
                                     <button
@@ -250,7 +250,7 @@ const AuthModal = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3.5 bg-brand-purple text-white font-extrabold rounded-xl shadow-lg shadow-brand-purple/30 hover:bg-[#7b3ba8] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 bg-brand-green text-white font-extrabold rounded-xl shadow-lg shadow-brand-green/30 hover:bg-brand-green-dark hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
                                     <span className="flex items-center justify-center gap-2">
@@ -273,22 +273,22 @@ const AuthModal = () => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             />
                                         </svg>
-                                        Signing In...
+                                        অপেক্ষা করুন...
                                     </span>
                                 ) : (
-                                    "Continue"
+                                    "লগইন করুন"
                                 )}
                             </button>
 
                             <div className="mt-6 text-center">
                                 <p className="text-sm text-gray-500">
-                                    Don&apos;t have an account?{" "}
+                                    অ্যাকাউন্ট নেই?{" "}
                                     <button
                                         type="button"
                                         onClick={() => setAuthModalMode("register")}
-                                        className="font-bold text-brand-purple hover:underline"
+                                        className="font-bold text-brand-green hover:underline"
                                     >
-                                        Register Now
+                                        রেজিস্টার করুন
                                     </button>
                                 </p>
                             </div>
@@ -299,7 +299,7 @@ const AuthModal = () => {
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                        First Name
+                                        নামের প্রথম অংশ
                                     </label>
                                     <input
                                         type="text"
@@ -308,13 +308,13 @@ const AuthModal = () => {
                                         onChange={handleRegisterChange}
                                         required
                                         placeholder="First"
-                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900"
+                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900"
                                         style={{ fontSize: "16px" }}
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                        Last Name
+                                        নামের শেষ অংশ
                                     </label>
                                     <input
                                         type="text"
@@ -323,7 +323,7 @@ const AuthModal = () => {
                                         onChange={handleRegisterChange}
                                         required
                                         placeholder="Last"
-                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900"
+                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900"
                                         style={{ fontSize: "16px" }}
                                     />
                                 </div>
@@ -331,7 +331,7 @@ const AuthModal = () => {
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                    Email
+                                    ইমেইল
                                 </label>
                                 <input
                                     type="email"
@@ -340,14 +340,14 @@ const AuthModal = () => {
                                     onChange={handleRegisterChange}
                                     required
                                     placeholder="email@example.com"
-                                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900"
+                                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900"
                                     style={{ fontSize: "16px" }}
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                    Phone
+                                    ফোন নম্বর
                                 </label>
                                 <div className="flex">
                                     <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm font-medium">
@@ -360,7 +360,7 @@ const AuthModal = () => {
                                         onChange={handleRegisterChange}
                                         required
                                         placeholder="01XXXXXXXXX"
-                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900"
+                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900"
                                         style={{ fontSize: "16px" }}
                                     />
                                 </div>
@@ -368,7 +368,7 @@ const AuthModal = () => {
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                    Password
+                                    পাসওয়ার্ড
                                 </label>
                                 <div className="relative">
                                     <input
@@ -377,8 +377,8 @@ const AuthModal = () => {
                                         value={registerData.password}
                                         onChange={handleRegisterChange}
                                         required
-                                        placeholder="Min. 6 characters"
-                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900 pr-11"
+                                        placeholder="অন্তত ৬টি অক্ষর"
+                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900 pr-11"
                                         style={{ fontSize: "16px" }}
                                     />
                                     <button
@@ -397,7 +397,7 @@ const AuthModal = () => {
 
                             <div>
                                 <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wider">
-                                    Confirm Password
+                                    নিশ্চিত করুন
                                 </label>
                                 <div className="relative">
                                     <input
@@ -406,8 +406,8 @@ const AuthModal = () => {
                                         value={registerData.confirm_password}
                                         onChange={handleRegisterChange}
                                         required
-                                        placeholder="Re-enter password"
-                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple transition-all text-gray-900 pr-11"
+                                        placeholder="পাসওয়ার্ড পুনরায় লিখুন"
+                                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all text-gray-900 pr-11"
                                         style={{ fontSize: "16px" }}
                                     />
                                     <button
@@ -429,7 +429,7 @@ const AuthModal = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-3.5 bg-brand-purple text-white font-extrabold rounded-xl shadow-lg shadow-brand-purple/30 hover:bg-[#7b3ba8] hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all duration-200 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="w-full py-3.5 bg-brand-green text-white font-extrabold rounded-xl shadow-lg shadow-brand-green/30 hover:bg-brand-green-dark hover:-translate-y-0.5 active:translate-y-0 active:shadow-none transition-all duration-200 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 {loading ? (
                                     <span className="flex items-center justify-center gap-2">
@@ -452,22 +452,22 @@ const AuthModal = () => {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             />
                                         </svg>
-                                        Creating Account...
+                                        অ্যাকাউন্ট তৈরি হচ্ছে...
                                     </span>
                                 ) : (
-                                    "Register"
+                                    "রেজিস্টার করুন"
                                 )}
                             </button>
 
                             <div className="mt-4 text-center">
                                 <p className="text-sm text-gray-500">
-                                    Already have an account?{" "}
+                                    আগে থেকেই অ্যাকাউন্ট আছে?{" "}
                                     <button
                                         type="button"
                                         onClick={() => setAuthModalMode("login")}
-                                        className="font-bold text-brand-purple hover:underline"
+                                        className="font-bold text-brand-green hover:underline"
                                     >
-                                        Log In
+                                        লগইন করুন
                                     </button>
                                 </p>
                             </div>

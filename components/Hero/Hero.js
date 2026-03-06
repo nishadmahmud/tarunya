@@ -90,7 +90,7 @@ export default function Hero({ slides = [], banners = [] }) {
                                         <p className="text-white/80 text-[11px] md:text-sm mb-4 md:mb-6 leading-relaxed hidden sm:block">
                                             {slide.subtitle}
                                         </p>
-                                        <Link href={slide.buttonLink || "/category/all"} className="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold text-[11px] md:text-sm px-4 md:px-6 py-2 md:py-3 rounded-lg transition-all w-fit shadow-lg hover:shadow-xl">
+                                        <Link href="#" className="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold text-[11px] md:text-sm px-4 md:px-6 py-2 md:py-3 rounded-lg transition-all w-fit shadow-lg hover:shadow-xl">
                                             {slide.buttonText || "সংগ্রহ দেখুন"} <FiArrowRight size={16} />
                                         </Link>
                                     </div>
@@ -114,7 +114,7 @@ export default function Hero({ slides = [], banners = [] }) {
                     {/* Side Banners */}
                     <div className="lg:w-[35%] w-full flex flex-row lg:flex-col gap-3">
                         {displayBanners.map((banner, idx) => (
-                            <Link href={banner.link || banner.link_url || "/"} key={banner.id || idx} className="w-1/2 lg:w-full lg:flex-1 relative overflow-hidden rounded-xl bg-gray-100 group block shadow-sm hover:shadow-md transition-shadow">
+                            <Link href="#" key={banner.id || idx} className="w-1/2 lg:w-full lg:flex-1 relative overflow-hidden rounded-xl bg-gray-100 group block shadow-sm hover:shadow-md transition-shadow">
                                 <Image
                                     src={banner.image || banner.image_path || banner.image_url}
                                     alt={banner.title || `ব্যানার ${idx + 1}`}

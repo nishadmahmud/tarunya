@@ -208,7 +208,7 @@ export default function ProfileDashboard() {
                                 <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-white/10 rounded-lg"><X className="w-5 h-5" /></button>
                             </div>
                             <div className="p-5 bg-gradient-to-r from-brand-purple to-purple-600 hidden lg:block">
-                                <Link href="/"className="flex items-center"><span className="text-xl font-extrabold text-white">pochondoshop<span className="text-brand-purple">+</span></span></Link>
+                                <Link href="/"className="flex items-center"><span className="text-xl font-extrabold text-white">Tarunno Prokashon<span className="text-brand-purple">+</span></span></Link>
                             </div>
                             <nav className="p-4 flex-1 overflow-y-auto pb-20 lg:pb-4 bg-gray-50/50">
                                 {(() => {

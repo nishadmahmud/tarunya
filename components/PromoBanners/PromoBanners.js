@@ -22,7 +22,7 @@ export default function PromoBanners() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {banners.map((banner) => (
-                        <Link href={banner.link} key={banner.id} className="block group rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <Link href="#" key={banner.id} className="block group rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div className="relative w-full h-[350px] sm:h-[400px] md:h-[550px]">
                                 <Image
                                     src={banner.imageUrl}

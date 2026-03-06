@@ -63,7 +63,7 @@ export default function PopularAuthors() {
                         </h2>
                         <p className="text-xs md:text-sm text-gray-400 hidden sm:block">সর্বাধিক পঠিত ও প্রিয় লেখকদের বই সংগ্রহ</p>
                     </div>
-                    <Link href="/authors" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>
@@ -71,7 +71,7 @@ export default function PopularAuthors() {
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-5">
                     {authors.map((author) => (
                         <Link
-                            href={`/author/${author.slug}`}
+                            href="#"
                             key={author.id}
                             className="flex flex-col items-center text-center group"
                         >

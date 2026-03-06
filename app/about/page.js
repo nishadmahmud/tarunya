@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'About Us | Pochondo Shop',
-    description: 'Learn about Pochondo Shop — Bangladesh\'s premier destination for genuine tech gear, smart gadgets, and digital lifestyle accessories.',
+    title: 'About Us | Tarunno Shop',
+    description: 'Learn about Tarunno Shop — Bangladesh\'s premier destination for genuine tech gear, smart gadgets, and digital lifestyle accessories.',
 };
 
 export default function AboutPage() {
@@ -11,7 +11,7 @@ export default function AboutPage() {
             {/* Hero */}
             <div className="bg-gradient-to-br from-brand-purple/10 via-purple-50 to-white py-16 md:py-24">
                 <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">About <span className="text-brand-purple">Pochondo Shop</span></h1>
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">About <span className="text-brand-purple">Tarunno Shop</span></h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                         Bangladesh's premier destination for genuine tech gear, smart gadgets, and digital lifestyle accessories.
                     </p>
@@ -22,7 +22,7 @@ export default function AboutPage() {
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Who We Are</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        Pochondo Shop is a leading electronics and gadget retailer in Bangladesh. We are passionate about bringing the latest technology to your doorstep at the most competitive prices. From smartphones and laptops to accessories and smart home devices, we curate only the best products from top global brands.
+                        Tarunno Shop is a leading electronics and gadget retailer in Bangladesh. We are passionate about bringing the latest technology to your doorstep at the most competitive prices. From smartphones and laptops to accessories and smart home devices, we curate only the best products from top global brands.
                     </p>
                 </section>
 

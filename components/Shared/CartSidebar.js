@@ -170,12 +170,12 @@ export default function CartSidebar() {
                         <p className="text-xs text-gray-400 mb-5 text-center">Shipping and discount warnings calculated at checkout.</p>
 
                         <div className="grid grid-cols-2 gap-3">
-                            <Link href="/"onClick={closeCart} className="w-full">
+                            <Link href="#"onClick={closeCart} className="w-full">
                                 <button className="w-full py-3.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors border border-gray-200">
                                     View Cart
                                 </button>
                             </Link>
-                            <Link href="/"onClick={closeCart} className="w-full">
+                            <Link href="#"onClick={closeCart} className="w-full">
                                 <button className="w-full py-3.5 px-4 bg-brand-purple hover:bg-[#7b3ba8] text-white font-bold rounded-xl shadow-lg shadow-brand-purple/20 transition-all flex items-center justify-center gap-2">
                                     Checkout Now
                                 </button>

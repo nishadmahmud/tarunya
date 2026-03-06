@@ -25,7 +25,7 @@ export default function FeaturedProducts({ products = [] }) {
                         </h2>
                         <p className="text-gray-400 text-xs md:text-sm hidden sm:block">সর্বাধিক বিক্রিত ও পাঠকপ্রিয় বই</p>
                     </div>
-                    <Link href="/" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>

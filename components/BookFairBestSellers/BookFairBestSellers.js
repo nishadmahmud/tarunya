@@ -30,7 +30,7 @@ export default function BookFairBestSellers() {
                         </h2>
                         <p className="text-gray-400 text-xs md:text-sm hidden sm:block">এবারের বইমেলায় সর্বাধিক বিক্রিত বই সমূহ</p>
                     </div>
-                    <Link href="/book-fair" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>

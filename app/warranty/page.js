@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'Warranty Policy | Pochondo Shop',
-    description: 'Learn about our warranty policy for electronics and gadgets purchased from Pochondo Shop.',
+    title: 'Warranty Policy | Tarunno Shop',
+    description: 'Learn about our warranty policy for electronics and gadgets purchased from Tarunno Shop.',
 };
 
 export default function WarrantyPage() {
@@ -20,7 +20,7 @@ export default function WarrantyPage() {
             <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-10">
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Warranty Coverage</h2>
-                    <p className="text-gray-600 leading-relaxed mb-4">All products sold through Pochondo Shop come with the manufacturer's official warranty. The warranty period and coverage vary by product and brand. Warranty details are listed on each product page.</p>
+                    <p className="text-gray-600 leading-relaxed mb-4">All products sold through Tarunno Shop come with the manufacturer's official warranty. The warranty period and coverage vary by product and brand. Warranty details are listed on each product page.</p>
                     <ul className="list-disc pl-6 space-y-2 text-gray-600">
                         <li>Smartphones: Typically 1 year manufacturer warranty</li>
                         <li>Laptops: Typically 1-2 years manufacturer warranty</li>

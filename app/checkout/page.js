@@ -53,7 +53,7 @@ export default function CheckoutPage() {
 
     // Load saved details on mount
     useEffect(() => {
-        const savedDetails = localStorage.getItem("pochondoshopCheckoutDetails");
+        const savedDetails = localStorage.getItem("Tarunno ProkashonCheckoutDetails");
         if (savedDetails) {
             try {
                 const parsed = JSON.parse(savedDetails);
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
                 district: selectedDistrict,
                 city: selectedCity
             };
-            localStorage.setItem("pochondoshopCheckoutDetails", JSON.stringify(detailsToSave));
+            localStorage.setItem("Tarunno ProkashonCheckoutDetails", JSON.stringify(detailsToSave));
         } catch (error) {
             console.error("Failed to save checkout details to local storage", error);
         }

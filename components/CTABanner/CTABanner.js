@@ -25,10 +25,10 @@ export default function CTABanner() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3">
-                            <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-white text-brand-green-dark font-bold py-2.5 md:py-3 px-5 md:px-7 rounded-lg hover:bg-brand-gold hover:text-white transition-all text-sm shadow-lg">
+                            <Link href="#" className="inline-flex items-center justify-center gap-2 bg-white text-brand-green-dark font-bold py-2.5 md:py-3 px-5 md:px-7 rounded-lg hover:bg-brand-gold hover:text-white transition-all text-sm shadow-lg">
                                 যোগাযোগ করুন <FiArrowRight size={16} />
                             </Link>
-                            <a href="tel:01979456721" className="inline-flex items-center justify-center gap-2 text-white font-bold py-2.5 md:py-3 px-5 md:px-7 rounded-lg border border-white/20 hover:bg-white/10 transition-colors text-sm">
+                            <a href="#" className="inline-flex items-center justify-center gap-2 text-white font-bold py-2.5 md:py-3 px-5 md:px-7 rounded-lg border border-white/20 hover:bg-white/10 transition-colors text-sm">
                                 <FiPhoneCall size={16} /> ০১৯৭৯৪৫৬৭২১
                             </a>
                         </div>

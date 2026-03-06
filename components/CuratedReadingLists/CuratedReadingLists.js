@@ -76,7 +76,7 @@ export default function CuratedReadingLists() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                     {recommendations.map((list) => (
                         <Link
-                            href={`/reading-list/${list.id}`}
+                            href="#"
                             key={list.id}
                             className={`group flex flex-col p-4 md:p-5 rounded-2xl bg-gradient-to-br ${list.color} border ${list.borderColor} hover:shadow-lg transition-all duration-300`}
                         >

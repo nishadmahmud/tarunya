@@ -1,6 +1,6 @@
 export const metadata = {
-    title: 'Terms & Conditions | Pochondo Shop',
-    description: 'Read our terms and conditions, privacy policy, and usage guidelines for Pochondo Shop.',
+    title: 'Terms & Conditions | Tarunno Shop',
+    description: 'Read our terms and conditions, privacy policy, and usage guidelines for Tarunno Shop.',
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">1. General Terms</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        By accessing and placing an order with Pochondo Shop, you confirm that you agree to and are bound by the terms and conditions contained herein. These terms apply to the entire website and any email or other communication between you and Pochondo Shop.
+                        By accessing and placing an order with Tarunno Shop, you confirm that you agree to and are bound by the terms and conditions contained herein. These terms apply to the entire website and any email or other communication between you and Tarunno Shop.
                     </p>
                 </section>
 
@@ -60,21 +60,21 @@ export default function TermsPage() {
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Intellectual Property</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        All content on this website, including but not limited to text, images, graphics, logos, and software, is the property of Pochondo Shop or its content suppliers and is protected by intellectual property laws.
+                        All content on this website, including but not limited to text, images, graphics, logos, and software, is the property of Tarunno Shop or its content suppliers and is protected by intellectual property laws.
                     </p>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Limitation of Liability</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        Pochondo Shop shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services or products purchased through our platform.
+                        Tarunno Shop shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services or products purchased through our platform.
                     </p>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Contact</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        If you have any questions about these Terms & Conditions, please contact us at support@pochondoshop.com or visit our Contact Us page.
+                        If you have any questions about these Terms & Conditions, please contact us at support@Tarunno Prokashon.com or visit our Contact Us page.
                     </p>
                 </section>
             </div>

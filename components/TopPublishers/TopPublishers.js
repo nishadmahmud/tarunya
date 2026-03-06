@@ -21,7 +21,7 @@ export default function TopPublishers() {
                         </h2>
                         <p className="text-xs md:text-sm text-gray-400 hidden sm:block">বাংলাদেশের সেরা প্রকাশনা সংস্থা থেকে বই সংগ্রহ করুন</p>
                     </div>
-                    <Link href="/publishers" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>
@@ -29,7 +29,7 @@ export default function TopPublishers() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
                     {publishers.map((pub) => (
                         <Link
-                            href={`/publisher/${pub.slug}`}
+                            href="#"
                             key={pub.id}
                             className={`group flex flex-col items-center justify-center text-center p-5 md:p-6 rounded-2xl bg-gradient-to-br ${pub.color} border border-gray-100 hover:border-brand-green/20 hover:shadow-md transition-all duration-300`}
                         >

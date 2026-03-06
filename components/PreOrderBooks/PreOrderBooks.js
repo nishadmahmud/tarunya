@@ -55,7 +55,7 @@ export default function PreOrderBooks() {
                         </h2>
                         <p className="text-xs md:text-sm text-gray-400 hidden sm:block">আগেই অর্ডার করুন, বিশেষ ছাড় পান</p>
                     </div>
-                    <Link href="/pre-order" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>
@@ -63,7 +63,7 @@ export default function PreOrderBooks() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
                     {upcomingBooks.map((book) => (
                         <Link
-                            href={`/product/pre-order-${book.id}`}
+                            href="#"
                             key={book.id}
                             className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-brand-green/20 transition-all duration-300 flex flex-col"
                         >
