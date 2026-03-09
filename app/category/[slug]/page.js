@@ -49,25 +49,35 @@ export default function CategoryPage() {
 
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+    // English to Bangla Category Name Mapping
+    const categoryTranslations = {
+        'novels': 'উপন্যাস',
+        'poetry': 'কবিতা',
+        'children': 'শিশু-কিশোর',
+        'self-help': 'আত্মউন্নয়ন',
+        'religious': 'ধর্মীয় বই',
+        'history': 'ইতিহাস',
+        'science': 'বিজ্ঞান',
+        'biography': 'জীবনী',
+    };
+
     const [categoryId, setCategoryId] = useState(rawSlug);
-    const [categoryName, setCategoryName] = useState(() =>
-        decodeURIComponent(rawSlug)
-            .replace(/-/g, ' ')
-            .replace(/\b\w/g, c => c.toUpperCase())
-    );
+    const [categoryName, setCategoryName] = useState(() => {
+        const decoded = decodeURIComponent(rawSlug).toLowerCase();
+        return categoryTranslations[decoded] || decoded.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    });
 
     // Instead of holding 1 page, we hold ALL products for this category.
     const [allProducts, setAllProducts] = useState([]);
     const [filterOptions, setFilterOptions] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [bannerImage, setBannerImage] = useState("https://images.unsplash.com/photo-1616348436168-de43ad0db179?q=80&w=2000&auto=format&fit=crop");
+    // Updated to a book-themed banner image
+    const [bannerImage, setBannerImage] = useState("https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop");
 
     // Filter State
     const [selectedBrands, setSelectedBrands] = useState(['All']);
     const [selectedPrice, setSelectedPrice] = useState({ min: '', max: '' });
-    const [selectedStorage, setSelectedStorage] = useState([]);
     const [selectedRegion, setSelectedRegion] = useState([]);
-    const [selectedColor, setSelectedColor] = useState([]);
     const [selectedAvailability, setSelectedAvailability] = useState('All');
 
     useEffect(() => {
@@ -111,7 +121,7 @@ export default function CategoryPage() {
                 // Fetch the FIRST page to get initial data and pagination limits fast
                 const firstPageData = await getCategoryWiseProducts(resolvedCatId, 1);
 
-                if (isMounted && firstPageData?.success && Array.isArray(firstPageData.data)) {
+                if (isMounted && firstPageData?.success && Array.isArray(firstPageData.data) && firstPageData.data.length > 0) {
                     // Start rendering first page immediately
                     let globalProductsArray = [...firstPageData.data];
                     setAllProducts(globalProductsArray.map(mapProduct).sort((a, b) => b.stock - a.stock));
@@ -150,11 +160,30 @@ export default function CategoryPage() {
                         }
                     }
                 } else if (isMounted) {
+                    // Fallback Dummy Data for Category Grid
+                    const fallbackBooks = [
+                        { id: 'f1', name: "খরাজ খাতা", brand_name: "আহমাদ মোস্তফা কামাল", retails_price: 350, discount: 50, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop", current_stock: 10 },
+                        { id: 'f2', name: "জীবন যেখানে যেমন", brand_name: "আরিফ আজাদ", retails_price: 400, discount: 20, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop", current_stock: 50 },
+                        { id: 'f3', name: "প্রোডাক্টিভ মুসলিম", brand_name: "মোহাম্মদ ফারিস", retails_price: 600, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop", current_stock: 20 },
+                        { id: 'f4', name: "নেপোলিয়ন হিল: থিঙ্ক অ্যান্ড গ্রো রিচ", brand_name: "নেপোলিয়ন হিল", retails_price: 450, discount: 15, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop", current_stock: 5 },
+                        { id: 'f5', name: "রিচ ড্যাড পুওর ড্যাড", brand_name: "রবার্ট কিয়োসাকি", retails_price: 500, discount: 100, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&auto=format&fit=crop", current_stock: 100 },
+                        { id: 'f6', name: "দ্য সিক্রেট", brand_name: "রোন্ডা বাইর্ন", retails_price: 550, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400&auto=format&fit=crop", current_stock: 15 },
+                    ];
+                    setAllProducts(fallbackBooks.map(mapProduct));
                     setIsLoading(false);
                 }
             } catch (err) {
                 console.error('Failed to fetch category products:', err);
-                if (isMounted) setIsLoading(false);
+                if (isMounted) {
+                    const fallbackBooks = [
+                        { id: 'f1', name: "খরাজ খাতা", brand_name: "আহমাদ মোস্তফা কামাল", retails_price: 350, discount: 50, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop", current_stock: 10 },
+                        { id: 'f2', name: "জীবন যেখানে যেমন", brand_name: "আরিফ আজাদ", retails_price: 400, discount: 20, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop", current_stock: 50 },
+                        { id: 'f3', name: "প্রোডাক্টিভ মুসলিম", brand_name: "মোহাম্মদ ফারিস", retails_price: 600, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop", current_stock: 20 },
+                        { id: 'f4', name: "নেপোলিয়ন হিল: থিঙ্ক অ্যান্ড গ্রো রিচ", brand_name: "নেপোলিয়ন হিল", retails_price: 450, discount: 15, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop", current_stock: 5 },
+                    ];
+                    setAllProducts(fallbackBooks.map(mapProduct));
+                    setIsLoading(false);
+                }
             }
         };
 
@@ -172,43 +201,13 @@ export default function CategoryPage() {
             brandsList.push(...new Set(allProducts.map(p => p.brand).filter(Boolean)));
         }
 
-        // Storage List
-        let storageList = [];
-        if (filterOptions?.storages) {
-            storageList = Object.values(filterOptions.storages);
-        } else {
-            const allImeis = allProducts.flatMap(p => p.rawImeis || []);
-            storageList = [...new Set(allImeis.map(i => i.storage).filter(Boolean))].sort();
-        }
-
-        // Region List
+        // Region List (Publisher)
         let regionList = [];
         if (filterOptions?.regions) {
             regionList = Object.values(filterOptions.regions);
         } else {
             const allImeis = allProducts.flatMap(p => p.rawImeis || []);
             regionList = [...new Set(allImeis.map(i => i.region).filter(Boolean))].sort();
-        }
-
-        // Color List
-        let colorList = [];
-        if (filterOptions?.colors && Array.isArray(filterOptions.colors) && filterOptions.colors.length > 0) {
-            colorList = filterOptions.colors.map(c => ({
-                name: c,
-                hex: c.toLowerCase() === 'black' ? '#000000' :
-                    c.toLowerCase() === 'white' ? '#ffffff' : '#cccccc'
-            }));
-        } else {
-            const allImeis = allProducts.flatMap(p => p.rawImeis || []);
-            const colorMap = new Map();
-            allImeis.forEach(i => {
-                if (i.color) {
-                    if (!colorMap.has(i.color) || colorMap.get(i.color) === '#cccccc') {
-                        colorMap.set(i.color, i.color_code || '#cccccc');
-                    }
-                }
-            });
-            colorList = Array.from(colorMap.entries()).map(([name, hex]) => ({ name, hex }));
         }
 
         // Price Boundary Calculation
@@ -240,9 +239,7 @@ export default function CategoryPage() {
 
         return {
             brandsList: [...new Set(brandsList)],
-            storageList,
             regionList,
-            colorList,
             globalMinPrice,
             globalMaxPrice
         };
@@ -258,13 +255,11 @@ export default function CategoryPage() {
             if (selectedPrice.max !== '' && p.rawPrice > Number(selectedPrice.max)) return false;
             if (selectedAvailability === 'In Stock' && p.stock <= 0) return false;
 
-            const hasImeiFilters = selectedStorage.length > 0 || selectedRegion.length > 0 || selectedColor.length > 0;
+            const hasImeiFilters = selectedRegion.length > 0;
             if (hasImeiFilters) {
                 const hasMatchingImei = (p.rawImeis || []).some(i => {
                     let match = true;
-                    if (selectedStorage.length > 0 && !selectedStorage.includes(i.storage)) match = false;
                     if (selectedRegion.length > 0 && !selectedRegion.includes(i.region)) match = false;
-                    if (selectedColor.length > 0 && !selectedColor.includes(i.color)) match = false;
                     return match;
                 });
                 if (!hasMatchingImei) return false;
@@ -272,7 +267,7 @@ export default function CategoryPage() {
 
             return true;
         });
-    }, [allProducts, selectedBrands, selectedPrice, selectedStorage, selectedRegion, selectedColor, selectedAvailability]);
+    }, [allProducts, selectedBrands, selectedPrice, selectedRegion, selectedAvailability]);
 
     // Frontend pagination limits
     const itemsPerPage = 20;
@@ -301,18 +296,18 @@ export default function CategoryPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-900/60 to-transparent flex items-center p-8 md:p-16">
                         <div className="text-white">
                             <h1 className="text-3xl md:text-6xl font-black mb-2 tracking-tight capitalize">{categoryName}</h1>
-                            <p className="text-lg md:text-2xl font-medium text-white/90">The latest : Have a look at a glance</p>
+                            <p className="text-lg md:text-2xl font-medium text-white/90">নতুন সংগ্রহ : এক নজরে দেখে নিন</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Breadcrumbs */}
                 <div className="text-[12px] md:text-sm text-gray-500 mb-6 md:mb-10 flex items-center gap-2 font-medium">
-                    <Link href="/" className="hover:text-brand-purple transition-colors">Home</Link>
+                    <Link href="/" className="hover:text-brand-green transition-colors">হোম</Link>
                     <span>/</span>
-                    <span className="hover:text-brand-purple transition-colors cursor-pointer">Categories</span>
+                    <span className="hover:text-brand-green transition-colors cursor-pointer">বিভাগ</span>
                     <span>/</span>
-                    <span className="text-brand-purple font-bold capitalize">{categoryName}</span>
+                    <span className="text-brand-green font-bold capitalize">{categoryName}</span>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-0 lg:gap-8 pt-2 lg:pt-0">
@@ -327,12 +322,8 @@ export default function CategoryPage() {
                             globalMaxPrice={derivedFilters.globalMaxPrice}
                             selectedPrice={selectedPrice}
                             setSelectedPrice={setSelectedPrice}
-                            selectedStorage={selectedStorage}
-                            setSelectedStorage={setSelectedStorage}
                             selectedRegion={selectedRegion}
                             setSelectedRegion={setSelectedRegion}
-                            selectedColor={selectedColor}
-                            setSelectedColor={setSelectedColor}
                             selectedAvailability={selectedAvailability}
                             setSelectedAvailability={setSelectedAvailability}
                         />
@@ -342,8 +333,8 @@ export default function CategoryPage() {
                     <main className="lg:w-3/4 order-2">
                         {isLoading ? (
                             <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-2xl border border-gray-200 border-dashed">
-                                <div className="w-8 h-8 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mb-4"></div>
-                                <p className="text-gray-400 font-medium">Loading products...</p>
+                                <div className="w-8 h-8 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin mb-4"></div>
+                                <p className="text-gray-400 font-medium">বই লোড হচ্ছে...</p>
                             </div>
                         ) : paginatedProductsForScreen.length > 0 ? (
                             <ProductGrid
@@ -356,7 +347,7 @@ export default function CategoryPage() {
                             />
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-2xl border border-gray-200 border-dashed">
-                                <p className="text-gray-400 font-medium">No products match your filters.</p>
+                                <p className="text-gray-400 font-medium">আপনার ফিল্টার অনুযায়ী কোনো বই পাওয়া যায়নি।</p>
                             </div>
                         )}
 
@@ -380,7 +371,7 @@ export default function CategoryPage() {
                                             href={`/category/${rawSlug}?page=${pageNum}`}
                                             scroll={true}
                                             className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${pageNum === validCurrentPage
-                                                ? 'bg-brand-purple text-white shadow-md'
+                                                ? 'bg-brand-green text-white shadow-md'
                                                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
                                                 }`}
                                         >

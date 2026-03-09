@@ -15,6 +15,7 @@ import TopPublishers from "../components/TopPublishers/TopPublishers";
 import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
 import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
 import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
+import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
 
 import {
   getSlidersFromServer,
@@ -48,6 +49,7 @@ export default async function Home() {
         <Hero slides={[]} banners={[]} />
         <TrustStats />
         <ShopCategories categories={[]} flashSaleProducts={[]} />
+        <SeriesBooks />
         <NewArrivals products={[]} />
         <PopularAuthors />
         <PromoBanners />
@@ -259,6 +261,7 @@ export default async function Home() {
       <TrustStats />
 
       <ShopCategories categories={categories} flashSaleProducts={flashSaleProducts} />
+      <SeriesBooks />
       <NewArrivals products={newArrivals} />
       <PopularAuthors />
       <PromoBanners />

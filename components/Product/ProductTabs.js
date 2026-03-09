@@ -12,25 +12,25 @@ export default function ProductTabs({ description, specifications }) {
                 <button
                     onClick={() => setActiveTab('description')}
                     className={`cursor-pointer pb-4 text-[15px] md:text-[17px] font-bold transition-colors relative ${activeTab === 'description'
-                        ? 'text-[#ff2a3b]'
+                        ? 'text-brand-green'
                         : 'text-gray-400 hover:text-gray-600'
                         }`}
                 >
-                    Description
+                    বিস্তারিত বিবরণ
                     {activeTab === 'description' && (
-                        <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-[#ff2a3b] rounded-t-lg"></span>
+                        <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-brand-green rounded-t-lg"></span>
                     )}
                 </button>
                 <button
                     onClick={() => setActiveTab('specifications')}
                     className={`cursor-pointer pb-4 text-[15px] md:text-[17px] font-bold transition-colors relative ${activeTab === 'specifications'
-                        ? 'text-[#ff2a3b]'
+                        ? 'text-brand-green'
                         : 'text-gray-400 hover:text-gray-600'
                         }`}
                 >
-                    Specifications
+                    বইয়ের তথ্য
                     {activeTab === 'specifications' && (
-                        <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-[#ff2a3b] rounded-t-lg"></span>
+                        <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-brand-green rounded-t-lg"></span>
                     )}
                 </button>
             </div>

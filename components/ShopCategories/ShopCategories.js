@@ -8,14 +8,14 @@ import ProductCard from '../Shared/ProductCard';
 export default function ShopCategories({ categories = [], flashSaleProducts = [] }) {
 
     const defaultCategories = [
-        { name: "উপন্যাস", icon: <FiBook /> },
-        { name: "কবিতা", icon: <FiFeather /> },
-        { name: "শিশু-কিশোর", icon: <FiStar /> },
-        { name: "আত্মউন্নয়ন", icon: <FiSun /> },
-        { name: "ধর্মীয় বই", icon: <FiHeart /> },
-        { name: "ইতিহাস", icon: <FiGlobe /> },
-        { name: "বিজ্ঞান", icon: <FiBookOpen /> },
-        { name: "জীবনী", icon: <FiCoffee /> },
+        { name: "উপন্যাস", slug: "novels", icon: <FiBook /> },
+        { name: "কবিতা", slug: "poetry", icon: <FiFeather /> },
+        { name: "শিশু-কিশোর", slug: "children", icon: <FiStar /> },
+        { name: "আত্মউন্নয়ন", slug: "self-help", icon: <FiSun /> },
+        { name: "ধর্মীয় বই", slug: "religious", icon: <FiHeart /> },
+        { name: "ইতিহাস", slug: "history", icon: <FiGlobe /> },
+        { name: "বিজ্ঞান", slug: "science", icon: <FiBookOpen /> },
+        { name: "জীবনী", slug: "biography", icon: <FiCoffee /> },
     ];
 
     const displayCategories = categories && categories.length > 0
@@ -23,10 +23,10 @@ export default function ShopCategories({ categories = [], flashSaleProducts = []
         : defaultCategories;
 
     const defaultCuratedBooks = [
-        { id: 101, name: "হুমায়ূন আহমেদ সংকলন — ১০ খণ্ড", brand: "হুমায়ূন আহমেদ", price: "৳ 2,500", oldPrice: "৳ 3,500", discount: "-29%", imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400" },
-        { id: 102, name: "শরৎচন্দ্র রচনাসমগ্র", brand: "শরৎচন্দ্র", price: "৳ 1,800", oldPrice: "৳ 2,400", discount: "-25%", imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400" },
-        { id: 103, name: "বাংলা থ্রিলার সেট", brand: "বিভিন্ন লেখক", price: "৳ 950", oldPrice: "৳ 1,200", discount: "-21%", imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400" },
-        { id: 104, name: "রবীন্দ্র রচনাবলী", brand: "রবীন্দ্রনাথ ঠাকুর", price: "৳ 3,200", oldPrice: "৳ 4,000", discount: "-20%", imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400" },
+        { id: 101, name: "হুমায়ূন আহমেদ সংকলন — ১০ খণ্ড", brand: "হুমায়ূন আহমেদ", price: "৳ 2,500", oldPrice: "৳ 3,500", discount: "-29%", imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop" },
+        { id: 102, name: "শরৎচন্দ্র রচনাসমগ্র", brand: "শরৎচন্দ্র", price: "৳ 1,800", oldPrice: "৳ 2,400", discount: "-25%", imageUrl: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop" },
+        { id: 103, name: "বাংলা থ্রিলার সেট", brand: "বিভিন্ন লেখক", price: "৳ 950", oldPrice: "৳ 1,200", discount: "-21%", imageUrl: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop" },
+        { id: 104, name: "রবীন্দ্র রচনাবলী", brand: "রবীন্দ্রনাথ ঠাকুর", price: "৳ 3,200", oldPrice: "৳ 4,000", discount: "-20%", imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop" },
     ];
 
     const displayCurated = flashSaleProducts && flashSaleProducts.length > 0 ? flashSaleProducts : defaultCuratedBooks;
@@ -49,7 +49,7 @@ export default function ShopCategories({ categories = [], flashSaleProducts = []
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
                         {displayCategories.map((cat, idx) => (
-                            <Link key={idx} href="#" className="group flex flex-col items-center p-4 md:p-6 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
+                            <Link key={idx} href={`/category/${cat.slug || cat.category_id || cat.id || cat.name}`} className="group flex flex-col items-center p-4 md:p-6 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
                                 <div className="p-3 md:p-4 rounded-xl bg-white text-brand-green text-2xl md:text-3xl shadow-sm group-hover:shadow-md transition-all">
                                     {cat.icon}
                                 </div>

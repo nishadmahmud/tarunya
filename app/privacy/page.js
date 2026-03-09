@@ -1,71 +1,71 @@
 import Link from "next/link";
 
 export const metadata = {
-    title: "Privacy Policy | Tarunno Shop",
-    description: "Tarunno Shop privacy policy — how we collect, use, and protect your personal information.",
+    title: "গোপনীয়তা নীতি | তারুণ্য প্রকাশন",
+    description: "তারুণ্য প্রকাশনের গোপনীয়তা নীতি — কীভাবে আমরা আপনার ব্যক্তিগত তথ্য সংগ্রহ করি, ব্যবহার করি এবং সুরক্ষিত রাখি তা জানুন।",
 };
 
 const sections = [
     {
-        title: "1. Information We Collect",
+        title: "১. আমরা যে তথ্যগুলো সংগ্রহ করি",
         content: [
-            "**Personal Information:** When you create an account, place an order, or contact us, we may collect your name, email address, phone number, shipping address, and payment information.",
-            "**Device Information:** We automatically collect information about the device and browser you use to access our website, including your IP address, browser type, operating system, and referring URLs.",
-            "**Order Information:** Details of products you purchase, installation or maintenance services you request, order history, and delivery preferences.",
-            "**Communication Data:** Records of correspondence when you contact our support team via email, phone, or social media.",
+            "**ব্যক্তিগত তথ্য:** আপনি যখন অ্যাকাউন্ট তৈরি করেন, অর্ডার দেন অথবা আমাদের সাথে যোগাযোগ করেন, তখন আমরা আপনার নাম, ইমেইল, ফোন নম্বর, ডেলিভারি ঠিকানা এবং পেমেন্ট সংক্রান্ত তথ্য সংগ্রহ করতে পারি।",
+            "**ডিভাইস সম্পর্কিত তথ্য:** আপনি কোন ডিভাইস বা ব্রাউজার থেকে আমাদের ওয়েবসাইট ব্রাউজ করছেন, যেমন আইপি (IP) অ্যাড্রেস, ব্রাউজার টাইপ, অপারেটিং সিস্টেম ইত্যাদি আমরা স্বয়ংক্রিয়ভাবে সংগ্রহ করি।",
+            "**অর্ডার সংক্রান্ত তথ্য:** আপনার ক্রয়কৃত বইয়ের নাম, পরিমাণ, পূর্ববর্তী অর্ডার হিস্ট্রি এবং ডেলিভারির পছন্দসমূহ।",
+            "**যোগাযোগের তথ্য:** আপনি যখন ইমেইল, ফোন বা সোশ্যাল মিডিয়ার মাধ্যমে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করেন, সেগুলোর রেকর্ড আমরা সংরক্ষণ করতে পারি।",
         ],
     },
     {
-        title: "2. How We Use Your Information",
+        title: "২. কীভাবে আমরা আপনার তথ্য ব্যবহার করি",
         content: [
-            "To process and fulfill your orders and installation service requests.",
-            "To communicate with you about your orders, deliveries, and service updates.",
-            "To create and manage your customer account.",
-            "To provide customer support and respond to inquiries.",
-            "To send promotional offers, discounts, and newsletters (with your consent).",
-            "To improve our website, products, and services based on usage patterns.",
-            "To detect and prevent fraud or unauthorized activities.",
+            "আপনার অর্ডারগুলো সঠিকভাবে পৌঁছাতে ও অন্যান্য সেবা প্রদান করতে।",
+            "আপনার অর্ডার, ডেলিভারি স্ট্যাটাস এবং প্রয়োজনীয় আপডেট সম্পর্কে যোগযোগ করতে।",
+            "গ্রাহক একাউন্ট পরিচালনা এবং আপনার কেনাকাটাকে আরো সহজ করতে।",
+            "গ্রাহক সেবা প্রদান এবং যেকোনো প্রশ্নের দ্রুত সমাধান দিতে।",
+            "প্রমোশনাল অফার, ডিসকাউন্ট এবং নিউজলেটার পাঠাতে (অবশ্যই আপনার সম্মতি সাপেক্ষে)।",
+            "আমাদের ওয়েবসাইট, বইয়ের সম্ভার এবং সামগ্রিক সেবার মান উন্নত করতে।",
+            "যেকোনো ধরনের জালিয়াতি, স্প্যাম বা অননুমোদিত কার্যকলাপ প্রতিরোধ করতে।",
         ],
     },
     {
-        title: "3. Information Sharing",
+        title: "৩. তথ্য শেয়ারিং ব্যবস্থাপনা",
         content: [
-            "We do **not** sell, trade, or rent your personal information to third parties.",
-            "We may share your information with trusted delivery partners (e.g., Pathao, Steadfast) solely for order fulfillment.",
-            "We may share information with payment processors to complete transactions securely.",
-            "We may disclose information if required by law, regulation, or legal process.",
+            "আমরা কোনো তৃতীয় পক্ষের কাছে আপনার ব্যক্তিগত তথ্য **বিক্রি বা ভাড়া** দেই না।",
+            "অর্ডার পূরণের সুবিধার্থে এবং দ্রুত ডেলিভারির জন্য আমরা বিশ্বস্ত ডেলিভারি পার্টনারদের (যেমন- Steadfast, Pathao) সাথে প্রয়োজনীয় তথ্য শেয়ার করে থাকি।",
+            "নিরাপদ লেনদেন নিশ্চিত করার জন্য আমরা পেমেন্ট গেটওয়ের সাথে শুধুমাত্র পেমেন্ট সংক্রান্ত তথ্য শেয়ার করি।",
+            "আইনশৃঙ্খলা রক্ষাকারী বাহিনীর আইনি প্রক্রিয়ার প্রয়োজন হলে আমরা তথ্য প্রদান করতে বাধ্য থাকতে পারি।",
         ],
     },
     {
-        title: "4. Data Security",
+        title: "৪. তথ্যের নিরাপত্তা",
         content: [
-            "We implement industry-standard security measures to protect your personal information.",
-            "All payment transactions are encrypted using SSL/TLS technology.",
-            "Access to personal data is restricted to authorized employees only.",
-            "While we strive to protect your information, no method of electronic transmission is 100% secure.",
+            "আপনার ব্যক্তিগত তথ্যের সুরক্ষার জন্য আমরা স্ট্যান্ডার্ড নিরাপত্তা ব্যবস্থা গ্রহণ করেছি।",
+            "সকল পেমেন্ট ট্রানজেকশন SSL/TLS প্রযুক্তির মাধ্যমে নিয়ন্ত্রিত হয়।",
+            "গ্রাহকদের ব্যক্তিগত ডাটাবেসে শুধুমাত্র আমাদের অনুমোদিত কর্মীদেরই এক্সেস রয়েছে।",
+            "যদিও আমরা আপনার তথ্য নিরাপদ রাখতে বদ্ধপরিকর, তবে অনলাইনে কোনো তথ্য ট্রান্সমিশনের সিস্টেমই সম্পূর্ণ ঝুঁকিহীন নয়।",
         ],
     },
     {
-        title: "5. Cookies",
+        title: "৫. কুকিজ (Cookies) এর ব্যবহার",
         content: [
-            "We use cookies and similar technologies to enhance your browsing experience.",
-            "Cookies help us remember your preferences, keep you logged in, and understand how you use our site.",
-            "You can modify your browser settings to decline cookies, though some features may not function properly.",
+            "আপনাকে আরও ভালো ব্রাউজিং এক্সপেরিয়েন্স দেওয়ার জন্য আমরা কুকিজ ব্যবহার করি।",
+            "কুকিজ আমাদের সাইটে আপনার পছন্দগুলি মনে রাখতে এবং আপনাকে লগইন রাখতে সাহায্য করে।",
+            "আপনি চাইলে ব্রাউজার সেটিংস থেকে কুকিজ বন্ধ করতে পারেন, তবে এতে ওয়েবসাইটের কিছু ফিচারের কার্যকারিতা হ্রাস পেতে পারে।",
         ],
     },
     {
-        title: "6. Your Rights",
+        title: "৬. আপনার অধিকার",
         content: [
-            "You have the right to access, update, or delete your personal information through your account settings.",
-            "You may opt out of marketing communications at any time by unsubscribing from our emails.",
-            "You may request a copy of the data we hold about you by contacting us at support@Tarunno Prokashon.com.",
+            "অ্যাকাউন্ট সেটিংস থেকে আপনি আপনার ব্যক্তিগত তথ্য যেকোনো সময় দেখা, আপডেট বা মুছে ফেলার অধিকার রাখেন।",
+            "যেকোনো সময় আমাদের মার্কেটিং ইমেইল বা মেসেজের সাবস্ক্রিপশন বাতিল করতে পারেন।",
+            "আপনার সংগ্রহীত তথ্য সম্পর্কে বিস্তারিত জানতে info@tarunno.com-এ যোগাযোগ করতে পারেন।",
         ],
     },
     {
-        title: "7. Changes to This Policy",
+        title: "৭. নীতিমালায় পরিবর্তন",
         content: [
-            "We reserve the right to update this Privacy Policy at any time. Changes will be posted on this page with an updated revision date.",
-            "Continued use of our website after changes constitutes acceptance of the updated policy.",
+            "আমরা যেকোনো সময় এই গোপনীয়তা নীতি পরিবর্তন বা আপডেট করার অধিকার সংরক্ষণ করি। সংশোধিত নীতিমালায় আপডেট করার তারিখ উল্লেখ থাকবে।",
+            "নীতিতে পরিবর্তনের পর আমাদের ওয়েবসাইট ব্যবহার অব্যাহত রাখার মানে হলো আপনি নতুন নীতিমালার সাথে সম্মত।",
         ],
     },
 ];
@@ -73,18 +73,18 @@ const sections = [
 export default function PrivacyPage() {
     return (
         <div className="min-h-screen bg-gray-50 pb-20 md:pb-10">
-            <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+            <div className="bg-gradient-to-br from-brand-green-dark via-brand-green to-brand-green-dark text-white">
                 <div className="max-w-4xl mx-auto px-4 md:px-8 py-12 md:py-20 text-center">
-                    <span className="inline-block px-4 py-1.5 bg-brand-purple/20 text-brand-purple text-xs font-bold rounded-full mb-4 border border-brand-purple/20">LEGAL</span>
-                    <h1 className="text-3xl md:text-5xl font-extrabold mb-4">Privacy Policy</h1>
-                    <p className="text-gray-400 text-sm md:text-base">Last updated: February 2026</p>
+                    <span className="inline-block px-4 py-1.5 bg-brand-green-light/20 text-brand-green-light text-xs font-bold rounded-full mb-4 border border-brand-green-light/20">আইনি নীতিমালা</span>
+                    <h1 className="text-3xl md:text-5xl font-extrabold mb-4">গোপনীয়তা নীতি</h1>
+                    <p className="text-green-100 text-sm md:text-base">সর্বশেষ আপডেট: মার্চ ২০২৬</p>
                 </div>
             </div>
 
             <div className="max-w-4xl mx-auto px-4 md:px-8 -mt-6">
-                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10 border border-gray-100">
                     <p className="text-sm text-gray-600 leading-relaxed mb-8">
-                        At Tarunno Shop, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase.
+                        তারুণ্য প্রকাশন আপনার ব্যক্তিগত গোপনীয়তা রক্ষায় অঙ্গীকারবদ্ধ। আপনি যখন আমাদের ওয়েবসাইটে ভিজিট করেন বা কোনো বই অর্ডার করেন, তখন আমরা কিভাবে আপনার তথ্য সংগ্রহ ও ব্যবহার করি, তা এই গোপনীয়তা নীতিতে বিস্তারিত বলা হয়েছে।
                     </p>
 
                     <div className="space-y-8">
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
                                 <ul className="space-y-2">
                                     {section.content.map((item, j) => (
                                         <li key={j} className="text-sm text-gray-600 leading-relaxed flex items-start gap-2">
-                                            <span className="text-brand-purple mt-1.5 flex-shrink-0">•</span>
+                                            <span className="text-brand-green mt-1.5 flex-shrink-0">•</span>
                                             <span dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-900">$1</strong>') }} />
                                         </li>
                                     ))}
@@ -103,11 +103,11 @@ export default function PrivacyPage() {
                         ))}
                     </div>
 
-                    <div className="mt-10 p-5 bg-gray-50 rounded-xl border border-gray-100">
+                    <div className="mt-10 p-5 bg-brand-green-light/30 rounded-xl border border-brand-green/10">
                         <p className="text-sm text-gray-600">
-                            If you have any questions about this Privacy Policy, please contact us at{" "}
-                            <a href="/"className="text-brand-purple font-semibold hover:underline">support@Tarunno Prokashon.com</a> or call{" "}
-                            <a href="/"className="text-brand-purple font-semibold hover:underline">+880 1714-404100</a>.
+                            এই গোপনীয়তা নীতি সম্পর্কে আপনার যদি কোনো প্রশ্ন থাকে, তবে অনুগ্রহ করে আমাদের লিংকে যোগাযোগ করুন:{" "}
+                            <a href="mailto:info@tarunno.com" className="text-brand-green font-semibold hover:underline">info@tarunno.com</a> অথবা কল করুন:{" "}
+                            <a href="tel:01979456721" className="text-brand-green font-semibold hover:underline">০১৯৭৯৪৫৬৭২১</a>
                         </p>
                     </div>
                 </div>

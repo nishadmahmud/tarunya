@@ -6,25 +6,19 @@ import { FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
 export default function CategorySidebar({
     isOpen,
     onClose,
-    derivedFilters = { storageList: [], regionList: [], colorList: [] },
+    derivedFilters = { regionList: [] },
     globalMinPrice = 0,
     globalMaxPrice = 1000000,
     selectedPrice,
     setSelectedPrice,
-    selectedStorage,
-    setSelectedStorage,
     selectedRegion,
     setSelectedRegion,
-    selectedColor,
-    setSelectedColor,
     selectedAvailability,
     setSelectedAvailability
 }) {
     const [expandedSections, setExpandedSections] = useState({
         price: true,
-        storage: true,
         region: true,
-        color: true,
         availability: true
     });
 
@@ -45,13 +39,11 @@ export default function CategorySidebar({
 
     const handleReset = () => {
         setSelectedPrice({ min: '', max: '' });
-        setSelectedStorage([]);
         setSelectedRegion([]);
-        setSelectedColor([]);
         setSelectedAvailability('All');
     };
 
-    const { storageList, regionList, colorList } = derivedFilters;
+    const { regionList } = derivedFilters;
 
     return (
         <>
@@ -69,11 +61,11 @@ export default function CategorySidebar({
 
                 {/* Sidebar Header */}
                 <div className="flex items-center justify-between p-4 lg:p-0 lg:pb-5 border-b border-gray-100 mb-5">
-                    <span className="font-bold text-lg text-brand-purple">
-                        Filters
+                    <span className="font-bold text-lg text-brand-green">
+                        ফিল্টার
                     </span>
                     <button onClick={handleReset} className="text-[11px] font-semibold bg-gray-100 px-3 py-1.5 rounded hover:bg-gray-200 transition-colors text-gray-700">
-                        Reset
+                        রিসেট
                     </button>
                     {/* Close button for mobile */}
                     <button onClick={onClose} className="lg:hidden p-2 hover:bg-gray-100 rounded-full ml-2">
@@ -87,9 +79,9 @@ export default function CategorySidebar({
                     <div className="border-b border-gray-100 pb-6">
                         <button
                             onClick={() => toggleSection('price')}
-                            className="flex items-center justify-between w-full text-left font-bold text-brand-purple mb-4 uppercase text-sm tracking-wider"
+                            className="flex items-center justify-between w-full text-left font-bold text-brand-green mb-4 uppercase text-sm tracking-wider"
                         >
-                            <span>Price Range</span>
+                            <span>মূল্য তালিকা</span>
                             {expandedSections.price ? <FiChevronUp /> : <FiChevronDown />}
                         </button>
 
@@ -110,7 +102,7 @@ export default function CategorySidebar({
                                                 placeholder={globalMinPrice.toString()}
                                                 value={selectedPrice.min}
                                                 onChange={(e) => setSelectedPrice({ ...selectedPrice, min: e.target.value })}
-                                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-brand-purple"
+                                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-brand-green"
                                             />
                                         </div>
                                         <span className="text-gray-400 font-medium">-</span>
@@ -120,14 +112,14 @@ export default function CategorySidebar({
                                                 placeholder={globalMaxPrice.toString()}
                                                 value={selectedPrice.max}
                                                 onChange={(e) => setSelectedPrice({ ...selectedPrice, max: e.target.value })}
-                                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-brand-purple"
+                                                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-brand-green"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="relative h-2 bg-gray-200 rounded-full mt-6 mx-2">
                                         <div
-                                            className="absolute h-full bg-brand-purple rounded-full"
+                                            className="absolute h-full bg-brand-green rounded-full"
                                             style={{
                                                 left: `${leftPct}%`,
                                                 right: `${rightPct}%`
@@ -143,7 +135,7 @@ export default function CategorySidebar({
                                                 const val = Math.min(Number(e.target.value), maxVal - 1);
                                                 setSelectedPrice(prev => ({ ...prev, min: val }));
                                             }}
-                                            className="absolute w-full -top-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-purple [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-purple [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 z-10"
+                                            className="absolute w-full -top-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-green [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-green [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 z-10"
                                         />
 
                                         <input
@@ -155,7 +147,7 @@ export default function CategorySidebar({
                                                 const val = Math.max(Number(e.target.value), minVal + 1);
                                                 setSelectedPrice(prev => ({ ...prev, max: val }));
                                             }}
-                                            className="absolute w-full -top-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-purple [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-purple [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 z-20"
+                                            className="absolute w-full -top-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-brand-green [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-brand-green [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 z-20"
                                         />
                                     </div>
                                     <div className="h-2"></div>
@@ -164,45 +156,14 @@ export default function CategorySidebar({
                         })()}
                     </div>
 
-                    {/* Storage */}
-                    {storageList.length > 0 && (
-                        <div className="border-b border-gray-100 pb-6">
-                            <button
-                                onClick={() => toggleSection('storage')}
-                                className="flex items-center justify-between w-full text-left font-bold text-brand-purple mb-4 uppercase text-sm tracking-wider"
-                            >
-                                <span>Storage</span>
-                                {expandedSections.storage ? <FiChevronUp /> : <FiChevronDown />}
-                            </button>
-
-                            {expandedSections.storage && (
-                                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
-                                    {storageList.map(storage => (
-                                        <label key={storage} className="flex items-center gap-3 cursor-pointer group">
-                                            <div className="relative flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedStorage.includes(storage)}
-                                                    onChange={() => handleCheckboxChange(storage, selectedStorage, setSelectedStorage)}
-                                                    className="peer h-4 w-4 border border-gray-300 rounded text-brand-purple focus:ring-brand-purple"
-                                                />
-                                            </div>
-                                            <span className="text-sm font-medium text-gray-600 group-hover:text-brand-purple transition-colors">{storage}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Region */}
-                    {regionList.length > 0 && (
+                    {/* Region (Publisher) */}
+                    {regionList && regionList.length > 0 && (
                         <div className="border-b border-gray-100 pb-6">
                             <button
                                 onClick={() => toggleSection('region')}
-                                className="flex items-center justify-between w-full text-left font-bold text-brand-purple mb-4 uppercase text-sm tracking-wider"
+                                className="flex items-center justify-between w-full text-left font-bold text-brand-green mb-4 uppercase text-sm tracking-wider"
                             >
-                                <span>Region</span>
+                                <span>প্রকাশনী</span>
                                 {expandedSections.region ? <FiChevronUp /> : <FiChevronDown />}
                             </button>
 
@@ -215,45 +176,11 @@ export default function CategorySidebar({
                                                     type="checkbox"
                                                     checked={selectedRegion.includes(region)}
                                                     onChange={() => handleCheckboxChange(region, selectedRegion, setSelectedRegion)}
-                                                    className="peer h-4 w-4 border border-gray-300 rounded text-brand-purple focus:ring-brand-purple"
+                                                    className="peer h-4 w-4 border border-gray-300 rounded text-brand-green focus:ring-brand-green"
                                                 />
                                             </div>
-                                            <span className="text-sm font-medium text-gray-600 group-hover:text-brand-purple transition-colors">{region}</span>
+                                            <span className="text-sm font-medium text-gray-600 group-hover:text-brand-green transition-colors">{region}</span>
                                         </label>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Colors */}
-                    {colorList.length > 0 && (
-                        <div className="border-b border-gray-100 pb-6">
-                            <button
-                                onClick={() => toggleSection('color')}
-                                className="flex items-center justify-between w-full text-left font-bold text-brand-purple mb-4 uppercase text-sm tracking-wider"
-                            >
-                                <span>Color</span>
-                                {expandedSections.color ? <FiChevronUp /> : <FiChevronDown />}
-                            </button>
-
-                            {expandedSections.color && (
-                                <div className="flex flex-wrap gap-3">
-                                    {colorList.map(color => (
-                                        <button
-                                            key={color.name}
-                                            onClick={() => handleCheckboxChange(color.name, selectedColor, setSelectedColor)}
-                                            className={`w-8 h-8 rounded-full border shadow-sm transition-transform hover:scale-110 relative ${selectedColor.includes(color.name)
-                                                ? 'ring-2 ring-brand-purple ring-offset-2 border-brand-purple'
-                                                : 'border-gray-200'
-                                                }`}
-                                            style={{ backgroundColor: color.hex }}
-                                            title={color.name}
-                                        >
-                                            {color.hex === '#ffffff' || color.hex.toLowerCase() === '#fff' ? (
-                                                <span className="absolute inset-0 rounded-full border border-gray-200"></span>
-                                            ) : null}
-                                        </button>
                                     ))}
                                 </div>
                             )}
@@ -264,9 +191,9 @@ export default function CategorySidebar({
                     <div className="pb-6">
                         <button
                             onClick={() => toggleSection('availability')}
-                            className="flex items-center justify-between w-full text-left font-bold text-brand-purple mb-4 uppercase text-sm tracking-wider"
+                            className="flex items-center justify-between w-full text-left font-bold text-brand-green mb-4 uppercase text-sm tracking-wider"
                         >
-                            <span>Availability</span>
+                            <span>স্টক স্ট্যাটাস</span>
                             {expandedSections.availability ? <FiChevronUp /> : <FiChevronDown />}
                         </button>
                         {expandedSections.availability && (
@@ -277,9 +204,9 @@ export default function CategorySidebar({
                                         name="availability"
                                         checked={selectedAvailability === 'All'}
                                         onChange={() => setSelectedAvailability('All')}
-                                        className="h-4 w-4 border border-gray-300 rounded-full text-brand-purple focus:ring-brand-purple"
+                                        className="h-4 w-4 border border-gray-300 rounded-full text-brand-green focus:ring-brand-green"
                                     />
-                                    <span className="text-sm font-medium text-gray-600 group-hover:text-brand-purple">All</span>
+                                    <span className="text-sm font-medium text-gray-600 group-hover:text-brand-green">সকল</span>
                                 </label>
                                 <label className="flex items-center gap-3 cursor-pointer group">
                                     <input
@@ -287,9 +214,9 @@ export default function CategorySidebar({
                                         name="availability"
                                         checked={selectedAvailability === 'In Stock'}
                                         onChange={() => setSelectedAvailability('In Stock')}
-                                        className="h-4 w-4 border border-gray-300 rounded-full text-brand-purple focus:ring-brand-purple"
+                                        className="h-4 w-4 border border-gray-300 rounded-full text-brand-green focus:ring-brand-green"
                                     />
-                                    <span className="text-sm font-medium text-gray-600 group-hover:text-brand-purple">In Stock</span>
+                                    <span className="text-sm font-medium text-gray-600 group-hover:text-brand-green">স্টকে আছে</span>
                                 </label>
                             </div>
                         )}
@@ -298,11 +225,11 @@ export default function CategorySidebar({
 
                 {/* Mobile Footer Actions */}
                 <div className="lg:hidden p-4 border-t border-gray-100 bg-white flex gap-3 mt-auto">
-                    <button onClick={handleReset} className="flex-1 py-3 border border-gray-200 rounded-xl text-brand-purple font-bold text-sm">
-                        Reset
+                    <button onClick={handleReset} className="flex-1 py-3 border border-gray-200 rounded-xl text-brand-green font-bold text-sm">
+                        রিসেট
                     </button>
-                    <button onClick={onClose} className="flex-1 py-3 bg-brand-purple text-white rounded-xl font-bold text-sm shadow-lg shadow-brand-purple/20">
-                        Apply Filters
+                    <button onClick={onClose} className="flex-1 py-3 bg-brand-green text-white rounded-xl font-bold text-sm shadow-lg shadow-brand-green/20">
+                        ফিল্টার প্রয়োগ করুন
                     </button>
                 </div>
             </aside>

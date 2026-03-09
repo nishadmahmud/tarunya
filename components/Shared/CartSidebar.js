@@ -44,12 +44,12 @@ export default function CartSidebar() {
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-white z-10">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center text-brand-purple">
+                        <div className="w-10 h-10 bg-brand-green/10 rounded-full flex items-center justify-center text-brand-green">
                             <FiShoppingBag size={20} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-extrabold text-gray-900">Your Cart</h2>
-                            <p className="text-xs text-brand-purple font-bold uppercase tracking-wider">{cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}</p>
+                            <h2 className="text-xl font-extrabold text-gray-900">আপনার কার্ট</h2>
+                            <p className="text-xs text-brand-green font-bold tracking-wider">{cartItems.length} টি বই</p>
                         </div>
                     </div>
                     <button
@@ -64,16 +64,16 @@ export default function CartSidebar() {
                 <div className="flex-1 overflow-y-auto p-5 bg-gray-50/50">
                     {cartItems.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center text-brand-purple/30 mb-2">
+                            <div className="w-24 h-24 bg-brand-green/10 rounded-full flex items-center justify-center text-brand-green/30 mb-2">
                                 <FiShoppingBag size={48} />
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900">Your cart is empty</h3>
-                            <p className="text-sm text-gray-500 max-w-[250px]">Looks like you haven't added anything to your cart yet.</p>
+                            <h3 className="text-lg font-bold text-gray-900">আপনার কার্টটি খালি</h3>
+                            <p className="text-sm text-gray-500 max-w-[250px]">মনে হচ্ছে আপনি এখনও কোনো বই কার্টে যোগ করেননি।</p>
                             <button
                                 onClick={closeCart}
-                                className="mt-4 px-6 py-2.5 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors"
+                                className="mt-4 px-6 py-2.5 bg-brand-green text-white font-medium rounded-full hover:bg-brand-green-dark transition-colors"
                             >
-                                Continue Shopping
+                                কেনাকাটা চালিয়ে যান
                             </button>
                         </div>
                     ) : (
@@ -127,7 +127,7 @@ export default function CartSidebar() {
 
                                             {/* Price and Quantity row */}
                                             <div className="flex items-end justify-between mt-3">
-                                                <div className="font-extrabold text-brand-purple text-sm relative top-1">
+                                                <div className="font-extrabold text-brand-green text-sm relative top-1">
                                                     ৳{(item.numericPrice * item.quantity).toLocaleString()}
                                                 </div>
 
@@ -163,21 +163,17 @@ export default function CartSidebar() {
                 {cartItems.length > 0 && (
                     <div className="p-5 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] z-10">
                         <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-500 font-medium">Subtotal <span className="text-xs ml-1">(incl. VAT)</span></span>
+                            <span className="text-gray-500 font-medium">সাবটোটাল <span className="text-xs ml-1">(ভ্যাট সহ)</span></span>
                             <span className="text-xl font-extrabold text-gray-900">৳{cartTotal.toLocaleString()}</span>
                         </div>
 
-                        <p className="text-xs text-gray-400 mb-5 text-center">Shipping and discount warnings calculated at checkout.</p>
+                        <p className="text-xs text-gray-400 mb-5 text-center">ডেলিভারি চার্জ চেকআউট পেইজে হিসাব করা হবে।</p>
 
-                        <div className="grid grid-cols-2 gap-3">
-                            <Link href="#"onClick={closeCart} className="w-full">
-                                <button className="w-full py-3.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors border border-gray-200">
-                                    View Cart
-                                </button>
-                            </Link>
-                            <Link href="#"onClick={closeCart} className="w-full">
-                                <button className="w-full py-3.5 px-4 bg-brand-purple hover:bg-[#7b3ba8] text-white font-bold rounded-xl shadow-lg shadow-brand-purple/20 transition-all flex items-center justify-center gap-2">
-                                    Checkout Now
+                        <div className="pt-2">
+                            <Link href="/checkout" onClick={closeCart} className="w-full block">
+                                <button className="w-full py-4 px-4 bg-brand-green hover:bg-brand-green-dark text-white text-base font-extrabold rounded-xl shadow-lg shadow-brand-green/30 transition-all hover:-translate-y-0.5 relative overflow-hidden group">
+                                    <span className="relative z-10 flex items-center justify-center gap-2">চেকআউট করুন</span>
+                                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
                                 </button>
                             </Link>
                         </div>

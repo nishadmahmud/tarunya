@@ -18,6 +18,17 @@ import {
 import toast from "react-hot-toast";
 import AddressSelect from "../../components/Checkout/AddressSelect";
 
+const courierOptions = [
+    { id: "steadfast", name: "Steadfast", color: "text-[#009b4d]", bg: "bg-[#009b4d]/10", border: "hover:border-[#009b4d]", selectedBorder: "border-[#009b4d]" },
+    { id: "pathao", name: "Pathao", color: "text-[#ed1c24]", bg: "bg-[#ed1c24]/10", border: "hover:border-[#ed1c24]", selectedBorder: "border-[#ed1c24]" },
+    { id: "redx", name: "RedX", color: "text-[#eb2227]", bg: "bg-[#eb2227]/10", border: "hover:border-[#eb2227]", selectedBorder: "border-[#eb2227]" },
+    { id: "gogobangla", name: "Gogo Bangla", color: "text-[#f37021]", bg: "bg-[#f37021]/10", border: "hover:border-[#f37021]", selectedBorder: "border-[#f37021]" },
+    { id: "sundarban", name: "সুন্দরবন কুরিয়ার", color: "text-[#f8981d]", bg: "bg-[#f8981d]/10", border: "hover:border-[#f8981d]", selectedBorder: "border-[#f8981d]" },
+    { id: "saparibahan", name: "S.A পরিবহন", color: "text-[#004f9f]", bg: "bg-[#004f9f]/10", border: "hover:border-[#004f9f]", selectedBorder: "border-[#004f9f]" },
+    { id: "postoffice", name: "সরকারি পোস্ট অফিস", color: "text-[#c8102e]", bg: "bg-[#c8102e]/10", border: "hover:border-[#c8102e]", selectedBorder: "border-[#c8102e]" },
+    { id: "dhl", name: "DHL (দেশের বাহিরে)", color: "text-[#d40511]", bg: "bg-[#ffcc00]/20", border: "hover:border-[#d40511]", selectedBorder: "border-[#d40511]" },
+];
+
 export default function CheckoutPage() {
     const { cartItems, getSubtotal, deliveryFee, updateDeliveryFee, clearCart } =
         useCart();
@@ -42,6 +53,7 @@ export default function CheckoutPage() {
     });
 
     const [paymentMethod, setPaymentMethod] = useState("Cash");
+    const [selectedCourier, setSelectedCourier] = useState("steadfast");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [couponCode, setCouponCode] = useState("");
     const [couponDiscount, setCouponDiscount] = useState(0);
@@ -239,7 +251,7 @@ export default function CheckoutPage() {
             delivery_method_id: 1,
             delivery_info_id: 1,
             delivery_customer_name: formData.firstName,
-            delivery_customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict}`,
+            delivery_customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict} [কুরিয়ার: ${courierOptions.find(c => c.id === selectedCourier)?.name}]`,
             delivery_customer_phone: formData.phone,
             delivery_fee: deliveryFee,
             variants: [],
@@ -288,19 +300,19 @@ export default function CheckoutPage() {
         return (
             <div className="flex min-h-[70vh] flex-col items-center justify-center bg-gray-50">
                 <div className="text-center px-4">
-                    <div className="w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <ShoppingBag className="h-12 w-12 text-brand-purple/40" />
+                    <div className="w-24 h-24 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <ShoppingBag className="h-12 w-12 text-brand-green/40" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-gray-900">
-                        Your cart is empty
+                        আপনার কার্টটি খালি
                     </h2>
                     <p className="mt-2 text-gray-500 max-w-xs mx-auto">
-                        Add some products to your cart before checking out.
+                        চেকআউট করার আগে কার্টে কিছু বই যোগ করুন।
                     </p>
                     <Link
-                        href="/" className="mt-6 inline-block rounded-xl bg-brand-purple px-8 py-3.5 text-white font-bold hover:bg-[#7b3ba8] transition-colors shadow-lg shadow-brand-purple/20"
+                        href="/" className="mt-6 inline-block rounded-xl bg-brand-green px-8 py-3.5 text-white font-bold hover:bg-brand-green-dark transition-colors shadow-lg shadow-brand-green/20"
                     >
-                        Continue Shopping
+                        কেনাকাটা চালিয়ে যান
                     </Link>
                 </div>
             </div>
@@ -314,9 +326,9 @@ export default function CheckoutPage() {
 
                     {/* Page Header */}
                     <div className="mb-6 md:mb-8 pt-6 md:pt-0">
-                        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">Checkout</h1>
+                        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">চেকআউট</h1>
                         <p className="mt-1 text-sm text-gray-500">
-                            Complete your order by providing delivery and payment details.
+                            ডেলিভারি এবং পেমেন্ট সংক্রান্ত তথ্য দিয়ে আপনার অর্ডারটি সম্পন্ন করুন।
                         </p>
                     </div>
 
@@ -328,15 +340,15 @@ export default function CheckoutPage() {
                             {/* ── Delivery Information ── */}
                             <section className="rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm">
                                 <div className="mb-5 flex items-center gap-3 border-b border-gray-100 pb-4">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-50 text-brand-purple">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-green/10 text-brand-green">
                                         <MapPin className="h-5 w-5" />
                                     </div>
                                     <div>
                                         <h2 className="font-bold text-gray-900">
-                                            Delivery Address
+                                            ডেলিভারি ঠিকানা
                                         </h2>
                                         <p className="text-xs text-gray-500">
-                                            Where should we send your order?
+                                            আপনার অর্ডারটি কোথায় পাঠাবো?
                                         </p>
                                     </div>
                                 </div>
@@ -351,7 +363,7 @@ export default function CheckoutPage() {
                                         {/* Full Name */}
                                         <div className="space-y-2">
                                             <label className="text-sm font-semibold text-gray-700">
-                                                Full Name
+                                                পুরো নাম
                                             </label>
                                             <div className="relative">
                                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -363,8 +375,8 @@ export default function CheckoutPage() {
                                                     name="firstName"
                                                     value={formData.firstName}
                                                     onChange={handleChange}
-                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-purple focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-purple"
-                                                    placeholder="Your full name"
+                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
+                                                    placeholder="আপনার পুরো নাম"
                                                     style={{ fontSize: '16px' }}
                                                 />
                                             </div>
@@ -373,7 +385,7 @@ export default function CheckoutPage() {
                                         {/* Phone Number */}
                                         <div className="space-y-2">
                                             <label className="text-sm font-semibold text-gray-700">
-                                                Phone Number <span className="text-red-500">*</span>
+                                                ফোন নম্বর <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -385,7 +397,7 @@ export default function CheckoutPage() {
                                                     name="phone"
                                                     value={formData.phone}
                                                     onChange={handleChange}
-                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-purple focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-purple"
+                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
                                                     placeholder="01XXXXXXXXX"
                                                     style={{ fontSize: '16px' }}
                                                 />
@@ -404,7 +416,7 @@ export default function CheckoutPage() {
                                     {/* Email (Optional) */}
                                     <div className="space-y-2">
                                         <label className="text-sm font-semibold text-gray-700">
-                                            Email <span className="text-gray-400 font-normal">(Optional)</span>
+                                            ইমেইল <span className="text-gray-400 font-normal">(ঐচ্ছিক)</span>
                                         </label>
                                         <div className="relative">
                                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -418,7 +430,7 @@ export default function CheckoutPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-purple focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-purple"
+                                                className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
                                                 placeholder="email@example.com"
                                                 style={{ fontSize: '16px' }}
                                             />
@@ -438,7 +450,7 @@ export default function CheckoutPage() {
                                     {/* Detailed Address */}
                                     <div className="space-y-2">
                                         <label className="text-sm font-semibold text-gray-700">
-                                            Detailed Address
+                                            বিস্তারিত ঠিকানা
                                         </label>
                                         <textarea
                                             required
@@ -446,8 +458,8 @@ export default function CheckoutPage() {
                                             rows={3}
                                             value={formData.address}
                                             onChange={handleChange}
-                                            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-purple focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-purple resize-none"
-                                            placeholder="Street address, house number, landmarks..."
+                                            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green resize-none"
+                                            placeholder="রাস্তার নাম, বাড়ির নম্বর, নিকটস্থ ল্যান্ডমার্ক..."
                                             style={{ fontSize: '16px' }}
                                         />
                                     </div>
@@ -462,10 +474,10 @@ export default function CheckoutPage() {
                                     </div>
                                     <div>
                                         <h2 className="font-bold text-gray-900">
-                                            Payment Method
+                                            পেমেন্ট পদ্ধতি
                                         </h2>
                                         <p className="text-xs text-gray-500">
-                                            Select how you want to pay
+                                            আপনি কীভাবে পেমেন্ট করতে চান তা নির্বাচন করুন
                                         </p>
                                     </div>
                                 </div>
@@ -473,8 +485,8 @@ export default function CheckoutPage() {
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     {/* Cash on Delivery */}
                                     <label
-                                        className={`relative flex cursor-pointer rounded-xl border-2 p-4 transition-all hover:border-brand-purple ${paymentMethod === "Cash"
-                                            ? "border-brand-purple bg-purple-50/50 ring-1 ring-brand-purple"
+                                        className={`relative flex cursor-pointer rounded-xl border-2 p-4 transition-all hover:border-brand-green ${paymentMethod === "Cash"
+                                            ? "border-brand-green bg-brand-green/5 ring-1 ring-brand-green"
                                             : "border-gray-200"
                                             }`}
                                     >
@@ -488,16 +500,16 @@ export default function CheckoutPage() {
                                         />
                                         <div className="flex flex-1 flex-col">
                                             <span className="flex items-center gap-2 font-bold text-gray-900">
-                                                <Truck className="h-4 w-4 text-brand-purple" />
-                                                Cash on Delivery
+                                                <Truck className="h-4 w-4 text-brand-green" />
+                                                ক্যাশ অন ডেলিভারি
                                             </span>
                                             <span className="mt-1 text-xs text-gray-500">
-                                                Pay when you receive
+                                                বই হাতে পেয়ে মূল্য পরিশোধ করুন
                                             </span>
                                         </div>
                                         {paymentMethod === "Cash" && (
                                             <div className="absolute right-4 top-4">
-                                                <div className="h-3 w-3 rounded-full bg-brand-purple" />
+                                                <div className="h-3 w-3 rounded-full bg-brand-green" />
                                             </div>
                                         )}
                                     </label>
@@ -507,13 +519,61 @@ export default function CheckoutPage() {
                                         <div className="flex flex-1 flex-col">
                                             <span className="flex items-center gap-2 font-bold text-gray-400">
                                                 <CreditCard className="h-4 w-4" />
-                                                Online Payment
+                                                অনলাইন পেমেন্ট
                                             </span>
                                             <span className="mt-1 text-xs text-gray-400">
-                                                Coming soon
+                                                শীঘ্রই আসছে
                                             </span>
                                         </div>
                                     </label>
+                                </div>
+                            </section>
+
+                            {/* ── Courier Service ── */}
+                            <section className="rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm">
+                                <div className="mb-5 flex items-center gap-3 border-b border-gray-100 pb-4">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                                        <Truck className="h-5 w-5" />
+                                    </div>
+                                    <div>
+                                        <h2 className="font-bold text-gray-900">
+                                            কুরিয়ার সার্ভিস
+                                        </h2>
+                                        <p className="text-xs text-gray-500">
+                                            আপনার পছন্দের কুরিয়ার নির্বাচন করুন
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                    {courierOptions.map((courier) => (
+                                        <label
+                                            key={courier.id}
+                                            className={`relative flex cursor-pointer rounded-xl border-2 p-3 transition-all ${selectedCourier === courier.id
+                                                ? courier.selectedBorder + " " + courier.bg
+                                                : "border-gray-100 " + courier.border
+                                                }`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="courier"
+                                                value={courier.id}
+                                                checked={selectedCourier === courier.id}
+                                                onChange={(e) => setSelectedCourier(e.target.value)}
+                                                className="sr-only"
+                                            />
+                                            <div className="flex flex-1 items-center justify-center text-center">
+                                                <span className={`font-black text-sm ${courier.color} tracking-tight leading-tight`}>
+                                                    {courier.name}
+                                                </span>
+                                            </div>
+                                            {selectedCourier === courier.id && (
+                                                <div className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-sm">
+                                                    <div className={`h-2 w-2 rounded-full bg-current ${courier.color}`} />
+                                                </div>
+                                            )}
+                                        </label>
+                                    ))}
                                 </div>
                             </section>
                         </div>
@@ -522,7 +582,7 @@ export default function CheckoutPage() {
                         <div className="h-fit space-y-6 lg:sticky lg:top-24">
                             <section className="rounded-2xl border border-gray-100 bg-white p-5 md:p-6 shadow-sm">
                                 <h2 className="mb-5 font-extrabold text-gray-900 text-lg">
-                                    Order Summary
+                                    অর্ডার সামারি
                                 </h2>
 
                                 {/* Cart Items */}
@@ -543,12 +603,12 @@ export default function CheckoutPage() {
                                                     <h3 className="line-clamp-1 text-sm font-bold text-gray-900 pr-2">
                                                         {item.name}
                                                     </h3>
-                                                    <p className="text-sm font-extrabold text-brand-purple whitespace-nowrap">
+                                                    <p className="text-sm font-extrabold text-brand-green whitespace-nowrap">
                                                         {formatPrice(item.numericPrice * item.quantity)}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                                                    <span>Qty: {item.quantity}</span>
+                                                    <span>পরিমাণ: {item.quantity}</span>
                                                     {item.variants?.storage && (
                                                         <>
                                                             <span>·</span>
@@ -573,23 +633,23 @@ export default function CheckoutPage() {
                                 {/* Price Breakdown */}
                                 <div className="mb-5 space-y-3 border-t border-gray-100 pt-4">
                                     <div className="flex justify-between text-sm text-gray-600">
-                                        <span>Subtotal</span>
+                                        <span>সাবটোটাল</span>
                                         <span className="font-medium">{formatPrice(subTotal)}</span>
                                     </div>
                                     <div className="flex justify-between text-sm text-gray-600">
-                                        <span>Delivery ({
+                                        <span>ডেলিভারি চার্জ ({
                                             selectedCity ? (selectedCity === "Demra" || selectedCity?.includes("Savar") || selectedDistrict === "Gazipur" || selectedCity?.includes("Keraniganj"))
-                                                ? "Special Area"
+                                                ? "বিশেষ এলাকা"
                                                 : selectedDistrict === "Dhaka"
-                                                    ? "Inside Dhaka"
-                                                    : "Outside Dhaka"
-                                                : "Select Area"
+                                                    ? "ঢাকা সিটি"
+                                                    : "ঢাকার বাইরে"
+                                                : "এলাকা নির্বাচন করুন"
                                         })</span>
                                         <span className="font-medium">{deliveryFee > 0 ? formatPrice(deliveryFee) : "—"}</span>
                                     </div>
                                     {couponDiscount > 0 && (
                                         <div className="flex justify-between text-sm text-green-600 font-medium">
-                                            <span>Coupon Discount</span>
+                                            <span>কুপন ডিসকাউন্ট</span>
                                             <span>-{formatPrice(couponDiscount)}</span>
                                         </div>
                                     )}
@@ -600,21 +660,21 @@ export default function CheckoutPage() {
                                             <div className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-2.5">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-bold text-green-700">
-                                                        🎉 {couponCode} applied
+                                                        🎉 {couponCode} প্রয়োগ করা হয়েছে
                                                     </span>
                                                 </div>
                                                 <button
                                                     onClick={handleRemoveCoupon}
-                                                    className="text-xs text-purple-600 hover:underline font-medium"
+                                                    className="text-xs text-brand-green hover:underline font-medium"
                                                 >
-                                                    Remove
+                                                    বাতিল করুন
                                                 </button>
                                             </div>
                                         ) : (
                                             <div className="flex gap-2">
                                                 <input
                                                     type="text"
-                                                    placeholder="Coupon Code"
+                                                    placeholder="কুপন কোড"
                                                     value={couponCode}
                                                     onChange={(e) => {
                                                         setCouponCode(e.target.value.toUpperCase());
@@ -628,21 +688,21 @@ export default function CheckoutPage() {
                                                     }}
                                                     className={`flex-1 rounded-xl border px-4 py-2.5 text-sm focus:outline-none ${couponError
                                                         ? "border-red-300 bg-red-50 focus:border-red-500"
-                                                        : "border-gray-200 bg-gray-50 focus:border-brand-purple"
+                                                        : "border-gray-200 bg-gray-50 focus:border-brand-green"
                                                         }`}
                                                     style={{ fontSize: '16px' }}
                                                 />
                                                 <button
                                                     onClick={handleApplyCoupon}
                                                     disabled={couponLoading}
-                                                    className="rounded-xl bg-brand-purple px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#7b3ba8] disabled:opacity-50"
+                                                    className="rounded-xl bg-brand-green px-5 py-2.5 text-xs font-bold text-white transition hover:bg-brand-green-dark disabled:opacity-50"
                                                 >
-                                                    {couponLoading ? "..." : "Apply"}
+                                                    {couponLoading ? "..." : "অ্যাপ্লাই"}
                                                 </button>
                                             </div>
                                         )}
                                         {couponError && (
-                                            <p className="mt-1.5 text-xs text-purple-600">{couponError}</p>
+                                            <p className="mt-1.5 text-xs text-red-500">{couponError}</p>
                                         )}
                                     </div>
                                 </div>
@@ -650,9 +710,9 @@ export default function CheckoutPage() {
                                 {/* Grand Total */}
                                 <div className="flex items-center justify-between border-t border-gray-100 pt-4 mb-5">
                                     <span className="text-base font-extrabold text-gray-900">
-                                        Grand Total
+                                        সর্বমোট
                                     </span>
-                                    <span className="text-xl font-extrabold text-brand-purple">
+                                    <span className="text-xl font-extrabold text-brand-green">
                                         {formatPrice(grandTotal)}
                                     </span>
                                 </div>
@@ -662,7 +722,7 @@ export default function CheckoutPage() {
                                     type="submit"
                                     form="checkout-form"
                                     disabled={isSubmitting}
-                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-purple px-6 py-4 text-sm font-extrabold text-white shadow-lg shadow-brand-purple/20 transition-all hover:bg-[#7b3ba8] hover:translate-y-[-1px] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
+                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-4 text-sm font-extrabold text-white shadow-lg shadow-brand-green/20 transition-all hover:bg-brand-green-dark hover:translate-y-[-1px] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
                                 >
                                     {isSubmitting ? (
                                         <>
@@ -670,11 +730,11 @@ export default function CheckoutPage() {
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                             </svg>
-                                            Placing Order...
+                                            প্রসেসিং হচ্ছে...
                                         </>
                                     ) : (
                                         <>
-                                            Confirm & Place Order
+                                            অর্ডার কনফার্ম করুন
                                             <Truck className="h-4 w-4" />
                                         </>
                                     )}
@@ -682,7 +742,7 @@ export default function CheckoutPage() {
 
                                 <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-400">
                                     <Shield className="h-3 w-3" />
-                                    Secure checkout · SSL encrypted
+                                    নিরাপদ চেকআউট · SSL এনক্রিপ্টেড
                                 </div>
                             </section>
 

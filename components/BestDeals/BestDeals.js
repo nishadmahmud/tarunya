@@ -59,7 +59,7 @@ export default function BestDeals({ deals = [] }) {
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2">
                                     {deal.savings && <span className="bg-brand-green-light text-brand-green-dark text-[9px] md:text-xs font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-full border border-brand-green/15">{deal.savings}</span>}
-                                    <Link href="#" className="text-[10px] md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors ml-auto whitespace-nowrap">
+                                    <Link href={`/product/${deal.id || idx}`} className="text-[10px] md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors ml-auto whitespace-nowrap">
                                         এখনই কিনুন →
                                     </Link>
                                 </div>

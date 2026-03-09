@@ -10,18 +10,18 @@ import toast from "react-hot-toast";
 import { Home, Package, Heart, Tag, User, LogOut, ChevronDown, Clock, CheckCircle, Truck, PackageCheck, XCircle, CheckCircle2, PauseCircle, ClipboardList, MapPin, X, Camera, Edit3, Search } from "lucide-react";
 
 const timelineStages = [
-    { id: 1, label: "Order Received", icon: ClipboardList },
-    { id: 2, label: "Confirmed", icon: PackageCheck },
-    { id: 3, label: "Processing", icon: Truck },
-    { id: 4, label: "Delivered", icon: Home },
+    { id: 1, label: "অর্ডার গৃহীত", icon: ClipboardList },
+    { id: 2, label: "নিশ্চিতকৃত", icon: PackageCheck },
+    { id: 3, label: "প্রসেসিং", icon: Truck },
+    { id: 4, label: "ডেলিভারড", icon: Home },
 ];
 
 const ORDER_TABS = [
-    { id: "1", label: "Processing", Icon: Clock },
-    { id: "2", label: "Confirmed", Icon: CheckCircle },
-    { id: "3", label: "Delivering", Icon: Truck },
-    { id: "4", label: "Delivered", Icon: PackageCheck },
-    { id: "5", label: "Canceled", Icon: XCircle },
+    { id: "1", label: "প্রসেসিং", Icon: Clock },
+    { id: "2", label: "নিশ্চিতকৃত", Icon: CheckCircle },
+    { id: "3", label: "ডেলিভারিং", Icon: Truck },
+    { id: "4", label: "ডেলিভারড", Icon: PackageCheck },
+    { id: "5", label: "বাতিল", Icon: XCircle },
 ];
 
 const OrderTimeline = ({ currentStatus }) => {
@@ -31,18 +31,18 @@ const OrderTimeline = ({ currentStatus }) => {
             <div className="hidden sm:block">
                 <div className="relative flex items-center justify-between">
                     <div className="absolute left-0 right-0 top-5 h-1 bg-gray-200 rounded-full" />
-                    <div className="absolute left-0 top-5 h-1 bg-gradient-to-r from-brand-purple to-purple-400 rounded-full transition-all duration-500" style={{ width: `${((Math.min(status, 4) - 1) / 3) * 100}%` }} />
+                    <div className="absolute left-0 top-5 h-1 bg-gradient-to-r from-brand-green to-green-400 rounded-full transition-all duration-500" style={{ width: `${((Math.min(status, 4) - 1) / 3) * 100}%` }} />
                     {timelineStages.map((stage) => {
                         const isCompleted = status >= stage.id;
                         const isCurrent = status === stage.id;
                         const StageIcon = stage.icon;
                         return (
                             <div key={stage.id} className="relative flex flex-col items-center z-10">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted ? "bg-gradient-to-br from-brand-purple to-purple-500 text-white shadow-lg" : "bg-white border-2 border-gray-300 text-gray-400"} ${isCurrent ? "ring-4 ring-purple-100 scale-110" : ""}`}>
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isCompleted ? "bg-gradient-to-br from-brand-green to-green-500 text-white shadow-lg" : "bg-white border-2 border-gray-300 text-gray-400"} ${isCurrent ? "ring-4 ring-green-100 scale-110" : ""}`}>
                                     {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <span className="text-sm font-medium">{stage.id}</span>}
                                 </div>
                                 <div className={`mt-3 flex flex-col items-center ${isCompleted ? "text-gray-900" : "text-gray-400"}`}>
-                                    <StageIcon className={`w-5 h-5 mb-1 ${isCompleted ? "text-brand-purple" : ""}`} />
+                                    <StageIcon className={`w-5 h-5 mb-1 ${isCompleted ? "text-brand-green" : ""}`} />
                                     <span className={`text-xs font-medium text-center max-w-[80px] ${isCurrent ? "font-bold" : ""}`}>{stage.label}</span>
                                 </div>
                             </div>
@@ -59,13 +59,13 @@ const OrderTimeline = ({ currentStatus }) => {
                     return (
                         <div key={stage.id} className="flex items-start gap-3">
                             <div className="flex flex-col items-center">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isCompleted ? "bg-gradient-to-br from-brand-purple to-purple-500 text-white" : "bg-white border-2 border-gray-300 text-gray-400"} ${isCurrent ? "ring-2 ring-purple-100" : ""}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isCompleted ? "bg-gradient-to-br from-brand-green to-green-500 text-white" : "bg-white border-2 border-gray-300 text-gray-400"} ${isCurrent ? "ring-2 ring-green-100" : ""}`}>
                                     {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <span className="text-xs">{stage.id}</span>}
                                 </div>
-                                {!isLast && <div className={`w-0.5 h-6 ${isCompleted ? "bg-brand-purple" : "bg-gray-200"}`} />}
+                                {!isLast && <div className={`w-0.5 h-6 ${isCompleted ? "bg-brand-green" : "bg-gray-200"}`} />}
                             </div>
                             <div className={`flex items-center gap-2 pt-1 ${isCompleted ? "text-gray-900" : "text-gray-400"}`}>
-                                <StageIcon className={`w-4 h-4 ${isCompleted ? "text-brand-purple" : ""}`} />
+                                <StageIcon className={`w-4 h-4 ${isCompleted ? "text-brand-green" : ""}`} />
                                 <span className={`text-sm ${isCurrent ? "font-bold" : "font-medium"}`}>{stage.label}</span>
                             </div>
                         </div>
@@ -149,42 +149,42 @@ export default function ProfileDashboard() {
                 imageFormData.append("user_id", String(process.env.NEXT_PUBLIC_USER_ID));
                 const uploadRes = await uploadSingleFile(imageFormData, token);
                 if (uploadRes?.success && uploadRes?.path) imageUrl = uploadRes.path;
-                else { toast.error("Failed to upload image"); setIsUpdating(false); return; }
+                else { toast.error("ছবি আপলোড ব্যর্থ হয়েছে"); setIsUpdating(false); return; }
             }
             const result = await updateProfile({ id: formData.id, first_name: formData.first_name, last_name: formData.last_name, email: formData.email, phone: formData.mobile_number, address: formData.address, image: imageUrl });
-            if (result.success) { toast.success("Profile updated!"); setIsEditing(false); setProfileImage(null); setProfileImagePreview(null); }
-            else toast.error(result.message || "Failed to update");
-        } catch { toast.error("Something went wrong"); }
+            if (result.success) { toast.success("প্রোফাইল আপডেট হয়েছে!"); setIsEditing(false); setProfileImage(null); setProfileImagePreview(null); }
+            else toast.error(result.message || "আপডেট ব্যর্থ হয়েছে");
+        } catch { toast.error("কিছু সমস্যা হয়েছে"); }
         finally { setIsUpdating(false); }
     };
 
     const handleTrackOrder = async (e) => {
         e.preventDefault();
-        if (!trackInvoiceId.trim()) { toast.error("Enter Invoice ID"); return; }
+        if (!trackInvoiceId.trim()) { toast.error("ইনভয়েস আইডি দিন"); return; }
         setTrackLoading(true); setTrackOrderData(null);
         try {
             const response = await trackOrder({ invoice_id: trackInvoiceId });
-            if (response.success && response.data?.data?.length > 0) { setTrackOrderData(response.data.data[0]); toast.success("Order found!"); }
-            else { toast.error("Order not found"); }
-        } catch { toast.error("Something went wrong"); }
+            if (response.success && response.data?.data?.length > 0) { setTrackOrderData(response.data.data[0]); toast.success("অর্ডার পাওয়া গেছে!"); }
+            else { toast.error("অর্ডার পাওয়া যায়নি"); }
+        } catch { toast.error("কিছু সমস্যা হয়েছে"); }
         finally { setTrackLoading(false); }
     };
 
-    const getStatusLabel = (s) => { s = Number(s); if (s === 1) return "Order Received"; if (s === 2) return "Confirmed"; if (s === 3) return "Processing"; if (s === 4) return "Delivered"; if (s === 5) return "Canceled"; if (s === 6) return "On Hold"; return "Pending"; };
-    const getStatusColor = (s) => { s = Number(s); if (s === 1) return "bg-blue-50 text-blue-700"; if (s === 2) return "bg-indigo-50 text-indigo-700"; if (s === 3) return "bg-purple-50 text-purple-700"; if (s === 4) return "bg-green-50 text-green-700"; if (s === 5) return "bg-purple-50 text-purple-700"; if (s === 6) return "bg-purple-50 text-purple-700"; return "bg-gray-100 text-gray-800"; };
+    const getStatusLabel = (s) => { s = Number(s); if (s === 1) return "অর্ডার গৃহীত"; if (s === 2) return "নিশ্চিতকৃত"; if (s === 3) return "প্রসেসিং"; if (s === 4) return "ডেলিভারড"; if (s === 5) return "বাতিল"; if (s === 6) return "অপেক্ষমাণ"; return "পেন্ডিং"; };
+    const getStatusColor = (s) => { s = Number(s); if (s === 1) return "bg-blue-50 text-blue-700"; if (s === 2) return "bg-indigo-50 text-indigo-700"; if (s === 3) return "bg-green-50 text-green-700"; if (s === 4) return "bg-emerald-50 text-emerald-700"; if (s === 5) return "bg-red-50 text-red-700"; if (s === 6) return "bg-yellow-50 text-yellow-700"; return "bg-gray-100 text-gray-800"; };
 
     if (loading || !user) {
-        return (<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-purple"></div></div>);
+        return (<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div></div>);
     }
 
-    const userName = user.first_name || user.name?.split(" ")[0] || "User";
+    const userName = user.first_name || user.name?.split(" ")[0] || "গ্রাহক";
 
     const sidebarItems = [
-        { id: "dashboard", label: "Overview", icon: <Home className="w-4 h-4" /> },
-        { id: "orders", label: "My Orders", icon: <Package className="w-4 h-4" />, group: "Orders" },
-        { id: "tracking", label: "Track Order", icon: <Search className="w-4 h-4" /> },
-        { id: "coupons", label: "Coupons", icon: <Tag className="w-4 h-4" />, group: "Credits" },
-        { id: "profile", label: "Profile", icon: <User className="w-4 h-4" />, group: "Account" },
+        { id: "dashboard", label: "ওভারভিউ", icon: <Home className="w-4 h-4" /> },
+        { id: "orders", label: "আমার অর্ডার", icon: <Package className="w-4 h-4" />, group: "অর্ডার" },
+        { id: "tracking", label: "অর্ডার ট্র্যাক", icon: <Search className="w-4 h-4" /> },
+        { id: "coupons", label: "কুপন", icon: <Tag className="w-4 h-4" />, group: "অফার" },
+        { id: "profile", label: "প্রোফাইল", icon: <User className="w-4 h-4" />, group: "অ্যাকাউন্ট" },
     ];
 
     const handleNavClick = (id) => { setActiveSection(id); setSidebarOpen(false); };
@@ -196,19 +196,19 @@ export default function ProfileDashboard() {
             <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-6">
                 <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-50">
                     <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
-                    <span className="font-medium text-sm">Menu</span>
+                    <span className="font-medium text-sm">মেনু</span>
                 </button>
 
                 <div className="flex gap-6 items-start">
                     {/* Sidebar */}
                     <aside className={`fixed lg:static top-0 left-0 w-72 bg-white z-[70] lg:z-auto transform lg:transform-none transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} lg:block flex-shrink-0 h-screen lg:h-auto`}>
                         <div className="bg-white lg:rounded-2xl shadow-lg lg:sticky lg:top-24 h-full lg:h-auto flex flex-col overflow-hidden">
-                            <div className="lg:hidden flex items-center justify-between p-4 bg-gradient-to-r from-brand-purple to-purple-600 text-white flex-shrink-0">
-                                <span className="font-bold">Menu</span>
+                            <div className="lg:hidden flex items-center justify-between p-4 bg-gradient-to-r from-brand-green to-brand-green-dark text-white flex-shrink-0">
+                                <span className="font-bold">মেনু</span>
                                 <button onClick={() => setSidebarOpen(false)} className="p-2 hover:bg-white/10 rounded-lg"><X className="w-5 h-5" /></button>
                             </div>
-                            <div className="p-5 bg-gradient-to-r from-brand-purple to-purple-600 hidden lg:block">
-                                <Link href="/"className="flex items-center"><span className="text-xl font-extrabold text-white">Tarunno Prokashon<span className="text-brand-purple">+</span></span></Link>
+                            <div className="p-5 bg-gradient-to-r from-brand-green to-brand-green-dark hidden lg:block">
+                                <Link href="/" className="flex items-center"><span className="text-xl font-extrabold text-white">তারুণ্য প্রকাশন<span className="text-brand-gold">+</span></span></Link>
                             </div>
                             <nav className="p-4 flex-1 overflow-y-auto pb-20 lg:pb-4 bg-gray-50/50">
                                 {(() => {
@@ -221,7 +221,7 @@ export default function ProfileDashboard() {
                                                 {showGroup && <p className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-6">{item.group}</p>}
                                                 <button onClick={() => handleNavClick(item.id)}
                                                     className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-3 mb-1 ${activeSection === item.id
-                                                        ? (item.id === "dashboard" ? "bg-gradient-to-r from-brand-purple to-purple-500 text-white shadow-lg shadow-purple-500/30" : "bg-white text-brand-purple shadow-sm")
+                                                        ? (item.id === "dashboard" ? "bg-gradient-to-r from-brand-green to-green-500 text-white shadow-lg shadow-green-500/30" : "bg-white text-brand-green shadow-sm")
                                                         : "text-gray-700 hover:bg-white hover:shadow-md"}`}>
                                                     {item.icon}{item.label}
                                                 </button>
@@ -230,8 +230,8 @@ export default function ProfileDashboard() {
                                     });
                                 })()}
                                 <div className="mt-6 pt-4 border-t border-gray-200">
-                                    <button onClick={logout} className="w-full text-left px-4 py-2.5 rounded-lg text-sm text-gray-500 hover:text-purple-600 hover:bg-purple-50 transition-all flex items-center gap-3">
-                                        <LogOut className="w-4 h-4" />Logout
+                                    <button onClick={logout} className="w-full text-left px-4 py-2.5 rounded-lg text-sm text-gray-500 hover:text-brand-green hover:bg-green-50 transition-all flex items-center gap-3">
+                                        <LogOut className="w-4 h-4" />লগআউট
                                     </button>
                                 </div>
                             </nav>
@@ -244,31 +244,31 @@ export default function ProfileDashboard() {
                         {/* ═══ DASHBOARD ═══ */}
                         {activeSection === "dashboard" && (
                             <>
-                                <div className="bg-gradient-to-r from-brand-purple via-purple-500 to-brand-purple rounded-2xl p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 md:gap-6 shadow-xl">
+                                <div className="bg-gradient-to-r from-brand-green via-brand-green-light to-brand-green rounded-2xl p-4 md:p-6 mb-4 md:mb-6 flex items-center gap-4 md:gap-6 shadow-xl">
                                     <div className="relative">
-                                        <div className="w-14 h-14 md:w-20 md:h-20 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-white/30 ring-offset-2 ring-offset-purple-600">
+                                        <div className="w-14 h-14 md:w-20 md:h-20 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-white/30 ring-offset-2 ring-offset-green-600">
                                             {user?.image ? (<Image src={user.image} alt="Profile" width={80} height={80} className="w-full h-full object-cover" unoptimized />) : (
                                                 <svg className="w-7 h-7 md:w-10 md:h-10 text-white/70" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
                                             )}
                                         </div>
-                                        <div className="absolute bottom-0 right-0 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-gray-900" />
+                                        <div className="absolute bottom-0 right-0 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-brand-green" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h1 className="text-base md:text-xl font-bold text-white truncate">{userName}</h1>
-                                        <p className="text-white/60 text-xs md:text-sm truncate">{user?.email || user?.mobile_number || ""}</p>
-                                        <span className="inline-block mt-1 px-2 py-0.5 bg-brand-purple text-white text-[10px] md:text-xs font-bold rounded-full">MEMBER</span>
+                                        <h1 className="text-base md:text-xl font-bold text-gray-900 truncate">{userName}</h1>
+                                        <p className="text-gray-700 text-xs md:text-sm truncate">{user?.email || user?.mobile_number || ""}</p>
+                                        <span className="inline-block mt-1 px-2 py-0.5 bg-brand-gold text-white text-[10px] md:text-xs font-bold rounded-full">সদস্য</span>
                                     </div>
-                                    <button onClick={() => { setActiveSection("profile"); setIsEditing(true); }} className="px-3 py-1.5 md:px-5 md:py-2.5 bg-white text-gray-900 hover:bg-gray-100 rounded-lg text-xs md:text-sm font-semibold transition-colors whitespace-nowrap flex-shrink-0 shadow-lg">
-                                        Edit Profile
+                                    <button onClick={() => { setActiveSection("profile"); setIsEditing(true); }} className="px-3 py-1.5 md:px-5 md:py-2.5 bg-brand-green text-white hover:bg-brand-green-dark rounded-lg text-xs md:text-sm font-semibold transition-colors whitespace-nowrap flex-shrink-0 shadow-lg">
+                                        প্রোফাইল সম্পাদন
                                     </button>
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
                                     {[
-                                        { id: "orders", label: "Orders", desc: "Check order status", gradient: "from-blue-500 to-blue-600", shadow: "shadow-blue-500/30", icon: <Package className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
-                                        { id: "tracking", label: "Track Order", desc: "Track shipments", gradient: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30", icon: <Truck className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
-                                        { id: "coupons", label: "Coupons", desc: "Available discounts", gradient: "from-amber-500 to-purple-500", shadow: "shadow-amber-500/30", icon: <Tag className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
-                                        { id: "profile", label: "Profile", desc: "Edit your account", gradient: "from-violet-500 to-purple-600", shadow: "shadow-violet-500/30", icon: <User className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
+                                        { id: "orders", label: "আমার অর্ডার", desc: "অর্ডার স্ট্যাটাস", gradient: "from-blue-500 to-blue-600", shadow: "shadow-blue-500/30", icon: <Package className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
+                                        { id: "tracking", label: "অর্ডার ট্র্যাক", desc: "চালান ট্র্যাক করুন", gradient: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30", icon: <Truck className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
+                                        { id: "coupons", label: "কুপন", desc: "ডিসকাউন্ট সংগ্রহ", gradient: "from-amber-500 to-orange-500", shadow: "shadow-amber-500/30", icon: <Tag className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
+                                        { id: "profile", label: "প্রোফাইল", desc: "আপনার তথ্য সম্পাদন", gradient: "from-brand-green to-green-600", shadow: "shadow-green-500/30", icon: <User className="w-6 h-6 md:w-7 md:h-7 text-white" /> },
                                     ].map(card => (
                                         <button key={card.id} onClick={() => setActiveSection(card.id)} className="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                                             <div className={`w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 md:mb-4 bg-gradient-to-br ${card.gradient} rounded-xl flex items-center justify-center shadow-lg ${card.shadow} group-hover:scale-110 transition-transform`}>
@@ -285,21 +285,21 @@ export default function ProfileDashboard() {
                         {/* ═══ ORDERS ═══ */}
                         {activeSection === "orders" && (
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                                <div className="p-6 bg-gradient-to-r from-brand-purple to-purple-600">
-                                    <h2 className="text-2xl font-bold text-white">My Orders</h2>
-                                    <p className="text-white/60 text-sm mt-1">Track and manage your orders</p>
+                                <div className="p-6 bg-gradient-to-r from-brand-green to-brand-green-dark">
+                                    <h2 className="text-2xl font-bold text-white">আমার অর্ডার</h2>
+                                    <p className="text-white/60 text-sm mt-1">আপনার সমস্ত অর্ডারের বিবরণ</p>
                                 </div>
                                 <div className="border-b overflow-x-auto bg-gray-50">
                                     <div className="flex">
                                         {ORDER_TABS.map(tab => {
                                             const TabIcon = tab.Icon;
-                                            return (<button key={tab.id} onClick={() => setActiveOrderTab(tab.id)} className={`flex items-center gap-2 px-4 md:px-6 py-4 text-xs md:text-sm font-medium whitespace-nowrap border-b-2 transition-all ${activeOrderTab === tab.id ? "border-brand-purple text-brand-purple bg-white" : "border-transparent text-gray-500 hover:text-gray-700"}`}><TabIcon size={16} />{tab.label}</button>);
+                                            return (<button key={tab.id} onClick={() => setActiveOrderTab(tab.id)} className={`flex items-center gap-2 px-4 md:px-6 py-4 text-xs md:text-sm font-medium whitespace-nowrap border-b-2 transition-all ${activeOrderTab === tab.id ? "border-brand-green text-brand-green bg-white" : "border-transparent text-gray-500 hover:text-gray-700"}`}><TabIcon size={16} />{tab.label}</button>);
                                         })}
                                     </div>
                                 </div>
                                 <div className="p-4 md:p-6">
                                     {ordersLoading ? (
-                                        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-purple" /></div>
+                                        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green" /></div>
                                     ) : orders.length > 0 ? (
                                         <div className="space-y-4">
                                             {orders.map(order => (
@@ -309,26 +309,26 @@ export default function ProfileDashboard() {
                                                             {order.sales_details?.[0]?.product_info?.image_path ? (
                                                                 <Image src={order.sales_details[0].product_info.image_path} alt="Product" fill className="object-cover" unoptimized />
                                                             ) : (<div className="flex h-full w-full items-center justify-center text-gray-300"><Package className="h-8 w-8" /></div>)}
-                                                            {order.sales_details?.length > 1 && (<div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] py-0.5 text-center">+{order.sales_details.length - 1} more</div>)}
+                                                            {order.sales_details?.length > 1 && (<div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[10px] py-0.5 text-center">+{order.sales_details.length - 1} আরও</div>)}
                                                         </div>
                                                         <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
                                                             <div>
                                                                 <div className="flex justify-between items-start gap-2">
                                                                     <div>
-                                                                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1 mb-1">{order.sales_details?.[0]?.product_info?.name || `Order #${order.invoice_id}`}</h3>
+                                                                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-1 mb-1">{order.sales_details?.[0]?.product_info?.name || `অর্ডার #${order.invoice_id}`}</h3>
                                                                         <p className="text-xs text-gray-500 font-mono">#{order.invoice_id}</p>
                                                                     </div>
                                                                     <div className="text-right flex-shrink-0">
-                                                                        <p className="text-lg md:text-xl font-bold text-brand-purple">৳{(Number(order.sub_total ?? order.total ?? 0) + Number(order.delivery_fee ?? 0))}</p>
-                                                                        <p className="text-xs text-gray-500 mt-1">{new Date(order.created_at).toLocaleDateString("en-US", { day: 'numeric', month: 'short' })}</p>
+                                                                        <p className="text-lg md:text-xl font-bold text-brand-green">৳{(Number(order.sub_total ?? order.total ?? 0) + Number(order.delivery_fee ?? 0))}</p>
+                                                                        <p className="text-xs text-gray-500 mt-1">{new Date(order.created_at).toLocaleDateString("bn-BD", { day: 'numeric', month: 'short' })}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2">
                                                                 <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
-                                                                <p className="truncate">{order.delivery_customer_address || "No address"}</p>
+                                                                <p className="truncate">{order.delivery_customer_address || "ঠিকানা নেই"}</p>
                                                             </div>
-                                                            <button onClick={() => setSelectedOrder(order)} className="mt-3 w-full py-2 px-3 bg-gray-100 hover:bg-brand-purple hover:text-white text-gray-700 text-xs font-semibold rounded-lg transition-all">View Details</button>
+                                                            <button onClick={() => setSelectedOrder(order)} className="mt-3 w-full py-2 px-3 bg-gray-100 hover:bg-brand-green hover:text-white text-gray-700 text-xs font-semibold rounded-lg transition-all">বিস্তারিত দেখুন</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -337,8 +337,8 @@ export default function ProfileDashboard() {
                                     ) : (
                                         <div className="text-center py-20">
                                             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"><Package className="w-10 h-10 text-white" /></div>
-                                            <h3 className="font-bold text-gray-900 text-lg mb-2">No orders found</h3>
-                                            <p className="text-gray-500 text-sm">Orders will appear here once you make a purchase</p>
+                                            <h3 className="font-bold text-gray-900 text-lg mb-2">কোন অর্ডার পাওয়া যায়নি</h3>
+                                            <p className="text-gray-500 text-sm">আপনি কোনো পণ্য অর্ডার করলে এখানে দেখতে পাবেন</p>
                                         </div>
                                     )}
                                 </div>
@@ -347,10 +347,10 @@ export default function ProfileDashboard() {
                                 {selectedOrder && (
                                     <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4" onClick={() => setSelectedOrder(null)}>
                                         <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-                                            <div className="p-6 bg-gradient-to-r from-brand-purple to-purple-600 sticky top-0 z-10">
+                                            <div className="p-6 bg-gradient-to-r from-brand-green to-brand-green-dark sticky top-0 z-10">
                                                 <div className="flex items-center justify-between">
                                                     <div>
-                                                        <h3 className="text-xl font-bold text-white">Order Details</h3>
+                                                        <h3 className="text-xl font-bold text-white">অর্ডারের বিবরণ</h3>
                                                         <p className="text-white/60 text-sm mt-1">#{selectedOrder.invoice_id}</p>
                                                     </div>
                                                     <button onClick={() => setSelectedOrder(null)} className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white"><X className="w-5 h-5" /></button>
@@ -359,14 +359,14 @@ export default function ProfileDashboard() {
                                             <div className="p-6 space-y-6">
                                                 <div className="flex flex-wrap gap-4 justify-between items-center p-4 bg-gray-50 rounded-xl">
                                                     <div>
-                                                        <p className="text-xs text-gray-500 mb-1">Order Date</p>
-                                                        <p className="font-semibold text-gray-900">{new Date(selectedOrder.created_at).toLocaleDateString("en-US", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                                        <p className="text-xs text-gray-500 mb-1">অর্ডারের তারিখ</p>
+                                                        <p className="font-semibold text-gray-900">{new Date(selectedOrder.created_at).toLocaleDateString("bn-BD", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                                                     </div>
                                                     <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(selectedOrder.tran_status || selectedOrder.status)}`}>{getStatusLabel(selectedOrder.tran_status || selectedOrder.status)}</div>
                                                 </div>
                                                 {![5, 6].includes(Number(selectedOrder.tran_status || selectedOrder.status)) && <OrderTimeline currentStatus={selectedOrder.tran_status || selectedOrder.status} />}
                                                 <div>
-                                                    <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Package size={18} />Products ({selectedOrder.sales_details?.length || 0})</h4>
+                                                    <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2"><Package size={18} />পণ্য ({selectedOrder.sales_details?.length || 0})</h4>
                                                     <div className="space-y-3">
                                                         {selectedOrder.sales_details?.map((item, i) => (
                                                             <div key={i} className="flex gap-4 p-3 bg-gray-50 rounded-xl">
@@ -374,19 +374,19 @@ export default function ProfileDashboard() {
                                                                     {item.product_info?.image_path ? <Image src={item.product_info.image_path} alt="Product" fill className="object-cover" unoptimized /> : <div className="flex h-full w-full items-center justify-center text-gray-400"><Package size={20} /></div>}
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <p className="font-medium text-gray-900 text-sm line-clamp-1">{item.product_info?.name || "Product"}</p>
-                                                                    <p className="text-xs text-gray-500 mt-1">Qty: {item.qty}{item.size ? ` • Size: ${item.size}` : ""}</p>
+                                                                    <p className="font-medium text-gray-900 text-sm line-clamp-1">{item.product_info?.name || "পণ্য"}</p>
+                                                                    <p className="text-xs text-gray-500 mt-1">পরিমাণ: {item.qty}{item.size ? ` • সাইজ: ${item.size}` : ""}</p>
                                                                 </div>
-                                                                <div className="text-right"><p className="font-bold text-brand-purple">৳{item.price * item.qty}</p></div>
+                                                                <div className="text-right"><p className="font-bold text-brand-green">৳{item.price * item.qty}</p></div>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 </div>
                                                 <div className="p-4 bg-gray-50 rounded-xl space-y-2 text-sm">
-                                                    <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span className="font-medium">৳{selectedOrder.sub_total || selectedOrder.total || 0}</span></div>
-                                                    <div className="flex justify-between"><span className="text-gray-500">Delivery</span><span className="font-medium">৳{selectedOrder.delivery_fee || 0}</span></div>
-                                                    {Number(selectedOrder.coupon_discount || 0) > 0 && <div className="flex justify-between text-green-600"><span>Coupon</span><span>-৳{selectedOrder.coupon_discount}</span></div>}
-                                                    <div className="flex justify-between pt-2 border-t font-bold text-lg"><span>Total</span><span className="text-brand-purple">৳{(Number(selectedOrder.sub_total ?? selectedOrder.total ?? 0) + Number(selectedOrder.delivery_fee ?? 0) - Number(selectedOrder.coupon_discount ?? 0))}</span></div>
+                                                    <div className="flex justify-between"><span className="text-gray-500">সাবটোটাল</span><span className="font-medium">৳{selectedOrder.sub_total || selectedOrder.total || 0}</span></div>
+                                                    <div className="flex justify-between"><span className="text-gray-500">ডেলিভারি চার্জ</span><span className="font-medium">৳{selectedOrder.delivery_fee || 0}</span></div>
+                                                    {Number(selectedOrder.coupon_discount || 0) > 0 && <div className="flex justify-between text-green-600"><span>কুপন ডিসকাউন্ট</span><span>-৳{selectedOrder.coupon_discount}</span></div>}
+                                                    <div className="flex justify-between pt-2 border-t font-bold text-lg"><span>সর্বমোট</span><span className="text-brand-green">৳{(Number(selectedOrder.sub_total ?? selectedOrder.total ?? 0) + Number(selectedOrder.delivery_fee ?? 0) - Number(selectedOrder.coupon_discount ?? 0))}</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -398,15 +398,15 @@ export default function ProfileDashboard() {
                         {/* ═══ TRACKING ═══ */}
                         {activeSection === "tracking" && (
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                                <div className="p-6 bg-gradient-to-r from-brand-purple to-purple-600">
-                                    <h2 className="text-2xl font-bold text-white">Track Order</h2>
-                                    <p className="text-white/60 text-sm mt-1">Enter your invoice ID to track</p>
+                                <div className="p-6 bg-gradient-to-r from-brand-green to-brand-green-dark">
+                                    <h2 className="text-2xl font-bold text-white">অর্ডার ট্র্যাক</h2>
+                                    <p className="text-white/60 text-sm mt-1">আপনার ইনভয়েস আইডি দিয়ে ট্র্যাক করুন</p>
                                 </div>
                                 <div className="p-6">
                                     <form onSubmit={handleTrackOrder} className="flex gap-3 mb-6">
-                                        <input type="text" value={trackInvoiceId} onChange={e => setTrackInvoiceId(e.target.value)} placeholder="Enter Invoice ID (e.g. INV-12345)" className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm" />
-                                        <button type="submit" disabled={trackLoading} className="px-6 py-3 bg-brand-purple text-white font-bold rounded-xl hover:bg-[#7b3ba8] transition-colors disabled:opacity-70">
-                                            {trackLoading ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" /> : "Track"}
+                                        <input type="text" value={trackInvoiceId} onChange={e => setTrackInvoiceId(e.target.value)} placeholder="ইনভয়েস আইডি দিন (যেমন: INV-12345)" className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm" />
+                                        <button type="submit" disabled={trackLoading} className="px-6 py-3 bg-brand-green text-white font-bold rounded-xl hover:bg-brand-green-dark transition-colors disabled:opacity-70">
+                                            {trackLoading ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" /> : "ট্র্যাক করুন"}
                                         </button>
                                     </form>
                                     {trackOrderData && (
@@ -414,7 +414,7 @@ export default function ProfileDashboard() {
                                             <div className="flex justify-between items-center mb-4">
                                                 <div>
                                                     <h3 className="font-bold text-gray-900">#{trackOrderData.invoice_id}</h3>
-                                                    <p className="text-sm text-gray-500">{new Date(trackOrderData.created_at).toLocaleDateString("en-US", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                                    <p className="text-sm text-gray-500">{new Date(trackOrderData.created_at).toLocaleDateString("bn-BD", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                                                 </div>
                                                 <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(trackOrderData.tran_status || trackOrderData.status)}`}>{getStatusLabel(trackOrderData.tran_status || trackOrderData.status)}</div>
                                             </div>
@@ -428,31 +428,31 @@ export default function ProfileDashboard() {
                         {/* ═══ COUPONS ═══ */}
                         {activeSection === "coupons" && (
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                                <div className="p-6 bg-gradient-to-r from-brand-purple to-purple-600">
-                                    <h2 className="text-2xl font-bold text-white">My Coupons</h2>
-                                    <p className="text-white/60 text-sm mt-1">Your available discount codes</p>
+                                <div className="p-6 bg-gradient-to-r from-brand-green to-brand-green-dark">
+                                    <h2 className="text-2xl font-bold text-white">আমার কুপন</h2>
+                                    <p className="text-white/60 text-sm mt-1">আপনার উপলব্ধ ডিসকাউন্ট কোডগুলি</p>
                                 </div>
                                 <div className="p-6">
                                     {couponsLoading ? (
-                                        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-purple" /></div>
+                                        <div className="flex justify-center py-20"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green" /></div>
                                     ) : coupons.length > 0 ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {coupons.map((coupon, i) => (
-                                                <div key={i} className="border border-dashed border-purple-300 rounded-xl p-4 bg-purple-50/50 hover:shadow-md transition-all">
+                                                <div key={i} className="border border-dashed border-green-300 rounded-xl p-4 bg-green-50/50 hover:shadow-md transition-all">
                                                     <div className="flex items-center justify-between mb-2">
-                                                        <span className="px-3 py-1 bg-brand-purple text-white text-xs font-bold rounded-full">{coupon.coupon_code || coupon.code}</span>
-                                                        <span className="text-lg font-extrabold text-brand-purple">{coupon.discount_type === "percentage" ? `${coupon.discount}%` : `৳${coupon.discount}`}</span>
+                                                        <span className="px-3 py-1 bg-brand-green text-white text-xs font-bold rounded-full">{coupon.coupon_code || coupon.code}</span>
+                                                        <span className="text-lg font-extrabold text-brand-green">{coupon.discount_type === "percentage" ? `${coupon.discount}%` : `৳${coupon.discount}`}</span>
                                                     </div>
-                                                    <p className="text-sm text-gray-600 mt-2">{coupon.description || "Use this code at checkout"}</p>
-                                                    {coupon.min_order && <p className="text-xs text-gray-400 mt-1">Min order: ৳{coupon.min_order}</p>}
+                                                    <p className="text-sm text-gray-600 mt-2">{coupon.description || "এই কোডটি চেকআউটে ব্যবহার করুন"}</p>
+                                                    {coupon.min_order && <p className="text-xs text-gray-400 mt-1">সর্বনিম্ন অর্ডার: ৳{coupon.min_order}</p>}
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
                                         <div className="text-center py-20">
-                                            <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"><Tag className="w-10 h-10 text-white" /></div>
-                                            <h3 className="font-bold text-gray-900 text-lg mb-2">No coupons yet</h3>
-                                            <p className="text-gray-500 text-sm">Collected coupons will appear here</p>
+                                            <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"><Tag className="w-10 h-10 text-white" /></div>
+                                            <h3 className="font-bold text-gray-900 text-lg mb-2">কোন কুপন নেই</h3>
+                                            <p className="text-gray-500 text-sm">সংগৃহীত কুপন এখানে প্রদর্শিত হবে</p>
                                         </div>
                                     )}
                                 </div>
@@ -462,23 +462,23 @@ export default function ProfileDashboard() {
                         {/* ═══ PROFILE ═══ */}
                         {activeSection === "profile" && (
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                                <div className="p-6 bg-gradient-to-r from-brand-purple to-purple-600 flex items-center justify-between">
-                                    <div><h2 className="text-2xl font-bold text-white">My Profile</h2><p className="text-white/60 text-sm mt-1">Manage your account details</p></div>
-                                    {!isEditing && <button onClick={() => setIsEditing(true)} className="px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-lg text-sm font-semibold flex items-center gap-2"><Edit3 className="w-4 h-4" />Edit</button>}
+                                <div className="p-6 bg-gradient-to-r from-brand-green to-brand-green-dark flex items-center justify-between">
+                                    <div><h2 className="text-2xl font-bold text-white">আমার প্রোফাইল</h2><p className="text-white/60 text-sm mt-1">আপনার অ্যাকাউন্টের বিবরণ পরিচালনা করুন</p></div>
+                                    {!isEditing && <button onClick={() => setIsEditing(true)} className="px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 rounded-lg text-sm font-semibold flex items-center gap-2"><Edit3 className="w-4 h-4" />সম্পাদন</button>}
                                 </div>
                                 <div className="p-6">
                                     {isEditing ? (
                                         <form onSubmit={handleProfileUpdate} className="space-y-5">
                                             <div className="flex justify-center mb-4">
                                                 <div className="relative">
-                                                    <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden ring-4 ring-brand-purple/20">
+                                                    <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden ring-4 ring-brand-green/20">
                                                         {profileImagePreview || user?.image ? (
                                                             <Image src={profileImagePreview || user.image} alt="Profile" width={96} height={96} className="w-full h-full object-cover" unoptimized />
                                                         ) : (
                                                             <div className="flex h-full w-full items-center justify-center text-gray-400"><User className="w-10 h-10" /></div>
                                                         )}
                                                     </div>
-                                                    <label className="absolute bottom-0 right-0 w-8 h-8 bg-brand-purple text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-[#7b3ba8] transition-colors">
+                                                    <label className="absolute bottom-0 right-0 w-8 h-8 bg-brand-green text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-brand-green-dark transition-colors">
                                                         <Camera className="w-4 h-4" />
                                                         <input type="file" accept="image/*" className="hidden" onChange={(e) => { const file = e.target.files[0]; if (file) { setProfileImage(file); setProfileImagePreview(URL.createObjectURL(file)); } }} />
                                                     </label>
@@ -486,37 +486,37 @@ export default function ProfileDashboard() {
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">First Name</label>
-                                                    <input type="text" value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm" />
+                                                    <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">নামের প্রথমাংশ</label>
+                                                    <input type="text" value={formData.first_name} onChange={e => setFormData({ ...formData, first_name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm" />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Last Name</label>
-                                                    <input type="text" value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm" />
+                                                    <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">নামের শেষাংশ</label>
+                                                    <input type="text" value={formData.last_name} onChange={e => setFormData({ ...formData, last_name: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm" />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Email</label>
-                                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm" />
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">ইমেইল</label>
+                                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm" />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Phone</label>
-                                                <input type="tel" value={formData.mobile_number} onChange={e => setFormData({ ...formData, mobile_number: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm" />
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">ফোন নম্বর</label>
+                                                <input type="tel" value={formData.mobile_number} onChange={e => setFormData({ ...formData, mobile_number: e.target.value })} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm" />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">Address</label>
-                                                <textarea value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} rows={3} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-sm resize-none" />
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wider">ঠিকানা</label>
+                                                <textarea value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} rows={3} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green text-sm resize-none" />
                                             </div>
                                             <div className="flex gap-3">
-                                                <button type="button" onClick={() => { setIsEditing(false); setProfileImage(null); setProfileImagePreview(null); }} className="flex-1 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">Cancel</button>
-                                                <button type="submit" disabled={isUpdating} className="flex-1 py-3 bg-brand-purple text-white font-bold rounded-xl shadow-lg shadow-brand-purple/30 hover:bg-[#7b3ba8] transition-all disabled:opacity-70">
-                                                    {isUpdating ? "Saving..." : "Save Changes"}
+                                                <button type="button" onClick={() => { setIsEditing(false); setProfileImage(null); setProfileImagePreview(null); }} className="flex-1 py-3 border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors">বাতিল</button>
+                                                <button type="submit" disabled={isUpdating} className="flex-1 py-3 bg-brand-green text-white font-bold rounded-xl shadow-lg shadow-brand-green/30 hover:bg-brand-green-dark transition-all disabled:opacity-70">
+                                                    {isUpdating ? "সংরক্ষণ করা হচ্ছে..." : "পরিবর্তনগুলি সংরক্ষণ করুন"}
                                                 </button>
                                             </div>
                                         </form>
                                     ) : (
                                         <div className="space-y-6">
                                             <div className="flex items-center gap-4 mb-6">
-                                                <div className="w-20 h-20 rounded-full bg-gray-200 overflow-hidden ring-4 ring-brand-purple/20 flex-shrink-0">
+                                                <div className="w-20 h-20 rounded-full bg-gray-200 overflow-hidden ring-4 ring-brand-green/20 flex-shrink-0">
                                                     {user?.image ? <Image src={user.image} alt="Profile" width={80} height={80} className="w-full h-full object-cover" unoptimized /> : <div className="flex h-full w-full items-center justify-center text-gray-400"><User className="w-8 h-8" /></div>}
                                                 </div>
                                                 <div>
@@ -526,9 +526,9 @@ export default function ProfileDashboard() {
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 {[
-                                                    { label: "Phone", value: user.mobile_number || user.phone || "Not set" },
-                                                    { label: "Email", value: user.email || "Not set" },
-                                                    { label: "Address", value: user.address || "Not set", full: true },
+                                                    { label: "ফোন নম্বর", value: user.mobile_number || user.phone || "সেট করা নেই" },
+                                                    { label: "ইমেইল", value: user.email || "সেট করা নেই" },
+                                                    { label: "ঠিকানা", value: user.address || "সেট করা নেই", full: true },
                                                 ].map((field, i) => (
                                                     <div key={i} className={`p-4 bg-gray-50 rounded-xl ${field.full ? "md:col-span-2" : ""}`}>
                                                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{field.label}</p>

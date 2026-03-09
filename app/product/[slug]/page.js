@@ -13,22 +13,19 @@ export default function ProductDetailsPage() {
     const params = useParams();
     const slug = typeof params.slug === 'string' ? params.slug : params.slug?.[0] || '';
 
-    // Parse product ID from slug (supports "product-name-12345" or just "12345")
+    // Parse product ID from slug (supports "product-name-12345", "12345", or dummy IDs like "f1")
     const productId = useMemo(() => {
         if (!slug) return null;
         const decoded = decodeURIComponent(slug).trim();
 
-        // Case 1: slug is just the numeric ID
-        if (/^\d+$/.test(decoded)) {
-            const directId = Number(decoded);
-            return Number.isFinite(directId) && directId > 0 ? directId : null;
+        // If there's no hyphen, the whole slug is the ID
+        if (!decoded.includes('-')) {
+            return decoded;
         }
 
-        // Case 2: slug is "name-<id>"
+        // Otherwise, it's usually "name-<id>", so take the last part
         const parts = decoded.split('-');
-        const maybeId = parts[parts.length - 1];
-        const idNum = Number(maybeId);
-        return Number.isFinite(idNum) && idNum > 0 ? idNum : null;
+        return parts[parts.length - 1];
     }, [slug]);
 
     const [productData, setProductData] = useState(null);
@@ -63,13 +60,18 @@ export default function ProductDetailsPage() {
             setIsLoading(true);
             setError('');
             try {
-                const res = await getProductById(productId);
-                const payload = res?.data || res;
-                if (!payload || !payload.id) {
-                    throw new Error('Product not found');
+                let p;
+                // If it's a numeric ID, try the API
+                if (/^\d+$/.test(String(productId))) {
+                    const res = await getProductById(productId);
+                    const payload = res?.data || res;
+                    if (!payload || !payload.id) {
+                        throw new Error('Product not found');
+                    }
+                    p = payload;
+                } else {
+                    throw new Error('Dummy product');
                 }
-
-                const p = payload;
 
                 const originalPrice = Number(p.retails_price || 0);
                 const discountValue = Number(p.discount || 0);
@@ -99,10 +101,10 @@ export default function ProductDetailsPage() {
 
                 const specs = `
                     <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Brand:</strong> ${p.brand_name || p.brands?.name || 'N/A'}</li>
-                        <li><strong>Base price:</strong> ৳ ${originalPrice.toLocaleString('en-IN')}</li>
-                        <li><strong>Status:</strong> ${p.status || 'N/A'}</li>
-                        <li><strong>Current stock:</strong> ${p.current_stock ?? 'N/A'}</li>
+                        <li><strong>প্রকাশনী / ব্র্যান্ড:</strong> ${p.brand_name || p.brands?.name || 'জানা নেই'}</li>
+                        <li><strong>মূল দাম:</strong> ৳ ${originalPrice.toLocaleString('en-IN')}</li>
+                        <li><strong>স্ট্যাটাস:</strong> ${p.status || 'জানা নেই'}</li>
+                        <li><strong>বর্তমান স্টক:</strong> ${p.current_stock ?? 'জানা নেই'}</li>
                     </ul>
                 `;
 
@@ -163,9 +165,49 @@ export default function ProductDetailsPage() {
                     // ignore related errors
                 }
             } catch (err) {
-                console.error('Failed to load product details', err);
+                console.error('Failed to load product details from API, using fallback:', err);
                 if (!cancelled) {
-                    setError('Failed to load product details.');
+                    const decodedName = decodeURIComponent(slug).replace(/-[^-]+$/, '').replace(/-/g, ' ');
+
+                    const dummyProduct = {
+                        id: productId || 'dummy',
+                        name: decodedName || "ইসলামিক বই",
+                        price: "৳ ৩৫০",
+                        rawPrice: 350,
+                        originalPrice: 500,
+                        oldPrice: "৳ ৫০০",
+                        discount: "-৩০%",
+                        discountValue: 30,
+                        discountType: "percentage",
+                        hasDiscount: true,
+                        images: ["https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800"],
+                        rawImeis: [],
+                        description: "<p>এটি একটি ডেমো বইয়ের বিবরণ। আসল ডাটাবেস বা এপিআই কানেক্ট না থাকায় এই ডেমো পেজটি দেখানো হচ্ছে। বইটি ইসলামিক জ্ঞান অন্বেষণের জন্য একটি চমৎকার উৎস হতে পারে।</p>",
+                        specifications: `
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li><strong>প্রকাশনী / ব্র্যান্ড:</strong> তারুণ্য প্রকাশন (ডেমো)</li>
+                                <li><strong>লেখকের নাম:</strong> সংগ্রহ প্রদানকারী (ডেমো)</li>
+                                <li><strong>মূল দাম:</strong> ৳ ৫০০</li>
+                                <li><strong>স্ট্যাটাস:</strong> Available</li>
+                                <li><strong>বর্তমান স্টক:</strong> ২১০</li>
+                            </ul>
+                        `,
+                        category: {
+                            id: 1,
+                            name: "ইসলামী বই",
+                            slug: "islamic-books"
+                        }
+                    };
+
+                    setProductData(dummyProduct);
+                    setVariantImages(null);
+
+                    setRelatedProducts([
+                        { id: 'r1', name: "সীরাতুন নবী (সা.)", price: "৳ 450", oldPrice: "৳ 600", imageUrl: "https://images.unsplash.com/photo-1542871793-27e0283da70b?q=80&w=800" },
+                        { id: 'r2', name: "কুরআনের আলো", price: "৳ 300", oldPrice: null, imageUrl: "https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=800" },
+                        { id: 'r3', name: "গল্পে গল্পে ইসলাম", price: "৳ 250", oldPrice: "৳ 350", imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800" },
+                        { id: 'r4', name: "আদর্শ পরিবার", price: "৳ 320", oldPrice: null, imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800" },
+                    ]);
                 }
             } finally {
                 if (!cancelled) {
@@ -196,23 +238,23 @@ export default function ProductDetailsPage() {
 
     return (
         <div className="bg-white min-h-screen pb-12">
-            <div className="border-b border-brand-purple/10 bg-gradient-to-r from-brand-purple/5 to-transparent py-4 md:py-6 mb-6 md:mb-10">
+            <div className="border-b border-brand-green/10 bg-gradient-to-r from-brand-green/5 to-transparent py-4 md:py-6 mb-6 md:mb-10">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <div className="text-[11px] md:text-sm text-gray-500 flex items-center gap-2 font-medium">
-                        <Link href="/" className="hover:text-brand-purple cursor-pointer transition-colors">Home</Link>
+                        <Link href="/" className="hover:text-brand-green cursor-pointer transition-colors">হোম</Link>
                         <span>/</span>
                         {fromCategory && productData?.category?.name && (
                             <>
                                 <Link
                                     href={`/category/${productData.category.slug}`}
-                                    className="hover:text-brand-purple cursor-pointer transition-colors capitalize"
+                                    className="hover:text-brand-green cursor-pointer transition-colors capitalize"
                                 >
                                     {productData.category.name}
                                 </Link>
                                 <span>/</span>
                             </>
                         )}
-                        <span className="text-brand-purple font-bold capitalize truncate">{productName}</span>
+                        <span className="text-brand-green font-bold capitalize truncate">{productName}</span>
                     </div>
                 </div>
             </div>
@@ -221,12 +263,12 @@ export default function ProductDetailsPage() {
 
                 {isLoading ? (
                     <div className="py-20 flex flex-col items-center justify-center">
-                        <div className="w-10 h-10 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mb-4"></div>
-                        <p className="text-sm text-gray-500">Loading product details…</p>
+                        <div className="w-10 h-10 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin mb-4"></div>
+                        <p className="text-sm text-gray-500">বইয়ের তথ্য লোড হচ্ছে…</p>
                     </div>
                 ) : error || !productData ? (
                     <div className="py-20 text-center">
-                        <p className="text-sm text-red-500">{error || 'Product not found.'}</p>
+                        <p className="text-sm text-red-500">{error || 'বইটি পাওয়া যায়নি।'}</p>
                     </div>
                 ) : (
                     <>
@@ -256,7 +298,7 @@ export default function ProductDetailsPage() {
                         {relatedProducts.length > 0 && (
                             <div className="mt-16 md:mt-24 pt-12 border-t border-gray-200">
                                 <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center md:text-left">
-                                    Related Products
+                                    সম্পর্কিত বইসমূহ
                                 </h2>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
                                     {relatedProducts.map(product => (

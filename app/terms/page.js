@@ -1,80 +1,80 @@
 export const metadata = {
-    title: 'Terms & Conditions | Tarunno Shop',
-    description: 'Read our terms and conditions, privacy policy, and usage guidelines for Tarunno Shop.',
+    title: 'শর্তাবলী | তারুণ্য প্রকাশন',
+    description: 'তারুণ্য প্রকাশনের ব্যবহারের নিয়মাবলী, শর্তাবলী এবং গোপনীয়তা নীতি সম্পর্কে বিস্তারিত জানুন।',
 };
 
 export default function TermsPage() {
     return (
         <div className="bg-white min-h-screen">
-            <div className="bg-gradient-to-br from-brand-purple/10 via-purple-50 to-white py-16 md:py-24">
+            <div className="bg-gradient-to-br from-brand-green/10 via-brand-green-light to-white py-16 md:py-24">
                 <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Terms & <span className="text-brand-purple">Conditions</span></h1>
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">শর্তাবলী <span className="text-brand-green">(Terms & Conditions)</span></h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                        Please read these terms and conditions carefully before using our services.
+                        আমাদের সেবা গ্রহণ করার পূর্বে অনুগ্রহ করে এই শর্তাবলী মনোযোগ সহকারে পড়ুন।
                     </p>
                 </div>
             </div>
 
             <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-10">
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">1. General Terms</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">১. সাধারণ শর্তাবলী</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        By accessing and placing an order with Tarunno Shop, you confirm that you agree to and are bound by the terms and conditions contained herein. These terms apply to the entire website and any email or other communication between you and Tarunno Shop.
+                        তারুণ্য প্রকাশন এর ওয়েবসাইট ব্যবহার এবং অর্ডার করার মাধ্যমে আপনি এই শর্তাবলীর সাথে সম্মত হচ্ছেন বলে ধরে নেওয়া হবে। এই শর্তাবলী আমাদের ওয়েবসাইট এবং আমাদের সাথে আপনার যোগাযোগ সহ সকল ক্ষেত্রে প্রযোজ্য।
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Products & Pricing</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">২. বই বা প্রোডাক্ট ও মূল্য</h2>
                     <ul className="list-disc pl-6 space-y-2 text-gray-600">
-                        <li>All prices are listed in Bangladeshi Taka (BDT) and include applicable taxes unless stated otherwise</li>
-                        <li>Prices are subject to change without prior notice</li>
-                        <li>Product images are for illustration purposes and may differ slightly from the actual product</li>
-                        <li>We reserve the right to limit order quantities</li>
+                        <li>সকল পণ্যের মূল্য বাংলাদেশী টাকায় (BDT) উল্লেখ করা হয়েছে এবং প্রযোজ্য কর অন্তর্ভুক্ত।</li>
+                        <li>বইয়ের মূল্য এবং অফার পূর্ব ঘোষণা ছাড়াই পরিবর্তন করার অধিকার আমরা সংরক্ষণ করি।</li>
+                        <li>বইয়ের প্রচ্ছদ বা ছবি শুধুমাত্র নির্দেশনার জন্য; প্রকাশনী পরিবর্তিত প্রচ্ছদ বা সংস্করণ প্রদান করতে পারে।</li>
+                        <li>আমরা যেকোনো অর্ডারের পরিমাণ সীমিত করার অধিকার রাখি।</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Orders & Payment</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৩. অর্ডার ও পেমেন্ট</h2>
                     <ul className="list-disc pl-6 space-y-2 text-gray-600">
-                        <li>All orders are subject to acceptance and availability</li>
-                        <li>We accept Cash on Delivery, bank transfers, and mobile banking payments</li>
-                        <li>We reserve the right to refuse or cancel any order for any reason</li>
-                        <li>Order confirmation does not guarantee product availability</li>
+                        <li>সকল অর্ডার বইয়ের স্টক থাকা সাপেক্ষে গ্রহণ করা হবে।</li>
+                        <li>আমরা ক্যাশ অন ডেলিভারি (COD) এবং মোবাইল ব্যাংকিং এর মাধ্যমে পেমেন্ট গ্রহণ করি।</li>
+                        <li>যেকোনো যুক্তিসঙ্গত কারণে আমরা কোনো অর্ডার বাতিল বা গ্রহণ না করার অধিকার সংরক্ষণ করি।</li>
+                        <li>অর্ডার কনফার্মেশন মানেই শতভাগ নিশ্চয়তা নয় যে বইটি স্টকে পাওয়া যাবে।</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Delivery</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৪. ডেলিভারি</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        We deliver across Bangladesh. Delivery times vary depending on your location and product availability. Estimated delivery times are provided at checkout. We are not responsible for delays caused by courier services or force majeure events.
+                        আমরা বাংলাদেশের সব স্থানে ডেলিভারি করে থাকি। আপনার অবস্থান এবং কুরিয়ারের উপর ভিত্তি করে ডেলিভারির সময় পরিবর্তিত হতে পারে। চেকআউট করার সময় আনুমানিক ডেলিভারির সময় জানানো হবে। কুরিয়ার সার্ভিসের কোনো বিলম্বের জন্য তারুণ্য প্রকাশন দায়ী থাকবে না।
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Privacy Policy</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৫. গোপনীয়তা নীতি</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        We value your privacy. Personal information collected during the ordering process is used solely for order fulfillment and customer service. We do not sell or share your personal data with third parties except as necessary for order delivery and payment processing.
+                        আপনার গোপনীয়তা আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ। অর্ডার করার প্রক্রিয়ায় সংগৃহীত আপনার ব্যক্তিগত তথ্য শুধুমাত্র অর্ডার পূর্ণ করার জন্য এবং গ্রাহক সেবার জন্য ব্যবহার করা হয়। ডেলিভারি এবং পেমেন্ট প্রক্রিয়াকরণের প্রয়োজন ব্যতীত আমরা আপনার কোনো তথ্য তৃতীয় পক্ষের সাথে শেয়ার করি না।
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Intellectual Property</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৬. মেধা সম্পদ</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        All content on this website, including but not limited to text, images, graphics, logos, and software, is the property of Tarunno Shop or its content suppliers and is protected by intellectual property laws.
+                        এই ওয়েবসাইটের সকল কন্টেন্ট, পাঠ্য বিষয়, ছবি, লোগো এবং ডিজাইন তারুণ্য প্রকাশন এর নিজস্ব সম্পদ এবং এটি মেধা সম্পদ আইন দ্বারা সুরক্ষিত। পূর্বানুমতি ব্যতিত এর ব্যবহার আইনত দণ্ডনীয়।
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Limitation of Liability</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৭. দায়বদ্ধতার সীমাবদ্ধতা</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        Tarunno Shop shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services or products purchased through our platform.
+                        আমাদের ওয়েবসাইট বা পণ্য ব্যবহারের কারণে উদ্ভূত কোনো পরোক্ষ বা বিশেষ ক্ষতির জন্য তারুণ্য প্রকাশন দায়ী থাকবে না।
                     </p>
                 </section>
 
                 <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Contact</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">৮. যোগাযোগ</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        If you have any questions about these Terms & Conditions, please contact us at support@Tarunno Prokashon.com or visit our Contact Us page.
+                        আমাদের শর্তাবলী সম্পর্কে কোনো প্রশ্ন থাকলে, অনুগ্রহ করে info@tarunno.com এ ইমেইল করুন অথবা আমাদের 'যোগাযোগ করুন' পেইজে ভিজিট করুন।
                     </p>
                 </section>
             </div>

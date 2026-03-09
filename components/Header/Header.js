@@ -153,7 +153,7 @@ export default function Header({ categories = [] }) {
           <div className="max-w-7xl mx-auto flex justify-between items-center px-3 md:px-6 py-2.5 md:py-3 gap-2 md:gap-6">
 
             {/* Logo */}
-            <Link href="#" className="flex items-center flex-shrink-0 z-10" aria-label="হোম">
+            <Link href="/" className="flex items-center flex-shrink-0 z-10" aria-label="হোম">
               <Image
                 src="/Tarunno Logo Board.png"
                 alt="তারুণ্য প্রকাশন"
@@ -235,17 +235,17 @@ export default function Header({ categories = [] }) {
             {displayCategories.map((cat, idx) => (
               <Link
                 key={cat.id || idx}
-                href="#"
+                href={`/category/${cat.slug || cat.category_id || cat.id}`}
                 className="text-white/80 text-[13px] font-medium hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md transition-all flex-shrink-0"
               >
                 {cat.name}
               </Link>
             ))}
             <div className="ml-auto flex items-center gap-3 flex-shrink-0 pl-4 border-l border-white/10">
-              <Link href="#" className="text-white/80 text-[12px] font-bold hover:text-white transition-colors flex items-center gap-1.5">
+              <Link href="/track-order" className="text-white/80 text-[12px] font-bold hover:text-white transition-colors flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse"></span> অর্ডার ট্র্যাক
               </Link>
-              <Link href="#" className="bg-brand-gold text-white text-[11px] font-black px-4 py-1.5 rounded-full hover:bg-yellow-600 transition-colors shadow-sm">
+              <Link href="/special-offers" className="bg-brand-gold text-white text-[11px] font-black px-4 py-1.5 rounded-full hover:bg-yellow-600 transition-colors shadow-sm">
                 🔥 বিশেষ অফার
               </Link>
             </div>
@@ -294,24 +294,29 @@ export default function Header({ categories = [] }) {
                     <button onClick={closeSearchModal} className="text-xs text-brand-green hover:underline">বন্ধ করুন</button>
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredSearchResults.map(product => (
-                      <Link key={product.id} href="#" onClick={closeSearchModal} className="group flex flex-col border border-gray-100 rounded-xl hover:shadow-md transition-shadow p-3 hover:border-brand-green/30">
-                        <div className="aspect-[3/4] relative bg-gray-50 rounded-lg mb-3 overflow-hidden">
-                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
-                          {product.discount && (
-                            <div className="absolute top-2 left-2 bg-brand-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">{product.discount}</div>
-                          )}
-                        </div>
-                        <div className="flex-1 flex flex-col">
-                          <span className="text-[10px] font-semibold text-brand-green mb-1">{product.brand}</span>
-                          <h4 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">{product.name}</h4>
-                          <div className="mt-auto flex items-baseline gap-1.5 flex-wrap">
-                            <span className="font-bold text-brand-green-dark">{product.price}</span>
-                            {product.oldPrice && (<span className="text-[10px] text-gray-400 line-through">{product.oldPrice}</span>)}
+                    {filteredSearchResults.map(product => {
+                      const nameSlug = product.name ? product.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'product';
+                      const slug = product.id ? `${nameSlug}-${product.id}` : nameSlug;
+
+                      return (
+                        <Link key={product.id} href={`/product/${slug}`} onClick={closeSearchModal} className="group flex flex-col border border-gray-100 rounded-xl hover:shadow-md transition-shadow p-3 hover:border-brand-green/30">
+                          <div className="aspect-[3/4] relative bg-gray-50 rounded-lg mb-3 overflow-hidden">
+                            <Image src={product.imageUrl} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
+                            {product.discount && (
+                              <div className="absolute top-2 left-2 bg-brand-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">{product.discount}</div>
+                            )}
                           </div>
-                        </div>
-                      </Link>
-                    ))}
+                          <div className="flex-1 flex flex-col">
+                            <span className="text-[10px] font-semibold text-brand-green mb-1">{product.brand}</span>
+                            <h4 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">{product.name}</h4>
+                            <div className="mt-auto flex items-baseline gap-1.5 flex-wrap">
+                              <span className="font-bold text-brand-green-dark">{product.price}</span>
+                              {product.oldPrice && (<span className="text-[10px] text-gray-400 line-through">{product.oldPrice}</span>)}
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
@@ -324,7 +329,7 @@ export default function Header({ categories = [] }) {
       {isSidebarOpen && <div className="fixed inset-0 bg-black/50 z-[60] md:hidden" onClick={closeSidebar} />}
       <div className={`fixed inset-y-0 left-0 w-[280px] bg-white z-[70] transform transition-transform duration-300 ease-in-out flex flex-col md:hidden shadow-2xl ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="bg-brand-green p-4 flex justify-between items-center">
-          <Link href="#" onClick={closeSidebar} aria-label="হোম">
+          <Link href="/" onClick={closeSidebar} aria-label="হোম">
             <Image src="/Tarunno Logo Board.png" alt="তারুণ্য প্রকাশন" width={140} height={36} className="h-8 w-auto object-contain drop-shadow-md" unoptimized />
           </Link>
           <button onClick={closeSidebar} className="p-2 text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-colors"><FiX size={22} /></button>
@@ -352,13 +357,13 @@ export default function Header({ categories = [] }) {
             { label: "যোগাযোগ", href: "/contact" },
             { label: "অর্ডার ট্র্যাক", href: "/track-order", highlight: true },
           ].map(item => (
-            <Link key={item.href} href="#" onClick={closeSidebar} className={`flex items-center justify-between px-5 py-3.5 font-semibold border-b border-gray-50 transition-colors ${item.highlight ? 'text-brand-green bg-brand-green-light/50 hover:bg-brand-green-light' : 'text-gray-700 hover:text-brand-green hover:bg-brand-green-light/30'}`}>
+            <Link key={item.href} href={item.href} onClick={closeSidebar} className={`flex items-center justify-between px-5 py-3.5 font-semibold border-b border-gray-50 transition-colors ${item.highlight ? 'text-brand-green bg-brand-green-light/50 hover:bg-brand-green-light' : 'text-gray-700 hover:text-brand-green hover:bg-brand-green-light/30'}`}>
               <span>{item.label}</span><FiChevronRight size={16} className={item.highlight ? "text-brand-green" : "text-gray-300"} />
             </Link>
           ))}
           <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mt-2 flex items-center gap-2"><FiGrid size={12} /> বই বিভাগ</div>
           {displayCategories.map((cat, idx) => (
-            <Link key={cat.id || idx} href="#" onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-colors">
+            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-colors">
               <span>{cat.name}</span><FiChevronRight size={14} className="text-gray-300" />
             </Link>
           ))}

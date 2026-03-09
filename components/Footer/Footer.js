@@ -22,7 +22,7 @@ export default function Footer({ categories = [] }) {
 
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-1">
-                        <Link href="#" className="inline-block mb-4">
+                        <Link href="/" className="inline-block mb-4">
                             <Image
                                 src="/Tarunno Logo Board.png"
                                 alt="তারুণ্য প্রকাশন"
@@ -54,7 +54,7 @@ export default function Footer({ categories = [] }) {
                                 { label: "বিশেষ অফার", href: "/special-offers" },
                             ].map(item => (
                                 <li key={item.href}>
-                                    <Link href="#" className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">{item.label}</Link>
+                                    <Link href={item.href} className="text-white/50 text-xs md:text-sm hover:text-brand-gold transition-colors">{item.label}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -98,8 +98,9 @@ export default function Footer({ categories = [] }) {
                 <div className="py-4 md:py-5 flex flex-col md:flex-row justify-between items-center gap-2">
                     <p className="text-white/30 text-[10px] md:text-xs">&copy; {new Date().getFullYear()} তারুণ্য প্রকাশন। সর্বস্বত্ব সংরক্ষিত।</p>
                     <div className="flex gap-4">
-                        <Link href="#" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">গোপনীয়তা নীতি</Link>
-                        <Link href="#" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">শর্তাবলী</Link>
+                        <Link href="/privacy" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">গোপনীয়তা নীতি</Link>
+                        <Link href="/terms" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">শর্তাবলী</Link>
+                        <Link href="/warranty" className="text-white/30 text-[10px] md:text-xs hover:text-white/60 transition-colors">রিটার্ন ও রিফান্ড</Link>
                     </div>
                 </div>
             </div>
