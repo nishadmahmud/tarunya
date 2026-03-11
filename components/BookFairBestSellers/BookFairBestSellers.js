@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import ProductCard from '../Shared/ProductCard';
 
-export default function BookFairBestSellers() {
-    const books = [
+export default function BookFairBestSellers({ products = [] }) {
+    const fallbackBooks = [
         { id: 201, name: "একাত্তরের দিনগুলি", brand: "জাহানারা ইমাম", price: "৳ 400", oldPrice: "৳ 500", discount: "-20%", imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400" },
         { id: 202, name: "আমার বন্ধু রাশেদ", brand: "মুহম্মদ জাফর ইকবাল", price: "৳ 250", oldPrice: "৳ 300", discount: "-17%", imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400" },
         { id: 203, name: "বঙ্গবন্ধুর আত্মজীবনী", brand: "শেখ মুজিবুর রহমান", price: "৳ 850", oldPrice: null, discount: null, imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400" },
@@ -12,6 +12,8 @@ export default function BookFairBestSellers() {
         { id: 207, name: "পদ্মা নদীর মাঝি", brand: "মানিক বন্দ্যোপাধ্যায়", price: "৳ 350", oldPrice: "৳ 400", discount: "-13%", imageUrl: "https://images.unsplash.com/photo-1513001900722-370f803f498d?q=80&w=400" },
         { id: 208, name: "হাজার বছর ধরে", brand: "জহির রায়হান", price: "৳ 380", oldPrice: "৳ 450", discount: "-16%", imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400" },
     ];
+
+    const displayBooks = products.length > 0 ? products : fallbackBooks;
 
     return (
         <section className="bg-brand-cream/30 py-10 md:py-16 border-b border-gray-100 relative overflow-hidden">
@@ -30,13 +32,13 @@ export default function BookFairBestSellers() {
                         </h2>
                         <p className="text-gray-400 text-xs md:text-sm hidden sm:block">এবারের বইমেলায় সর্বাধিক বিক্রিত বই সমূহ</p>
                     </div>
-                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="/category/book-fair" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                    {books.map((book, idx) => (
+                    {displayBooks.slice(0, 10).map((book, idx) => (
                         <ProductCard key={book.id || idx} product={book} />
                     ))}
                 </div>

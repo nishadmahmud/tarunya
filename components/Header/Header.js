@@ -37,7 +37,7 @@ export default function Header({ categories = [] }) {
 
   const handleUserClick = () => {
     if (user) {
-      router.push('#');
+      router.push('/profile');
     } else {
       openAuthModal('login');
     }
@@ -209,16 +209,8 @@ export default function Header({ categories = [] }) {
               </button>
             </div>
 
-            {/* Mobile: Cart + Hamburger */}
-            <div className="flex md:hidden items-center gap-1">
-              <button onClick={openCart} className="text-white/90 hover:text-white p-1.5 relative" aria-label="কার্ট">
-                <FiShoppingCart size={22} />
-                {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-brand-gold text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center border border-brand-green">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
+            {/* Mobile: Hamburger Only */}
+            <div className="flex md:hidden items-center">
               <button onClick={() => setIsSidebarOpen(true)} className="text-white hover:text-white/80 p-1.5" aria-label="মেনু">
                 <FiMenu size={24} />
               </button>
@@ -335,22 +327,29 @@ export default function Header({ categories = [] }) {
           <button onClick={closeSidebar} className="p-2 text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-colors"><FiX size={22} /></button>
         </div>
         <div className="flex border-b border-gray-100 bg-gray-50/50">
-          <button onClick={() => { closeSidebar(); handleUserClick(); }} className="flex-1 py-4 flex flex-col items-center justify-center gap-2 border-r border-gray-100 text-gray-600 hover:text-brand-green hover:bg-brand-green-light/50 transition-colors">
+          <button onClick={() => { closeSidebar(); handleUserClick(); }} className="w-full py-4 flex flex-col items-center justify-center gap-2 text-gray-600 hover:text-brand-green hover:bg-brand-green-light/50 transition-colors">
             {user ? (
               <div className="w-8 h-8 rounded-full bg-brand-green/10 flex items-center justify-center text-sm font-bold text-brand-green ring-2 ring-brand-green/30">{(user.first_name || user.name || 'U').charAt(0).toUpperCase()}</div>
             ) : (<FiUser size={22} className="text-gray-400" />)}
             <span className="text-[11px] font-bold uppercase tracking-wider">{user ? 'প্রোফাইল' : 'লগইন'}</span>
           </button>
-          <button onClick={() => { closeSidebar(); openCart(); }} className="flex-1 py-4 flex flex-col items-center justify-center gap-2 text-gray-600 hover:text-brand-green-dark hover:bg-brand-green-light/50 transition-colors relative">
-            <div className="relative">
-              <FiShoppingCart size={22} className="text-gray-400" />
-              {cartCount > 0 && (<span className="absolute -top-1.5 -right-2 bg-brand-gold text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white">{cartCount}</span>)}
-            </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider">কার্ট</span>
-          </button>
         </div>
-        <div className="flex-1 overflow-y-auto py-2">
-          <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">মেনু</div>
+        <div className="flex-1 overflow-y-auto py-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+          {/* Categories at Top */}
+          <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest flex items-center gap-2"><FiGrid size={12} /> বই বিভাগ</div>
+          {displayCategories.map((cat, idx) => (
+            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-colors">
+              <span>{cat.name}</span><FiChevronRight size={14} className="text-gray-300" />
+            </Link>
+          ))}
+
+          {/* Regular Menu */}
+          <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mt-2">মেনু</div>
           {[
             { label: "হোম", href: "/" },
             { label: "আমাদের সম্পর্কে", href: "/about" },
@@ -359,12 +358,6 @@ export default function Header({ categories = [] }) {
           ].map(item => (
             <Link key={item.href} href={item.href} onClick={closeSidebar} className={`flex items-center justify-between px-5 py-3.5 font-semibold border-b border-gray-50 transition-colors ${item.highlight ? 'text-brand-green bg-brand-green-light/50 hover:bg-brand-green-light' : 'text-gray-700 hover:text-brand-green hover:bg-brand-green-light/30'}`}>
               <span>{item.label}</span><FiChevronRight size={16} className={item.highlight ? "text-brand-green" : "text-gray-300"} />
-            </Link>
-          ))}
-          <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mt-2 flex items-center gap-2"><FiGrid size={12} /> বই বিভাগ</div>
-          {displayCategories.map((cat, idx) => (
-            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-colors">
-              <span>{cat.name}</span><FiChevronRight size={14} className="text-gray-300" />
             </Link>
           ))}
         </div>

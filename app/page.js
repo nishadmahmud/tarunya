@@ -25,7 +25,8 @@ import {
   getBlogs,
   getBannerFromServer,
   getBestDealsFromServer,
-  getBestSellersFromServer
+  getBestSellersFromServer,
+  getBookFairBestSellersFromServer
 } from "../lib/api";
 
 const isApiConfigured = () => {
@@ -40,6 +41,7 @@ export default async function Home() {
   let bestDealsCards = [];
   let flashSaleProducts = [];
   let featuredProducts = [];
+  let bookFairBestSellers = [];
   let blogPosts = [];
 
   // Skip all API calls if environment is not configured — fallback data in each component will be used
@@ -240,6 +242,35 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch best sellers:", error); }
 
   try {
+    const res = await getBookFairBestSellersFromServer();
+    const items = res?.success ? (res.data?.data || res.data) : null;
+    if (Array.isArray(items)) {
+      bookFairBestSellers = items.map((p) => {
+        const originalPrice = Number(p.retails_price || 0);
+        const discountValue = Number(p.discount || 0);
+        const discountType = p.discount_type;
+        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
+
+        const discountedPrice = hasDiscount
+          ? (String(discountType).toLowerCase() === 'percentage'
+            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
+            : Math.max(0, originalPrice - discountValue))
+          : originalPrice;
+
+        return {
+          id: p.id,
+          name: p.name,
+          brand: p.brands?.name || "অন্যান্য",
+          price: toMoney(discountedPrice),
+          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
+          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
+          imageUrl: p.image_path || p.image_url || "/no-image.svg",
+        };
+      });
+    }
+  } catch (error) { console.error("Failed to fetch book fair best sellers:", error); }
+
+  try {
     const res = await getBlogs();
     if (res?.success && Array.isArray(res?.data)) {
       blogPosts = res.data.slice(0, 3).map(b => ({
@@ -266,7 +297,7 @@ export default async function Home() {
       <PopularAuthors />
       <PromoBanners />
       <FeaturedProducts products={featuredProducts} />
-      <BookFairBestSellers />
+      <BookFairBestSellers products={bookFairBestSellers} />
       <PreOrderBooks />
       <BestDeals deals={bestDealsCards} />
       <CuratedReadingLists />

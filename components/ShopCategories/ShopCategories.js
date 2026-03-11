@@ -19,7 +19,11 @@ export default function ShopCategories({ categories = [], flashSaleProducts = []
     ];
 
     const displayCategories = categories && categories.length > 0
-        ? categories.map(cat => ({ ...cat, icon: <FiBox /> }))
+        ? categories.map(cat => ({
+            ...cat,
+            imageUrl: cat.image_path || cat.image || cat.image_url || null,
+            icon: cat.image_path || cat.image || cat.image_url ? null : <FiBox />
+        }))
         : defaultCategories;
 
     const defaultCuratedBooks = [
@@ -47,13 +51,23 @@ export default function ShopCategories({ categories = [], flashSaleProducts = []
                         </h2>
                         <p className="text-xs md:text-sm text-gray-400">আপনার পছন্দের বিভাগ থেকে বই বেছে নিন</p>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 md:gap-4">
+                    <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                         {displayCategories.map((cat, idx) => (
-                            <Link key={idx} href={`/category/${cat.slug || cat.category_id || cat.id || cat.name}`} className="group flex flex-col items-center p-4 md:p-6 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
-                                <div className="p-3 md:p-4 rounded-xl bg-white text-brand-green text-2xl md:text-3xl shadow-sm group-hover:shadow-md transition-all">
-                                    {cat.icon}
+                            <Link key={idx} href={`/category/${cat.slug || cat.category_id || cat.id || cat.name}`} className="group flex flex-col items-center p-2 md:p-4 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
+                                <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl bg-white text-brand-green text-xl md:text-3xl shadow-sm group-hover:shadow-md transition-all overflow-hidden relative">
+                                    {cat.imageUrl ? (
+                                        <Image
+                                            src={cat.imageUrl}
+                                            alt={cat.name}
+                                            fill
+                                            unoptimized
+                                            className="object-contain p-2"
+                                        />
+                                    ) : (
+                                        cat.icon
+                                    )}
                                 </div>
-                                <span className="mt-3 md:mt-4 text-xs md:text-sm font-bold text-gray-700 group-hover:text-brand-green transition-colors">{cat.name}</span>
+                                <span className="mt-2 md:mt-3 text-[10px] md:text-sm font-bold text-gray-700 group-hover:text-brand-green transition-colors text-center line-clamp-1">{cat.name}</span>
                             </Link>
                         ))}
                     </div>
