@@ -15,16 +15,38 @@ export default function BookDetailsModal({ product, onClose }) {
 
     if (!product) return null;
 
-    const specRows = [
-        { label: 'বইয়ের নাম', value: product.name, icon: <BookOpen className="w-4 h-4" /> },
-        { label: 'লেখক', value: product.author || "জানা নেই", icon: <UserIcon className="w-4 h-4" /> },
-        { label: 'প্রকাশক', value: product.publisher || "জানা নেই", icon: <Building2 className="w-4 h-4" /> },
-        { label: 'আইএসবিএন', value: product.isbn || "N/A", icon: <Hash className="w-4 h-4" /> },
-        { label: 'সংস্করণ', value: product.edition || "N/A", icon: <Calendar className="w-4 h-4" /> },
-        { label: 'পৃষ্ঠা সংখ্যা', value: product.pages || "N/A", icon: <Hash className="w-4 h-4" /> },
-        { label: 'দেশ', value: product.country || "বাংলাদেশ", icon: <Globe className="w-4 h-4" /> },
-        { label: 'ভাষা', value: product.language || "বাংলা", icon: <Languages className="w-4 h-4" />, isPill: true },
-    ];
+    const iconMap = {
+        'Author': <UserIcon className="w-4 h-4" />,
+        'Publisher': <Building2 className="w-4 h-4" />,
+        'ISBN': <Hash className="w-4 h-4" />,
+        'Edition': <Calendar className="w-4 h-4" />,
+        'Number of Pages': <Hash className="w-4 h-4" />,
+        'Pages': <Hash className="w-4 h-4" />,
+        'Country': <Globe className="w-4 h-4" />,
+        'Language': <Languages className="w-4 h-4" />,
+        'Title': <BookOpen className="w-4 h-4" />,
+    };
+
+    const getIcon = (name) => iconMap[name] || <Hash className="w-4 h-4" />;
+
+    // Generate dynamic spec rows from API specifications if available
+    const specRows = product.specifications && product.specifications.length > 0
+        ? product.specifications.map(s => ({
+            label: s.name === 'Number of Pages' ? 'পৃষ্ঠা সংখ্যা' : s.name,
+            value: s.description,
+            icon: getIcon(s.name),
+            isPill: s.name.toLowerCase() === 'language'
+        }))
+        : [
+            { label: 'বইয়ের নাম', value: product.name, icon: <BookOpen className="w-4 h-4" /> },
+            { label: 'লেখক', value: product.author, icon: <UserIcon className="w-4 h-4" /> },
+            { label: 'প্রকাশক', value: product.publisher, icon: <Building2 className="w-4 h-4" /> },
+            { label: 'আইএসবিএন', value: product.isbn, icon: <Hash className="w-4 h-4" /> },
+            { label: 'সংস্করণ', value: product.edition, icon: <Calendar className="w-4 h-4" /> },
+            { label: 'পৃষ্ঠা সংখ্যা', value: product.pages, icon: <Hash className="w-4 h-4" /> },
+            { label: 'দেশ', value: product.country, icon: <Globe className="w-4 h-4" /> },
+            { label: 'ভাষা', value: product.language, icon: <Languages className="w-4 h-4" />, isPill: true },
+        ];
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-sm transition-all animate-in fade-in duration-300">

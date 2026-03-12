@@ -75,7 +75,7 @@ export default async function RootLayout({ children }) {
   }
 
   return (
-    <html lang="bn">
+    <html lang="bn" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${notoBangla.variable} antialiased bg-white text-gray-800 pb-16 md:pb-0`}
       >

@@ -110,12 +110,13 @@ export default function ShareCollectionPage() {
                             images: bestImages.length > 0 ? bestImages : (p.image_path ? [p.image_path] : ["/no-image.svg"]),
                             description: p.description,
                             author: getSpec('Author') || p.author_name || p.brand_name || p.brand?.name || 'অজানা লেখক',
-                            publisher: getSpec('Publisher') || p.publisher_name || p.category?.name || 'তারুণ্য প্রকাশন',
+                            publisher: getSpec('Publisher') || p.publisher_name || 'তারুণ্য প্রকাশন',
                             isbn: getSpec('ISBN') || p.barcode || p.sku || 'N/A',
-                            edition: getSpec('Edition') || p.edition || 'N/A',
-                            pages: getSpec('Pages') || p.pages || 'N/A',
-                            country: getSpec('Country') || p.country || 'বাংলাদেশ',
-                            language: getSpec('Language') || p.language || 'বাংলা'
+                            edition: getSpec('Edition') || 'N/A',
+                            pages: getSpec('Number of Pages') || getSpec('Pages') || 'N/A',
+                            country: getSpec('Country') || 'বাংলাদেশ',
+                            language: getSpec('Language') || 'বাংলা',
+                            specifications: p.specifications || []
                         });
                     }
                 }

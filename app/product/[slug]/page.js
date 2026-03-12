@@ -130,7 +130,7 @@ export default function ProductDetailsPage() {
                     publisher: getSpec('Publisher') || p.publisher || 'তারুণ্য প্রকাশন',
                     isbn: getSpec('ISBN') || p.isbn || '9789849697763',
                     edition: getSpec('Edition') || p.edition || '১ম প্রকাশ, ২০২৩',
-                    pages: getSpec('Pages') || p.pages || p.total_pages || '৭২',
+                    pages: getSpec('Number of Pages') || getSpec('Pages') || p.pages || p.total_pages || 'N/A',
                     country: getSpec('Country') || p.country || 'বাংলাদেশ',
                     language: getSpec('Language') || p.language || 'বাংলা এবং আরবি',
                     author: getSpec('Author') || p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
