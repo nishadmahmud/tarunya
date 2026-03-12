@@ -99,15 +99,6 @@ export default function ProductDetailsPage() {
                 // Pass the raw imeis array for dynamic variant logic
                 const rawImeis = Array.isArray(p.imeis) ? p.imeis.filter(i => i.in_stock === 1) : [];
 
-                const specs = `
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>প্রকাশনী / ব্র্যান্ড:</strong> ${p.brand_name || p.brands?.name || 'জানা নেই'}</li>
-                        <li><strong>মূল দাম:</strong> ৳ ${originalPrice.toLocaleString('en-IN')}</li>
-                        <li><strong>স্ট্যাটাস:</strong> ${p.status || 'জানা নেই'}</li>
-                        <li><strong>বর্তমান স্টক:</strong> ${p.current_stock ?? 'জানা নেই'}</li>
-                    </ul>
-                `;
-
                 const mappedProduct = {
                     id: p.id,
                     name: p.name,
@@ -124,7 +115,14 @@ export default function ProductDetailsPage() {
                     images,
                     rawImeis,
                     description: p.description || '',
-                    specifications: specs,
+                    brand: p.brand_name || p.brands?.name || 'তারুণ্য প্রকাশন',
+                    publisher: p.publisher || 'তারুণ্য প্রকাশন',
+                    isbn: p.isbn || '9789849697763',
+                    edition: p.edition || '১ম প্রকাশ, ২০২৩',
+                    pages: p.pages || p.total_pages || '৭২',
+                    country: p.country || 'বাংলাদেশ',
+                    language: p.language || 'বাংলা এবং আরবি',
+                    author: p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
                     category: {
                         id: p.category_id || p.category?.id,
                         name: p.category_name || p.category?.name,
@@ -183,15 +181,14 @@ export default function ProductDetailsPage() {
                         images: ["https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800"],
                         rawImeis: [],
                         description: "<p>এটি একটি ডেমো বইয়ের বিবরণ। আসল ডাটাবেস বা এপিআই কানেক্ট না থাকায় এই ডেমো পেজটি দেখানো হচ্ছে। বইটি ইসলামিক জ্ঞান অন্বেষণের জন্য একটি চমৎকার উৎস হতে পারে।</p>",
-                        specifications: `
-                            <ul class="list-disc pl-5 space-y-2">
-                                <li><strong>প্রকাশনী / ব্র্যান্ড:</strong> তারুণ্য প্রকাশন (ডেমো)</li>
-                                <li><strong>লেখকের নাম:</strong> সংগ্রহ প্রদানকারী (ডেমো)</li>
-                                <li><strong>মূল দাম:</strong> ৳ ৫০০</li>
-                                <li><strong>স্ট্যাটাস:</strong> Available</li>
-                                <li><strong>বর্তমান স্টক:</strong> ২১০</li>
-                            </ul>
-                        `,
+                        brand: "তারুণ্য প্রকাশন (ডেমো)",
+                        author: "উবাইদুল্লাহ আস সাহাল",
+                        publisher: "তারুণ্য প্রকাশন",
+                        isbn: "9789849697763",
+                        edition: "১ম প্রকাশ, ২০২৩",
+                        pages: "৭২",
+                        country: "বাংলাদেশ",
+                        language: "বাংলা এবং আরবি",
                         category: {
                             id: 1,
                             name: "ইসলামী বই",
@@ -290,8 +287,7 @@ export default function ProductDetailsPage() {
 
                         {/* Bottom: Tabs */}
                         <ProductTabs
-                            description={productData.description}
-                            specifications={productData.specifications}
+                            product={productData}
                         />
 
                         {/* Related Products Section */}
