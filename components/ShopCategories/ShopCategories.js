@@ -7,33 +7,15 @@ import ProductCard from '../Shared/ProductCard';
 
 export default function ShopCategories({ categories = [], flashSaleProducts = [] }) {
 
-    const defaultCategories = [
-        { name: "উপন্যাস", slug: "novels", icon: <FiBook /> },
-        { name: "কবিতা", slug: "poetry", icon: <FiFeather /> },
-        { name: "শিশু-কিশোর", slug: "children", icon: <FiStar /> },
-        { name: "আত্মউন্নয়ন", slug: "self-help", icon: <FiSun /> },
-        { name: "ধর্মীয় বই", slug: "religious", icon: <FiHeart /> },
-        { name: "ইতিহাস", slug: "history", icon: <FiGlobe /> },
-        { name: "বিজ্ঞান", slug: "science", icon: <FiBookOpen /> },
-        { name: "জীবনী", slug: "biography", icon: <FiCoffee /> },
-    ];
-
     const displayCategories = categories && categories.length > 0
         ? categories.map(cat => ({
             ...cat,
             imageUrl: cat.image_path || cat.image || cat.image_url || null,
             icon: cat.image_path || cat.image || cat.image_url ? null : <FiBox />
         }))
-        : defaultCategories;
+        : [];
 
-    const defaultCuratedBooks = [
-        { id: 101, name: "হুমায়ূন আহমেদ সংকলন — ১০ খণ্ড", brand: "হুমায়ূন আহমেদ", price: "৳ 2,500", oldPrice: "৳ 3,500", discount: "-29%", imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop" },
-        { id: 102, name: "শরৎচন্দ্র রচনাসমগ্র", brand: "শরৎচন্দ্র", price: "৳ 1,800", oldPrice: "৳ 2,400", discount: "-25%", imageUrl: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop" },
-        { id: 103, name: "বাংলা থ্রিলার সেট", brand: "বিভিন্ন লেখক", price: "৳ 950", oldPrice: "৳ 1,200", discount: "-21%", imageUrl: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop" },
-        { id: 104, name: "রবীন্দ্র রচনাবলী", brand: "রবীন্দ্রনাথ ঠাকুর", price: "৳ 3,200", oldPrice: "৳ 4,000", discount: "-20%", imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop" },
-    ];
-
-    const displayCurated = flashSaleProducts && flashSaleProducts.length > 0 ? flashSaleProducts : defaultCuratedBooks;
+    const displayCurated = flashSaleProducts && flashSaleProducts.length > 0 ? flashSaleProducts : [];
 
     // Separate featured book and rest
     const featuredBook = displayCurated[0];

@@ -47,7 +47,7 @@ export default function ProductTabs({ product }) {
             {/* Content Area */}
             <div className="min-h-[200px]">
                 {activeTab === 'summary' && (
-                    <div className="prose prose-sm md:prose-base max-w-full text-gray-600 leading-relaxed md:leading-loose">
+                    <div className="prose prose-sm md:prose-base max-w-full text-gray-600 leading-relaxed md:leading-loose break-words overflow-x-hidden">
                         <div dangerouslySetInnerHTML={{ __html: product.description }} />
                     </div>
                 )}

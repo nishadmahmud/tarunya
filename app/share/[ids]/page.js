@@ -89,19 +89,33 @@ export default function ShareCollectionPage() {
                                 : Math.max(0, originalPrice - discountValue)
                             : originalPrice;
 
+                        const imageCandidates = [
+                            Array.isArray(p.images) ? p.images : [],
+                            Array.isArray(p.image_paths) ? p.image_paths : [],
+                            Array.isArray(p.imei_image) ? p.imei_image.filter(Boolean) : []
+                        ];
+                        const bestImages = imageCandidates.reduce((best, curr) => curr.length > best.length ? curr : best, []);
+                        const displayImage = (bestImages.length > 0) ? bestImages[0] : (p.image_path || "/no-image.svg");
+
+                        const getSpec = (name) => {
+                            const spec = p.specifications?.find(s => s.name.toLowerCase() === name.toLowerCase());
+                            return spec ? spec.description : null;
+                        };
+
                         fetchedProducts.push({
                             id: p.id,
                             name: p.name,
                             numericPrice: price,
-                            image: p.image_path || (p.images && p.images[0]) || "/no-image.svg",
+                            image: displayImage,
+                            images: bestImages.length > 0 ? bestImages : (p.image_path ? [p.image_path] : ["/no-image.svg"]),
                             description: p.description,
-                            author: p.author_name || p.brand_name || p.brand?.name,
-                            publisher: p.publisher_name || p.category?.name,
-                            isbn: p.barcode || p.sku,
-                            edition: p.edition,
-                            pages: p.pages,
-                            country: p.country,
-                            language: p.language
+                            author: getSpec('Author') || p.author_name || p.brand_name || p.brand?.name || 'অজানা লেখক',
+                            publisher: getSpec('Publisher') || p.publisher_name || p.category?.name || 'তারুণ্য প্রকাশন',
+                            isbn: getSpec('ISBN') || p.barcode || p.sku || 'N/A',
+                            edition: getSpec('Edition') || p.edition || 'N/A',
+                            pages: getSpec('Pages') || p.pages || 'N/A',
+                            country: getSpec('Country') || p.country || 'বাংলাদেশ',
+                            language: getSpec('Language') || p.language || 'বাংলা'
                         });
                     }
                 }

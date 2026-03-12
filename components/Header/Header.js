@@ -33,7 +33,7 @@ export default function Header({ categories = [] }) {
     { name: "বিজ্ঞান", slug: "science" }
   ];
 
-  const displayCategories = (categories && categories.length > 0 ? categories : defaultCategories).slice(0, 7);
+  const displayCategories = categories && categories.length > 0 ? categories : defaultCategories;
 
   const handleUserClick = () => {
     if (user) {
@@ -219,25 +219,35 @@ export default function Header({ categories = [] }) {
         </div>
 
         {/* ─── Category Strip (Desktop Only) ─── */}
-        <div className="hidden md:block bg-brand-green-dark/90 backdrop-blur-sm border-t border-white/10">
-          <div className="max-w-7xl mx-auto flex items-center px-6 py-2 gap-1 overflow-x-auto whitespace-nowrap" style={{ scrollbarWidth: 'none' }}>
+        <div className="hidden md:block bg-brand-green-dark/95 backdrop-blur-sm border-t border-white/10">
+          <div className="max-w-7xl mx-auto flex items-center px-6 py-2">
             <Link href="#" className="text-white/70 text-[13px] font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/10 hover:text-white transition-all flex-shrink-0 mr-2 border-r border-white/10 pr-5">
               <FiGrid size={14} /> সকল বিভাগ
             </Link>
-            {displayCategories.map((cat, idx) => (
-              <Link
-                key={cat.id || idx}
-                href={`/category/${cat.slug || cat.category_id || cat.id}`}
-                className="text-white/80 text-[13px] font-medium hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md transition-all flex-shrink-0"
-              >
-                {cat.name}
-              </Link>
-            ))}
-            <div className="ml-auto flex items-center gap-3 flex-shrink-0 pl-4 border-l border-white/10">
-              <Link href="/track-order" className="text-white/80 text-[12px] font-bold hover:text-white transition-colors flex items-center gap-1.5">
+
+            {/* Scrollable Categories Container */}
+            <div className="flex-1 overflow-x-auto flex items-center gap-1 no-scrollbar min-w-0 scroll-smooth">
+              <style jsx>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+              `}</style>
+              {displayCategories.map((cat, idx) => (
+                <Link
+                  key={cat.id || idx}
+                  href={`/category/${cat.slug || cat.category_id || cat.id}`}
+                  className="text-white/80 text-[13px] font-medium hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md transition-all flex-shrink-0"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Fixed Right Section */}
+            <div className="flex items-center gap-3 flex-shrink-0 pl-4 border-l border-white/10 ml-2">
+              <Link href="/track-order" className="text-white/80 text-[12px] font-bold hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-300 animate-pulse"></span> অর্ডার ট্র্যাক
               </Link>
-              <Link href="/special-offers" className="bg-brand-gold text-white text-[11px] font-black px-4 py-1.5 rounded-full hover:bg-yellow-600 transition-colors shadow-sm">
+              <Link href="/special-offers" className="bg-brand-gold text-white text-[11px] font-black px-4 py-1.5 rounded-full hover:bg-yellow-600 transition-colors shadow-sm whitespace-nowrap">
                 🔥 বিশেষ অফার
               </Link>
             </div>
@@ -343,7 +353,7 @@ export default function Header({ categories = [] }) {
           {/* Categories at Top */}
           <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest flex items-center gap-2"><FiGrid size={12} /> বই বিভাগ</div>
           {displayCategories.map((cat, idx) => (
-            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-colors">
+            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-all">
               <span>{cat.name}</span><FiChevronRight size={14} className="text-gray-300" />
             </Link>
           ))}

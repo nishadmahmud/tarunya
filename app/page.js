@@ -1,21 +1,22 @@
 import Hero from "../components/Hero/Hero";
-import TrustStats from "../components/TrustStats/TrustStats";
+// import TrustStats from "../components/TrustStats/TrustStats";
 import ShopCategories from "../components/ShopCategories/ShopCategories";
 import NewArrivals from "../components/NewArrivals/NewArrivals";
-import PromoBanners from "../components/PromoBanners/PromoBanners";
+// import PromoBanners from "../components/PromoBanners/PromoBanners";
 import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
 import BestDeals from "../components/BestDeals/BestDeals";
-import Testimonials from "../components/Testimonials/Testimonials";
-import FAQ from "../components/FAQ/FAQ";
 import BlogTips from "../components/BlogTips/BlogTips";
-import CTABanner from "../components/CTABanner/CTABanner";
-import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
+// import CTABanner from "../components/CTABanner/CTABanner";
+import FAQ from "../components/FAQ/FAQ";
 import BookFairBestSellers from "../components/BookFairBestSellers/BookFairBestSellers";
-import TopPublishers from "../components/TopPublishers/TopPublishers";
-import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
-import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
-import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
-import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
+// import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
+// import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
+// import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
+// import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
+// import TopPublishers from "../components/TopPublishers/TopPublishers";
+// import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
+// import Testimonials from "../components/Testimonials/Testimonials";
+// import FAQ from "../components/FAQ/FAQ";
 
 import {
   getSlidersFromServer,
@@ -51,21 +52,21 @@ export default async function Home() {
         <Hero slides={[]} banners={[]} />
         <TrustStats />
         <ShopCategories categories={[]} flashSaleProducts={[]} />
-        <SeriesBooks />
+        {/* <SeriesBooks /> */}
         <NewArrivals products={[]} />
-        <PopularAuthors />
+        {/* <PopularAuthors /> */}
         <PromoBanners />
         <FeaturedProducts products={[]} />
         <BookFairBestSellers />
-        <PreOrderBooks />
+        {/* <PreOrderBooks /> */}
         <BestDeals deals={[]} />
-        <CuratedReadingLists />
-        <TopPublishers />
+        {/* <CuratedReadingLists /> */}
+        {/* <TopPublishers /> */}
         <BlogTips posts={[]} />
         <CTABanner />
-        <AppDownloadBanner />
-        <Testimonials />
-        <FAQ />
+        {/* <AppDownloadBanner /> */}
+        {/* <Testimonials /> */}
+        {/* <FAQ /> */}
       </>
     );
   }
@@ -100,7 +101,23 @@ export default async function Home() {
     const sliderData = res?.success ? res?.sliders : null;
     let images = [];
     if (Array.isArray(sliderData) && sliderData.length > 0) {
-      images = sliderData[0].image_path || [];
+      const s = sliderData[0];
+      // Collect all possible image arrays
+      const imageCandidates = [
+        Array.isArray(s.image_path) ? s.image_path : [],
+        Array.isArray(s.image_paths) ? s.image_paths : [],
+        Array.isArray(s.images) ? s.images : []
+      ];
+      
+      // Pick the best array
+      let best = imageCandidates.reduce((a, b) => b.length > a.length ? b : a, []);
+      
+      // Fallback to singular image_path string if no arrays found
+      if (best.length === 0 && s.image_path && typeof s.image_path === 'string') {
+        images = [s.image_path];
+      } else {
+        images = best;
+      }
     }
 
     heroSlides = images.map((img, idx) => ({
@@ -288,24 +305,24 @@ export default async function Home() {
 
   return (
     <>
-      <Hero slides={heroSlides} banners={homeBanners} />
-      <TrustStats />
+      {(heroSlides.length > 0 || homeBanners.length > 0) && <Hero slides={heroSlides} banners={homeBanners} />}
+      {/* <TrustStats /> */}
 
-      <ShopCategories categories={categories} flashSaleProducts={flashSaleProducts} />
-      <SeriesBooks />
-      <NewArrivals products={newArrivals} />
-      <PopularAuthors />
-      <PromoBanners />
-      <FeaturedProducts products={featuredProducts} />
-      <BookFairBestSellers products={bookFairBestSellers} />
-      <PreOrderBooks />
-      <BestDeals deals={bestDealsCards} />
-      <CuratedReadingLists />
-      <TopPublishers />
-      <BlogTips posts={blogPosts} />
-      <CTABanner />
-      <AppDownloadBanner />
-      <Testimonials />
+      {(categories.length > 0 || flashSaleProducts.length > 0) && <ShopCategories categories={categories} flashSaleProducts={flashSaleProducts} />}
+      {/* <SeriesBooks /> */}
+      {newArrivals.length > 0 && <NewArrivals products={newArrivals} />}
+      {/* <PopularAuthors /> */}
+      {/* <PromoBanners /> */}
+      {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
+      {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
+      {/* <PreOrderBooks /> */}
+      {bestDealsCards.length > 0 && <BestDeals deals={bestDealsCards} />}
+      {/* <CuratedReadingLists /> */}
+      {/* <TopPublishers /> */}
+      {blogPosts.length > 0 && <BlogTips posts={blogPosts} />}
+      {/* <CTABanner /> */}
+      {/* <AppDownloadBanner /> */}
+      {/* <Testimonials /> */}
       <FAQ />
     </>
   );

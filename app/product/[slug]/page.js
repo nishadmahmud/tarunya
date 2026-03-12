@@ -90,14 +90,25 @@ export default function ProductDetailsPage() {
                         : `৳ ${discountValue.toLocaleString('en-IN')}`
                     : null;
 
-                const images =
-                    (Array.isArray(p.images) && p.images.length > 0 && p.images) ||
-                    (Array.isArray(p.imei_image) && p.imei_image.filter(Boolean)) ||
-                    (p.image_path ? [p.image_path] : []) ||
-                    ['/no-image.svg'];
+                const imageCandidates = [
+                    Array.isArray(p.images) ? p.images : [],
+                    Array.isArray(p.image_paths) ? p.image_paths : [],
+                    Array.isArray(p.imei_image) ? p.imei_image.filter(Boolean) : []
+                ];
+                
+                // Pick the one with the most images
+                let bestImages = imageCandidates.reduce((best, curr) => curr.length > best.length ? curr : best, []);
+                
+                // If all arrays are empty, fallback to singular image_path or placeholder
+                const images = (bestImages.length > 0) ? bestImages : (p.image_path ? [p.image_path] : ['/no-image.svg']);
 
                 // Pass the raw imeis array for dynamic variant logic
                 const rawImeis = Array.isArray(p.imeis) ? p.imeis.filter(i => i.in_stock === 1) : [];
+
+                const getSpec = (name) => {
+                    const spec = p.specifications?.find(s => s.name.toLowerCase() === name.toLowerCase());
+                    return spec ? spec.description : null;
+                };
 
                 const mappedProduct = {
                     id: p.id,
@@ -116,13 +127,13 @@ export default function ProductDetailsPage() {
                     rawImeis,
                     description: p.description || '',
                     brand: p.brand_name || p.brands?.name || 'তারুণ্য প্রকাশন',
-                    publisher: p.publisher || 'তারুণ্য প্রকাশন',
-                    isbn: p.isbn || '9789849697763',
-                    edition: p.edition || '১ম প্রকাশ, ২০২৩',
-                    pages: p.pages || p.total_pages || '৭২',
-                    country: p.country || 'বাংলাদেশ',
-                    language: p.language || 'বাংলা এবং আরবি',
-                    author: p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
+                    publisher: getSpec('Publisher') || p.publisher || 'তারুণ্য প্রকাশন',
+                    isbn: getSpec('ISBN') || p.isbn || '9789849697763',
+                    edition: getSpec('Edition') || p.edition || '১ম প্রকাশ, ২০২৩',
+                    pages: getSpec('Pages') || p.pages || p.total_pages || '৭২',
+                    country: getSpec('Country') || p.country || 'বাংলাদেশ',
+                    language: getSpec('Language') || p.language || 'বাংলা এবং আরবি',
+                    author: getSpec('Author') || p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
                     category: {
                         id: p.category_id || p.category?.id,
                         name: p.category_name || p.category?.name,
@@ -277,7 +288,7 @@ export default function ProductDetailsPage() {
                             </div>
 
                             {/* Col 2: Info */}
-                            <div className="w-full md:w-1/2 lg:w-[60%]">
+                            <div className="w-full md:w-1/2 lg:w-[60%] min-w-0 overflow-hidden">
                                 <ProductInfo
                                     product={productData}
                                     onVariantImageChange={setVariantImages}
