@@ -298,7 +298,8 @@ export default async function Home() {
         category: b.category_id || 'সাধারণ',
         readTime: '৫ মিনিট',
         image: b.image || "/images/blog-fallback.jpg",
-        slug: b.title ? b.title.toLowerCase().replace(/\s+/g, '-') : String(b.id)
+        slug: b.title ? b.title.toLowerCase().replace(/\s+/g, '-') : String(b.id),
+        id: b.id
       }));
     }
   } catch (error) { console.error("Failed to fetch blogs:", error); }

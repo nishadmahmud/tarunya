@@ -22,7 +22,7 @@ export default function BlogTips({ posts = [] }) {
                         </h2>
                         <p className="text-gray-500 text-xs md:text-lg hidden sm:block">বই ও পড়ালেখা নিয়ে সর্বশেষ খবর ও পরামর্শ।</p>
                     </div>
-                    <Link href="#" className="text-xs md:text-sm font-bold text-gray-500 hover:text-brand-green uppercase tracking-wider transition-colors inline-block pb-1 border-b-2 border-transparent hover:border-brand-green whitespace-nowrap">
+                    <Link href="/blogs" className="text-xs md:text-sm font-bold text-gray-500 hover:text-brand-green uppercase tracking-wider transition-colors inline-block pb-1 border-b-2 border-transparent hover:border-brand-green whitespace-nowrap">
                         সব দেখুন
                     </Link>
                 </div>
@@ -31,7 +31,7 @@ export default function BlogTips({ posts = [] }) {
                 <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-3 md:gap-8 pb-2 md:pb-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
                     {displayPosts.map((post) => (
-                        <Link href="#" key={post.id} className="group flex flex-col bg-white rounded-xl md:rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg hover:border-brand-green/20 transition-all duration-300 min-w-[220px] md:min-w-0 flex-shrink-0">
+                        <Link href={`/blogs/${post.slug}-${post.id}`} key={post.id} className="group flex flex-col bg-white rounded-xl md:rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg hover:border-brand-green/20 transition-all duration-300 min-w-[220px] md:min-w-0 flex-shrink-0">
                             <div className="w-full aspect-[16/9] relative overflow-hidden bg-gray-100">
                                 <Image src={post.image || post.imageUrl} alt={post.title || post.name} fill unoptimized className="object-cover object-center group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute top-2 left-2 md:top-3 md:left-3">

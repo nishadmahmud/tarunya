@@ -375,9 +375,8 @@ export default function CheckoutPage() {
                                                     name="firstName"
                                                     value={formData.firstName}
                                                     onChange={handleChange}
-                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
+                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
                                                     placeholder="আপনার পুরো নাম"
-                                                    style={{ fontSize: '16px' }}
                                                 />
                                             </div>
                                         </div>
@@ -397,9 +396,8 @@ export default function CheckoutPage() {
                                                     name="phone"
                                                     value={formData.phone}
                                                     onChange={handleChange}
-                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
+                                                    className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
                                                     placeholder="01XXXXXXXXX"
-                                                    style={{ fontSize: '16px' }}
                                                 />
                                             </div>
                                             {formData.phone && !/^01[3-9]\d{8}$/.test(formData.phone) && (
@@ -430,9 +428,8 @@ export default function CheckoutPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
+                                                className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green"
                                                 placeholder="email@example.com"
-                                                style={{ fontSize: '16px' }}
                                             />
                                         </div>
                                     </div>
@@ -458,9 +455,8 @@ export default function CheckoutPage() {
                                             rows={3}
                                             value={formData.address}
                                             onChange={handleChange}
-                                            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green resize-none"
+                                            className="block w-full rounded-xl border border-gray-200 bg-gray-50 py-3 px-4 text-base text-gray-900 placeholder:text-gray-400 focus:border-brand-green focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand-green resize-none"
                                             placeholder="রাস্তার নাম, বাড়ির নম্বর, নিকটস্থ ল্যান্ডমার্ক..."
-                                            style={{ fontSize: '16px' }}
                                         />
                                     </div>
                                 </form>
@@ -686,11 +682,10 @@ export default function CheckoutPage() {
                                                             handleApplyCoupon();
                                                         }
                                                     }}
-                                                    className={`flex-1 rounded-xl border px-4 py-2.5 text-sm focus:outline-none ${couponError
+                                                    className={`flex-1 rounded-xl border px-4 py-2.5 text-base focus:outline-none ${couponError
                                                         ? "border-red-300 bg-red-50 focus:border-red-500"
                                                         : "border-gray-200 bg-gray-50 focus:border-brand-green"
                                                         }`}
-                                                    style={{ fontSize: '16px' }}
                                                 />
                                                 <button
                                                     onClick={handleApplyCoupon}

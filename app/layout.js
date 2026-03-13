@@ -3,6 +3,7 @@ import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import MobileBottomNav from "../components/MobileBottomNav/MobileBottomNav";
 import Providers from "../components/Providers";
+import FloatingChat from "../components/FloatingChat/FloatingChat";
 import { getCategoriesFromServer } from "../lib/api";
 import "./globals.css";
 
@@ -86,6 +87,7 @@ export default async function RootLayout({ children }) {
           </main>
           <MobileBottomNav />
           <Footer categories={categories} />
+          <FloatingChat />
         </Providers>
       </body>
     </html>

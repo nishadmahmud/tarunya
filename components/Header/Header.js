@@ -173,7 +173,7 @@ export default function Header({ categories = [] }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="বই, লেখক বা বিষয় খুঁজুন..."
-                className="flex-grow bg-transparent border-none outline-none text-[12px] md:text-sm text-gray-800 min-w-0 w-full placeholder-gray-400"
+                className="flex-grow bg-transparent border-none outline-none text-base md:text-sm text-gray-800 min-w-0 w-full placeholder-gray-400"
               />
               <button type="submit" className="bg-brand-green-dark text-white text-[10px] md:text-xs font-bold px-3 md:px-5 py-1 md:py-1.5 rounded-md hover:bg-brand-green transition-colors flex-shrink-0 ml-2 whitespace-nowrap">
                 খুঁজুন
