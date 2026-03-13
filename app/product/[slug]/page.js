@@ -7,7 +7,7 @@ import ProductGallery from '../../../components/Product/ProductGallery';
 import ProductInfo from '../../../components/Product/ProductInfo';
 import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
-import { getAuthorById, getProductById, getRelatedProduct } from '../../../lib/api';
+import { getAuthorById, getProductById, getRelatedProduct, getProductReviews } from '../../../lib/api';
 
 export default function ProductDetailsPage() {
     const params = useParams();
@@ -34,6 +34,8 @@ export default function ProductDetailsPage() {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [variantImages, setVariantImages] = useState(null);
     const [fromCategory, setFromCategory] = useState(null); // { name, slug }
+    const [reviewSummary, setReviewSummary] = useState(null);
+    const [reviewsData, setReviewsData] = useState([]);
 
     useEffect(() => {
         // Check if we came from a category page
@@ -161,6 +163,20 @@ export default function ProductDetailsPage() {
                 if (!cancelled) {
                     setProductData(mappedProduct);
                     setVariantImages(null); // reset on new product load
+                }
+
+                // Load reviews and summary
+                try {
+                    const reviewRes = await getProductReviews(p.id);
+                    if (!cancelled) {
+                        if (reviewRes?.summary) setReviewSummary(reviewRes.summary);
+                        if (reviewRes?.data) {
+                            const reviewList = Array.isArray(reviewRes.data?.data) ? reviewRes.data.data : (Array.isArray(reviewRes.data) ? reviewRes.data : []);
+                            setReviewsData(reviewList);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Failed to load review summary:', err);
                 }
 
                 // Load related products
@@ -311,6 +327,7 @@ export default function ProductDetailsPage() {
                                 <ProductInfo
                                     product={productData}
                                     onVariantImageChange={setVariantImages}
+                                    reviewSummary={reviewSummary}
                                 />
                             </div>
                         </div>
@@ -318,6 +335,20 @@ export default function ProductDetailsPage() {
                         {/* Bottom: Tabs */}
                         <ProductTabs
                             product={productData}
+                            initialReviews={reviewsData}
+                            onReviewSubmitted={async () => {
+                                // Re-fetch reviews at page level after new submission
+                                try {
+                                    const reviewRes = await getProductReviews(productData.id);
+                                    if (reviewRes?.summary) setReviewSummary(reviewRes.summary);
+                                    if (reviewRes?.data) {
+                                        const list = Array.isArray(reviewRes.data?.data) ? reviewRes.data.data : (Array.isArray(reviewRes.data) ? reviewRes.data : []);
+                                        setReviewsData(list);
+                                    }
+                                } catch (err) {
+                                    console.error('Failed to refresh reviews:', err);
+                                }
+                            }}
                         />
 
                         {/* Related Products Section */}

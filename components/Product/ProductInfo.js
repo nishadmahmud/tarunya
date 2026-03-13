@@ -6,7 +6,7 @@ import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { toast } from 'react-hot-toast';
 
-export default function ProductInfo({ product, onVariantImageChange }) {
+export default function ProductInfo({ product, onVariantImageChange, reviewSummary }) {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
@@ -204,6 +204,28 @@ export default function ProductInfo({ product, onVariantImageChange }) {
                         স্টকে আছে
                     </div>
                     <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">{product.name}</h1>
+                    
+                    {/* Rating Summary */}
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="flex text-brand-gold">
+                            {[...Array(5)].map((_, i) => (
+                                <FaStar 
+                                    key={i} 
+                                    size={14} 
+                                    className={reviewSummary && i < Math.round(reviewSummary.average_rating) ? 'fill-brand-gold' : 'text-gray-300'} 
+                                />
+                            ))}
+                        </div>
+                        {reviewSummary && reviewSummary.total_reviews > 0 ? (
+                            <>
+                                <span className="text-sm font-bold text-gray-700">{reviewSummary.average_rating_display}</span>
+                                <span className="text-gray-400">|</span>
+                                <span className="text-sm text-gray-500 font-medium">{reviewSummary.total_reviews} টি রিভিউ</span>
+                            </>
+                        ) : (
+                            <span className="text-sm text-gray-400 font-medium">(০ টি রিভিউ)</span>
+                        )}
+                    </div>
                     
                     {/* Book Meta Details */}
                     <div className="flex flex-col gap-2.5 text-sm text-gray-600 mb-6">
