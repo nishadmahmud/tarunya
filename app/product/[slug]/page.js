@@ -153,7 +153,9 @@ export default function ProductDetailsPage() {
                         id: p.category_id || p.category?.id,
                         name: p.category_name || p.category?.name,
                         slug: p.category_slug || p.category?.slug || (p.category_name || p.category?.name)?.toLowerCase().replace(/\s+/g, '-')
-                    }
+                    },
+                    youtubeLink: p.youtube_link || p.video_link || null,
+                    pdfFile: p.pdf_file || null
                 };
 
                 if (!cancelled) {
@@ -219,7 +221,9 @@ export default function ProductDetailsPage() {
                             id: 1,
                             name: "ইসলামী বই",
                             slug: "islamic-books"
-                        }
+                        },
+                        youtubeLink: "https://www.youtube.com/watch?v=wzXQ0FkXmGQ",
+                        pdfFile: "https://www.outletexpense.xyz/uploads/3-Emdad/1773408731_69b411db20c98.pdf"
                     };
 
                     setProductData(dummyProduct);

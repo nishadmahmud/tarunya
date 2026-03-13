@@ -4,11 +4,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
+import { toast } from 'react-hot-toast';
 
 export default function ProductInfo({ product, onVariantImageChange }) {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
-    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
 
     const imeis = product.rawImeis || [];
@@ -162,6 +162,30 @@ export default function ProductInfo({ product, onVariantImageChange }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedColor]);
 
+
+    const handleLookInside = () => {
+        setIsLookInsideOpen(true);
+    };
+
+    const handleVideoReview = () => {
+        if (product.youtubeLink) {
+            window.open(product.youtubeLink, '_blank', 'noopener,noreferrer');
+        } else {
+            toast.error('দুঃখিত, এই বইটির জন্য কোনো ভিডিও রিভিউ পাওয়া যায়নি।');
+        }
+    };
+
+    const handleShare = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                toast.success('লিংক কপি করা হয়েছে!');
+            })
+            .catch(() => {
+                toast.error('লিংক কপি করা যায়নি।');
+            });
+    };
+
     const handleAddToCart = () => {
         const variants = {};
         if (selectedStorage) variants.storage = selectedStorage;
@@ -180,9 +204,41 @@ export default function ProductInfo({ product, onVariantImageChange }) {
                         স্টকে আছে
                     </div>
                     <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">{product.name}</h1>
+                    
+                    {/* Book Meta Details */}
+                    <div className="flex flex-col gap-2.5 text-sm text-gray-600 mb-6">
+                        {product.author && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 w-24">লেখক:</span>
+                                <span className="font-bold text-brand-green hover:underline cursor-pointer">{product.author}</span>
+                            </div>
+                        )}
+                        {product.publisher && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 w-24">প্রকাশনী:</span>
+                                <span className="font-semibold text-gray-800">{product.publisher}</span>
+                            </div>
+                        )}
+                        {product.pages && product.pages !== 'N/A' && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 w-24">পৃষ্ঠা সংখ্যা:</span>
+                                <span className="font-semibold text-gray-800">{product.pages} টি</span>
+                            </div>
+                        )}
+                        {product.edition && (
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-400 w-24">সংস্করণ:</span>
+                                <span className="font-semibold text-gray-800">{product.edition}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <button className="p-2 text-gray-400 hover:text-brand-green hover:bg-brand-green/10 rounded-full transition-colors shrink-0">
+                <button 
+                    onClick={handleShare}
+                    className="p-2 text-gray-400 hover:text-brand-green hover:bg-brand-green/10 rounded-full transition-colors shrink-0"
+                    title="Share link"
+                >
                     <FiShare2 size={20} />
                 </button>
             </div>
@@ -313,7 +369,7 @@ export default function ProductInfo({ product, onVariantImageChange }) {
                 {/* Action Links: Look Inside / Video */}
                 <div className="flex flex-wrap items-center gap-4">
                     <button
-                        onClick={() => setIsLookInsideOpen(true)}
+                        onClick={handleLookInside}
                         className="flex items-center gap-1.5 text-brand-green hover:text-brand-green-dark font-bold text-sm transition-colors group"
                     >
                         <FiBookOpen className="group-hover:scale-110 transition-transform" size={18} />
@@ -321,7 +377,7 @@ export default function ProductInfo({ product, onVariantImageChange }) {
                     </button>
                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                     <button
-                        onClick={() => setIsVideoModalOpen(true)}
+                        onClick={handleVideoReview}
                         className="flex items-center gap-1.5 text-brand-gold hover:text-yellow-600 font-bold text-sm transition-colors group"
                     >
                         <FiPlayCircle className="group-hover:scale-110 transition-transform" size={18} />
@@ -366,89 +422,45 @@ export default function ProductInfo({ product, onVariantImageChange }) {
                 </div>
             </div>
 
-            {/* Video Review Modal */}
-            {isVideoModalOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white rounded-2xl md:rounded-3xl w-full max-w-4xl overflow-hidden shadow-2xl relative flex flex-col">
-                        <div className="flex justify-between items-center p-4 border-b border-gray-100">
-                            <h3 className="text-lg font-bold text-gray-900 mx-2">বইয়ের ভিডিও রিভিউ</h3>
-                            <button
-                                onClick={() => setIsVideoModalOpen(false)}
-                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                            >
-                                <FiX size={24} />
-                            </button>
-                        </div>
-                        <div className="relative w-full aspect-video bg-black">
-                            <iframe
-                                className="absolute inset-0 w-full h-full"
-                                src="https://www.youtube.com/embed/wzXQ0FkXmGQ?autoplay=1" // Placeholder Islamic book review video / generic video
-                                title="Book Review"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                        <div className="p-4 bg-gray-50 text-center text-sm text-gray-500">
-                            এটি একটি ডেমো রিভিউ ভিডিও।
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Look Inside Modal (PDF / Pages Preview) */}
-            {isLookInsideOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-opacity">
-                    <div className="bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] overflow-hidden shadow-2xl relative flex flex-col">
-                        <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50">
-                            <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
-                                <FiBookOpen />
-                                একটু পড়ে দেখুন
-                            </h3>
-                            <button
-                                onClick={() => setIsLookInsideOpen(false)}
-                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+            <div className={`fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-all duration-300 ${isLookInsideOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                <div className={`bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] overflow-hidden shadow-2xl relative flex flex-col transition-transform duration-300 ${isLookInsideOpen ? 'scale-100' : 'scale-95'}`}>
+                    <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50">
+                        <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
+                            <FiBookOpen />
+                            একটু পড়ে দেখুন
+                        </h3>
+                        <button
+                            onClick={() => setIsLookInsideOpen(false)}
+                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                        >
+                            <FiX size={24} />
+                        </button>
+                    </div>
+
+                    <div className="flex-1 bg-gray-100 overflow-hidden relative">
+                        {/* Using object tag for pre-fetching speed and native rendering */}
+                        {product.pdfFile ? (
+                            <object
+                                data={product.pdfFile}
+                                type="application/pdf"
+                                className="w-full h-full"
                             >
-                                <FiX size={24} />
-                            </button>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto bg-gray-100 p-4 md:p-8 flex flex-col items-center gap-6">
-                            {/* Dummy Pages for Look Inside */}
-                            {[1, 2, 3].map((pageNum) => (
-                                <div key={pageNum} className="w-full max-w-xl aspect-[1/1.4] bg-white shadow-md border border-gray-200 p-8 md:p-12 flex flex-col">
-                                    <div className="border-b-2 border-brand-gold/30 pb-4 mb-6">
-                                        <h4 className="text-xl font-bold text-gray-800 text-center">অধ্যায় {pageNum}</h4>
-                                    </div>
-                                    <div className="flex-1 space-y-4 text-justify text-gray-700 leading-relaxed font-serif">
-                                        <p>বিসমিল্লাহির রহমানির রহিম। এটি একটি ডেমো পৃষ্ঠার ডামি লেখা। এখানে বইটির প্রথম দিকের কিছু পাতার লেখা বা ছবি দেখানো হবে, যাতে পাঠক বইটি সম্পর্কে ধারণা পেতে পারেন।</p>
-                                        <p>ইসলামী জীবনব্যবস্থা মানুষের জন্য একটি পরিপূর্ণ দিকনির্দেশনা। এখানে সেই দিকনির্দেশনার আলোকে জীবন গড়ার অনুপ্রেরণা দেওয়া হয়েছে। আল্লাহ তাআলা আমাদের সবাইকে সঠিক বুঝ দান করুন।</p>
-                                        <div className="h-4 w-1/3 bg-gray-200 mt-6 mx-auto rounded"></div>
-                                        <div className="h-4 w-2/3 bg-gray-200 mx-auto rounded"></div>
-                                        <div className="h-4 w-1/2 bg-gray-200 mx-auto rounded"></div>
-                                    </div>
-                                    <div className="pt-4 mt-auto border-t border-gray-100 text-center text-xs text-gray-400">
-                                        পৃষ্ঠা - {pageNum + 5}
-                                    </div>
-                                </div>
-                            ))}
-
-                            <div className="text-center py-6">
-                                <p className="text-gray-500 mb-4 font-medium">বইটি ভালো লাগলে পুরোটা পড়ার জন্য সংগ্রহ করুন</p>
-                                <button
-                                    onClick={() => {
-                                        setIsLookInsideOpen(false);
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    }}
-                                    className="bg-brand-green text-white font-bold py-2.5 px-6 rounded-full shadow-md hover:bg-brand-green-dark transition-colors"
-                                >
-                                    কার্টে যোগ করুন
-                                </button>
+                                <iframe
+                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
+                                    className="w-full h-full border-none"
+                                    title="Product PDF Preview Fallback"
+                                />
+                            </object>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                                <FiBookOpen size={48} className="text-gray-300 mb-4" />
+                                <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
