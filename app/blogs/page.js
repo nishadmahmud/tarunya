@@ -17,7 +17,7 @@ export default function BlogsPage() {
                     const mappedBlogs = res.data.map(b => ({
                         id: b.id,
                         title: b.title,
-                        excerpt: b.content ? b.content.replace(/<[^>]+>/g, '').substring(0, 160) + '...' : 'আমাদের সর্বশেষ পোস্ট পড়ুন...',
+                        excerpt: (b.description || b.content) ? (b.description || b.content).replace(/&nbsp;/g, ' ').replace(/<[^>]+>/g, '').substring(0, 160) + '...' : 'আমাদের সর্বশেষ পোস্ট পড়ুন...',
                         date: new Date(b.created_at || Date.now()).toLocaleDateString('bn-BD', { month: 'long', day: 'numeric', year: 'numeric' }),
                         category: b.category_id || 'সাধারণ',
                         readTime: '৫ মিনিট',

@@ -13,7 +13,7 @@ export default function AboutPage() {
                 <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">আমাদের <span className="text-brand-green">সম্পর্কে</span></h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                        তারুণ্য প্রকাশন — কুরআন ও সুন্নাহর আলোকে বিশুদ্ধ ইসলামী জ্ঞান ছড়িয়ে দেওয়ার প্রত্যয়ে অঙ্গীকারবদ্ধ একটি প্রতিষ্ঠান।
+                        তারুণ্য প্রকাশন — বাংলাবাজার কেন্দ্রিক কুরআন ও সুন্নাহর আলোকে বিশুদ্ধ ইসলামী জ্ঞান ছড়িয়ে দেওয়ার প্রত্যয়ে অঙ্গীকারবদ্ধ একটি প্রতিষ্ঠান।
                     </p>
                 </div>
             </div>

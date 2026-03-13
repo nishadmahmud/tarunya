@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getBlogs } from "../../../lib/api";
 import { ChevronLeft, Calendar, User, Clock, Share2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function BlogDetailPage() {
     const params = useParams();
@@ -43,6 +44,18 @@ export default function BlogDetailPage() {
         if (blogId) fetchPost();
         else setLoading(false);
     }, [blogId]);
+
+    const handleCopyLink = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                toast.success('লিঙ্ক কপি করা হয়েছে!');
+            })
+            .catch(err => {
+                console.error('Failed to copy link: ', err);
+                toast.error('লিঙ্ক কপি করা যায়নি।');
+            });
+    };
 
     if (loading) {
         return (
@@ -112,21 +125,21 @@ export default function BlogDetailPage() {
                 {/* Main Text */}
                 <div className="flex-grow">
                     <div 
-                        className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
+                        className="prose prose-lg max-w-full overflow-hidden break-words text-gray-700 leading-relaxed space-y-6"
+                        dangerouslySetInnerHTML={{ 
+                            __html: (post.description || post.content || "").replace(/&nbsp;/g, ' ') 
+                        }}
                     />
                     
-                    {/* Tags/Footer of Article */}
-                    <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap justify-between items-center gap-6">
+                    {/* Share Section */}
+                    <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap justify-center sm:justify-between items-center gap-6">
                         <div className="flex items-center gap-2 text-sm font-bold text-gray-500 uppercase tracking-widest">
                             <span className="text-brand-green">শেয়ার করুন:</span>
-                            <div className="flex gap-4">
-                                <Link href="#" className="hover:text-brand-green">FB</Link>
-                                <Link href="#" className="hover:text-brand-green">TW</Link>
-                                <Link href="#" className="hover:text-brand-green">WA</Link>
-                            </div>
                         </div>
-                        <button className="inline-flex items-center gap-2 text-sm font-bold bg-gray-50 px-6 py-2.5 rounded-xl hover:bg-brand-green hover:text-white transition-all">
+                        <button 
+                            onClick={handleCopyLink}
+                            className="inline-flex items-center gap-2 text-sm font-bold bg-gray-50 px-6 py-2.5 rounded-xl hover:bg-brand-green hover:text-white transition-all shadow-sm border border-gray-100"
+                        >
                             <Share2 size={16} />
                             লিঙ্ক কপি করুন
                         </button>

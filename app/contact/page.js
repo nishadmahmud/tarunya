@@ -26,9 +26,9 @@ export default function ContactPage() {
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">আমাদের ঠিকানা ও তথ্য</h2>
                             <div className="space-y-5">
                                 {[
-                                    { label: 'ঠিকানা', value: 'ঢাকা, বাংলাদেশ', icon: <MapPin className="w-6 h-6" /> },
-                                    { label: 'ফোন', value: '০১৯৭৯৪৫৬৭২১', icon: <Phone className="w-6 h-6" /> },
-                                    { label: 'ইমেইল', value: 'info@tarunno.com', icon: <Mail className="w-6 h-6" /> },
+                                    { label: 'ঠিকানা', value: 'Shop No: 13, 1st Floor, Islami Tower, 11/1, Banglabazar, Dhaka-1100.', icon: <MapPin className="w-6 h-6" /> },
+                                    { label: 'ফোন', value: '01979-456721', icon: <Phone className="w-6 h-6" /> },
+                                    { label: 'ইমেইল', value: 'tarunyaprokashon@gmail.com', icon: <Mail className="w-6 h-6" /> },
                                     { label: 'অফিসের সময়সূচী', value: 'শনি - বৃহস্পতি: সকাল ১০টা - রাত ৮টা', icon: <Clock className="w-6 h-6" /> },
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">

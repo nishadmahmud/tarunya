@@ -105,7 +105,7 @@ export default function Footer({ categories = [] }) {
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-xs text-brand-gold/70 font-medium">ফোন করুন</span>
-                                        <a href="tel:০১৯৭৯৪৫৬৭২১" className="hover:text-brand-gold transition-colors">০১৯৭৯৪৫৬৭২১</a>
+                                        <a href="tel:01979-456721" className="hover:text-brand-gold transition-colors">01979-456721</a>
                                     </div>
                                 </li>
                                 <li className="flex items-start gap-3 text-gray-100 text-sm md:text-base">
@@ -114,7 +114,7 @@ export default function Footer({ categories = [] }) {
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-xs text-brand-gold/70 font-medium">ইমেইল</span>
-                                        <a href="mailto:info@tarunnyoprokashon.com" className="hover:text-brand-gold transition-colors break-all">info@tarunnyoprokashon.com</a>
+                                        <a href="mailto:tarunyaprokashon@gmail.com" className="hover:text-brand-gold transition-colors break-all">tarunyaprokashon@gmail.com</a>
                                     </div>
                                 </li>
                                 <li className="flex items-start gap-3 text-gray-100 text-sm md:text-base">
@@ -123,7 +123,7 @@ export default function Footer({ categories = [] }) {
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-xs text-brand-gold/70 font-medium">ঠিকানা</span>
-                                        <span>ঢাকা, বাংলাদেশ</span>
+                                        <span className="text-xs md:text-sm">Shop No: 13, 1st Floor, Islami Tower, 11/1, Banglabazar, Dhaka-1100.</span>
                                     </div>
                                 </li>
                             </ul>

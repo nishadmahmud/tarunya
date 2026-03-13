@@ -1,13 +1,14 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FiHome, FiGrid, FiShoppingCart, FiUser } from 'react-icons/fi';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiHome, FiPercent, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
 export default function MobileBottomNav() {
     const pathname = usePathname();
+    const router = useRouter();
     const { cartCount, openCart } = useCart();
     const { user, openAuthModal } = useAuth();
 
@@ -22,10 +23,10 @@ export default function MobileBottomNav() {
                     <span className="text-[9px] font-bold">হোম</span>
                 </Link>
 
-                {/* Categories */}
-                <Link href="#" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/category') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
-                    <FiGrid size={19} />
-                    <span className="text-[9px] font-bold">বিভাগ</span>
+                {/* Offers */}
+                <Link href="/special-offers" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/special-offers') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
+                    <FiPercent size={19} />
+                    <span className="text-[9px] font-bold">অফার</span>
                 </Link>
 
                 {/* Cart */}
@@ -40,17 +41,13 @@ export default function MobileBottomNav() {
                 </button>
 
                 {/* Profile / Login */}
-                {user ? (
-                    <Link href="#" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/profile') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
-                        <FiUser size={19} />
-                        <span className="text-[9px] font-bold">প্রোফাইল</span>
-                    </Link>
-                ) : (
-                    <button onClick={() => openAuthModal('login')} className="flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl text-white/50 hover:text-white/80 transition-colors">
-                        <FiUser size={19} />
-                        <span className="text-[9px] font-bold">লগইন</span>
-                    </button>
-                )}
+                <button 
+                    onClick={() => user ? router.push('/profile') : openAuthModal('login')} 
+                    className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/profile') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}
+                >
+                    <FiUser size={19} />
+                    <span className="text-[9px] font-bold">{user ? 'প্রোফাইল' : 'লগইন'}</span>
+                </button>
             </div>
         </nav>
     );
