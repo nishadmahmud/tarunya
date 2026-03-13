@@ -3,22 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { FiChevronRight, FiGift, FiTag, FiInfo } from "react-icons/fi";
 
-const fallbackOffers = [
-    {
-        id: 1,
-        title: "বইমেলা ধামাকা অফার",
-        description: "যেকোনো ৫টি বই কিনলেই পাচ্ছেন ২০% নগদ মূল্যছাড় এবং ফ্রি হোম ডেলিভারি। অফারটি সীমিত সময়ের জন্য!",
-        image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800",
-        link: "/category/boimela"
-    },
-    {
-        id: 2,
-        title: "উপহার কম্বো সেট",
-        description: "প্রিয়জনকে উপহার দিতে আমাদের বিশেষ ৩টি বইয়ের সুন্দর গিফট বক্স কম্বো। সাথে পাচ্ছেন আকর্ষণীয় বুকমার্ক ফ্রি।",
-        image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800",
-        link: "/category/gift-combo"
-    }
-];
 
 export const metadata = {
     title: "বিশেষ অফার ও প্যাকেজ | তারুণ্য প্রকাশন",
@@ -37,11 +21,6 @@ export default async function SpecialOffersPage() {
         } catch (error) {
             console.error("Failed to fetch special offers:", error);
         }
-    }
-
-    // Use fallback if no results from API or API not configured
-    if (offers.length === 0) {
-        offers = fallbackOffers;
     }
 
     return (

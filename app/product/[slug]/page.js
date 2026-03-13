@@ -7,7 +7,7 @@ import ProductGallery from '../../../components/Product/ProductGallery';
 import ProductInfo from '../../../components/Product/ProductInfo';
 import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
-import { getProductById, getRelatedProduct } from '../../../lib/api';
+import { getAuthorById, getProductById, getRelatedProduct } from '../../../lib/api';
 
 export default function ProductDetailsPage() {
     const params = useParams();
@@ -110,6 +110,20 @@ export default function ProductDetailsPage() {
                     return spec ? spec.description : null;
                 };
 
+                // Fetch full author info if ID exists
+                let fullAuthor = null;
+                const authorId = p.author_id || p.author?.id;
+                if (authorId) {
+                    try {
+                        const authorRes = await getAuthorById(authorId);
+                        if (authorRes?.success && authorRes?.data) {
+                            fullAuthor = authorRes.data;
+                        }
+                    } catch (err) {
+                        console.error('Failed to load author details:', err);
+                    }
+                }
+
                 const mappedProduct = {
                     id: p.id,
                     name: p.name,
@@ -134,6 +148,7 @@ export default function ProductDetailsPage() {
                     country: getSpec('Country') || p.country || 'বাংলাদেশ',
                     language: getSpec('Language') || p.language || 'বাংলা এবং আরবি',
                     author: getSpec('Author') || p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
+                    authorDetails: fullAuthor,
                     category: {
                         id: p.category_id || p.category?.id,
                         name: p.category_name || p.category?.name,

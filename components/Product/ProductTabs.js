@@ -86,8 +86,20 @@ export default function ProductTabs({ product }) {
 
                 {activeTab === 'author' && (
                     <div className="prose prose-sm md:prose-base max-w-full text-gray-600">
-                        <p className="font-semibold text-gray-800 text-lg mb-2">{product.author}</p>
-                        <p>Author information is currently being updated. Please check back later for a complete biography and other works by this author.</p>
+                        {product.authorDetails ? (
+                            <>
+                                <p className="font-semibold text-gray-800 text-lg mb-4">{product.authorDetails.name}</p>
+                                <div 
+                                    className="leading-relaxed"
+                                    dangerouslySetInnerHTML={{ __html: product.authorDetails.description || product.authorDetails.bio || ' লেখকের জীবনী পাওয়া যায়নি।' }} 
+                                />
+                            </>
+                        ) : (
+                            <div className="py-6">
+                                <p className="font-semibold text-gray-800 text-lg mb-2">{product.author}</p>
+                                <p className="text-gray-500 italic">দুঃখিত, এই লেখকের বিস্তারিত তথ্য এই মুহূর্তে পাওয়া যায়নি।</p>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
