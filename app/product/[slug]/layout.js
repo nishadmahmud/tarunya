@@ -49,21 +49,12 @@ export async function generateMetadata({ params }) {
             openGraph: {
                 title,
                 description,
-                images: [
-                    {
-                        url: primaryImage,
-                        width: 800,
-                        height: 800,
-                        alt: product.name,
-                    },
-                ],
                 type: 'website',
             },
             twitter: {
                 card: 'summary_large_image',
                 title,
                 description,
-                images: [primaryImage],
             },
         };
     } catch (error) {

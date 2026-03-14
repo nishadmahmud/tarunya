@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../context/CartContext";
-import { saveSalesOrder, getCouponList, applyCoupon } from "../../lib/api";
+import { saveSalesOrder, getCouponList, applyCoupon, getPaymentTypes, initiateSslPayment } from "../../lib/api";
 import {
     MapPin,
     CreditCard,
@@ -52,7 +52,9 @@ export default function CheckoutPage() {
         address: "",
     });
 
-    const [paymentMethod, setPaymentMethod] = useState("Cash");
+    const [paymentTypes, setPaymentTypes] = useState([]);
+    const [isPaymentLoading, setIsPaymentLoading] = useState(true);
+    const [paymentMethod, setPaymentMethod] = useState(null);
     const [selectedCourier, setSelectedCourier] = useState("steadfast");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [couponCode, setCouponCode] = useState("");
@@ -83,6 +85,32 @@ export default function CheckoutPage() {
                 console.error("Failed to parse saved checkout details", e);
             }
         }
+    }, []);
+
+    // Fetch dynamic payment types
+    useEffect(() => {
+        const fetchPayments = async () => {
+            const userId = process.env.NEXT_PUBLIC_USER_ID;
+            if (!userId) {
+                setIsPaymentLoading(false);
+                return;
+            }
+            try {
+                const res = await getPaymentTypes(userId);
+                if (res?.data?.data && Array.isArray(res.data.data)) {
+                    setPaymentTypes(res.data.data);
+                    // Select Cash by default if available
+                    const cashMethod = res.data.data.find(p => p.type_name === "Cash");
+                    if (cashMethod) setPaymentMethod(cashMethod.id);
+                    else if (res.data.data.length > 0) setPaymentMethod(res.data.data[0].id);
+                }
+            } catch (error) {
+                console.error("Failed to fetch payment types:", error);
+            } finally {
+                setIsPaymentLoading(false);
+            }
+        };
+        fetchPayments();
     }, []);
 
     // Update delivery fee based on selection
@@ -233,9 +261,19 @@ export default function CheckoutPage() {
             console.error("Failed to save checkout details to local storage", error);
         }
 
+        const selectedPaymentObj = paymentTypes.find(p => p.id === paymentMethod);
+        if (!selectedPaymentObj) {
+            toast.error("Please select a valid payment method");
+            setIsSubmitting(false);
+            return;
+        }
+
+        const payMode = selectedPaymentObj.type_name === "SSL" ? "Online" : "Cash";
+        const paymentTypeCategoryId = selectedPaymentObj.payment_type_category?.[0]?.id;
+
         const orderPayload = {
-            pay_mode: paymentMethod,
-            paid_amount: 0,
+            pay_mode: payMode,
+            paid_amount: payMode === "Online" ? grandTotal : 0,
             user_id: process.env.NEXT_PUBLIC_USER_ID,
             sub_total: subTotal,
             vat: 0,
@@ -266,6 +304,13 @@ export default function CheckoutPage() {
             delivery_city: selectedCity,
             delivery_district: selectedDistrict,
             detailed_address: formData.address,
+            payment_method: [
+                {
+                    payment_type_id: selectedPaymentObj.id,
+                    payment_type_category_id: paymentTypeCategoryId,
+                    payment_amount: grandTotal
+                }
+            ]
         };
 
         try {
@@ -281,8 +326,48 @@ export default function CheckoutPage() {
 
             if (response.success) {
                 clearCart();
-                toast.success("Order placed successfully!");
-                const invoiceId = response.data?.invoice_id || response.invoice_id || "INV-" + Date.now();
+                const invoiceId = response.data?.invoice_id || response.invoice_id || response.data?.data?.invoice_id || "INV-" + Date.now();
+
+                // If SSL, Initiate SSL Payment
+                if (payMode === "Online") {
+                    toast.success("Order saved! Redirecting to payment gateway...");
+                    try {
+                        const sslPayload = {
+                            user_id: process.env.NEXT_PUBLIC_USER_ID,
+                            amount: grandTotal,
+                            customer_name: formData.firstName,
+                            customer_email: formData.email || "customer@tarunnyoprokashon.com",
+                            customer_phone: formData.phone,
+                            customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict}`,
+                            customer_city: selectedDistrict || "Dhaka",
+                            customer_country: "Bangladesh",
+                            product_name: "Books from Tarunno Prokashon",
+                            invoice_id: invoiceId,
+                            product_category: "Books",
+                            payment_method: [
+                                {
+                                    payment_type_id: selectedPaymentObj.id,
+                                    payment_type_category_id: paymentTypeCategoryId,
+                                    payment_amount: grandTotal
+                                }
+                            ]
+                        };
+                        const sslRes = await initiateSslPayment(sslPayload);
+                        if (sslRes?.url) {
+                            window.location.href = sslRes.url;
+                            return; // Wait for redirect
+                        } else {
+                            console.error("SSL Response failed:", sslRes);
+                            toast.error("Failed to initiate gateway. Your order is saved as pending.");
+                        }
+                    } catch (sslErr) {
+                        console.error("SSL Initiation Error:", sslErr);
+                        toast.error("Payment gateway error. Your order is saved as pending.");
+                    }
+                } else {
+                    toast.success("Order placed successfully!");
+                }
+                
                 router.push(`/order-success?invoice=${invoiceId}`);
             } else {
                 toast.error("Failed to place order. Please try again.");
@@ -480,49 +565,58 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    {/* Cash on Delivery */}
-                                    <label
-                                        className={`relative flex cursor-pointer rounded-xl border-2 p-4 transition-all hover:border-brand-green ${paymentMethod === "Cash"
-                                            ? "border-brand-green bg-brand-green/5 ring-1 ring-brand-green"
-                                            : "border-gray-200"
-                                            }`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="paymentMethod"
-                                            value="Cash"
-                                            className="sr-only"
-                                            checked={paymentMethod === "Cash"}
-                                            onChange={(e) => setPaymentMethod(e.target.value)}
-                                        />
-                                        <div className="flex flex-1 flex-col">
-                                            <span className="flex items-center gap-2 font-bold text-gray-900">
-                                                <Truck className="h-4 w-4 text-brand-green" />
-                                                ক্যাশ অন ডেলিভারি
-                                            </span>
-                                            <span className="mt-1 text-xs text-gray-500">
-                                                বই হাতে পেয়ে মূল্য পরিশোধ করুন
-                                            </span>
+                                    {isPaymentLoading ? (
+                                        <div className="col-span-1 sm:col-span-2 py-4 flex justify-center items-center">
+                                            <svg className="animate-spin h-6 w-6 text-brand-green" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                            </svg>
                                         </div>
-                                        {paymentMethod === "Cash" && (
-                                            <div className="absolute right-4 top-4">
-                                                <div className="h-3 w-3 rounded-full bg-brand-green" />
-                                            </div>
-                                        )}
-                                    </label>
-
-                                    {/* Online Payment (Coming Soon) */}
-                                    <label className="relative flex cursor-not-allowed rounded-xl border-2 border-gray-100 p-4 opacity-50">
-                                        <div className="flex flex-1 flex-col">
-                                            <span className="flex items-center gap-2 font-bold text-gray-400">
-                                                <CreditCard className="h-4 w-4" />
-                                                অনলাইন পেমেন্ট
-                                            </span>
-                                            <span className="mt-1 text-xs text-gray-400">
-                                                শীঘ্রই আসছে
-                                            </span>
+                                    ) : paymentTypes.length > 0 ? (
+                                        paymentTypes.map((pt) => {
+                                            const isCash = pt.type_name === "Cash";
+                                            return (
+                                                <label
+                                                    key={pt.id}
+                                                    className={`relative flex cursor-pointer rounded-xl border-2 p-4 transition-all hover:border-brand-green ${paymentMethod === pt.id
+                                                        ? "border-brand-green bg-brand-green/5 ring-1 ring-brand-green"
+                                                        : "border-gray-200"
+                                                        }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="paymentMethod"
+                                                        value={pt.id}
+                                                        className="sr-only"
+                                                        checked={paymentMethod === pt.id}
+                                                        onChange={() => setPaymentMethod(pt.id)}
+                                                    />
+                                                    <div className="flex flex-1 flex-col">
+                                                        <span className="flex items-center gap-2 font-bold text-gray-900">
+                                                            {isCash ? (
+                                                                <Truck className="h-4 w-4 text-brand-green" />
+                                                            ) : (
+                                                                <CreditCard className="h-4 w-4 text-brand-green" />
+                                                            )}
+                                                            {isCash ? "ক্যাশ অন ডেলিভারি" : "অনলাইন পেমেন্ট (SSL)"}
+                                                        </span>
+                                                        <span className="mt-1 text-xs text-gray-500">
+                                                            {isCash ? "বই হাতে পেয়ে মূল্য পরিশোধ করুন" : "নিরাপদ অনলাইন পেমেন্ট"}
+                                                        </span>
+                                                    </div>
+                                                    {paymentMethod === pt.id && (
+                                                        <div className="absolute right-4 top-4">
+                                                            <div className="h-3 w-3 rounded-full bg-brand-green" />
+                                                        </div>
+                                                    )}
+                                                </label>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="col-span-1 sm:col-span-2 text-sm text-gray-500 py-4 text-center">
+                                            No payment methods available right now.
                                         </div>
-                                    </label>
+                                    )}
                                 </div>
                             </section>
 

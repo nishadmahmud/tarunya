@@ -10,7 +10,8 @@ export const contentType = 'image/png';
 export default async function Image({ params }) {
     const [fonts, logoUrl] = await Promise.all([getOgFonts(), getLogoDataUrl()]);
 
-    const slugWithId = typeof params.slug === 'string' ? params.slug : params.slug?.[0] || '';
+    const resolvedParams = await params;
+    const slugWithId = typeof resolvedParams.slug === 'string' ? resolvedParams.slug : resolvedParams.slug?.[0] || '';
     const blogId = slugWithId ? slugWithId.split('-').pop() : null;
     let post = null;
 
@@ -28,7 +29,7 @@ export default async function Image({ params }) {
 
     return new ImageResponse(
         (
-            <div style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', overflow: 'hidden', fontFamily: 'HindSiliguri' }}>
+            <div lang="bn-BD" dir="ltr" style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', overflow: 'hidden', fontFamily: 'HindSiliguri' }}>
                 {blogImage && <img src={blogImage} width={OG_WIDTH} height={OG_HEIGHT} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: blogImage ? 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(27,94,32,0.6) 100%)' : 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 40%, #388e3c 100%)', display: 'flex' }} />
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', height: '100%', position: 'relative', padding: '50px 60px' }}>

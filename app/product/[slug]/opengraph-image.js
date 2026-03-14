@@ -10,7 +10,9 @@ export const contentType = 'image/png';
 export default async function Image({ params }) {
     const [fonts, logoUrl] = await Promise.all([getOgFonts(), getLogoDataUrl()]);
 
-    const slug = typeof params.slug === 'string' ? params.slug : params.slug?.[0] || '';
+    const resolvedParams = await params;
+    const slug = typeof resolvedParams.slug === 'string' ? resolvedParams.slug : resolvedParams.slug?.[0] || '';
+    
     let productId = null;
     if (slug) {
         const decoded = decodeURIComponent(slug).trim();
@@ -75,42 +77,42 @@ export default async function Image({ params }) {
 
     return new ImageResponse(
         (
-            <div style={{ width: '100%', height: '100%', display: 'flex', background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 40%, #388e3c 100%)', fontFamily: 'HindSiliguri', position: 'relative', overflow: 'hidden' }}>
+            <div lang="bn-BD" dir="ltr" style={{ width: '100%', height: '100%', display: 'flex', background: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 40%, #388e3c 100%)', fontFamily: 'HindSiliguri', position: 'relative', overflow: 'hidden' }}>
                 {/* Decorative */}
                 <div style={{ position: 'absolute', top: '-60px', right: '-60px', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex' }} />
 
                 {/* Left - Book Cover */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '400px', padding: '50px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '480px', padding: '40px', flexShrink: 0 }}>
                     {bookImage ? (
                         <img
                             src={bookImage}
-                            width={280}
-                            height={380}
-                            style={{ objectFit: 'cover', borderRadius: '16px', border: '4px solid rgba(255,255,255,0.15)', boxShadow: '0 25px 50px rgba(0,0,0,0.3)' }}
+                            width={340}
+                            height={460}
+                            style={{ objectFit: 'cover', borderRadius: '16px', border: '5px solid rgba(255,255,255,0.15)', boxShadow: '0 25px 50px rgba(0,0,0,0.3)' }}
                         />
                     ) : (
-                        <div style={{ width: '280px', height: '380px', borderRadius: '16px', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '80px', color: 'rgba(255,255,255,0.3)' }}>
+                        <div style={{ width: '340px', height: '460px', borderRadius: '16px', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '100px', color: 'rgba(255,255,255,0.3)' }}>
                             📖
                         </div>
                     )}
                 </div>
 
                 {/* Right - Details */}
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, padding: '50px 50px 50px 0', gap: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, padding: '40px 40px 40px 0', gap: '16px' }}>
                     {/* Logo */}
                     {logoUrl && (
-                        <img src={logoUrl} width={200} height={50} style={{ objectFit: 'contain', objectPosition: 'left', marginBottom: '8px' }} />
+                        <img src={logoUrl} width={260} height={65} style={{ objectFit: 'contain', objectPosition: 'left', marginBottom: '12px' }} />
                     )}
 
                     {/* Title */}
-                    <div style={{ fontSize: '36px', fontWeight: 700, color: '#ffffff', lineHeight: 1.3, display: 'flex', maxWidth: '600px' }}>
+                    <div style={{ fontSize: '52px', fontWeight: 700, color: '#ffffff', lineHeight: 1.3, display: 'flex', maxWidth: '640px' }}>
                         {name.length > 70 ? name.substring(0, 67) + '...' : name}
                     </div>
 
                     {/* Author */}
                     {author && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                            <div style={{ fontSize: '20px', color: 'rgba(255,255,255,0.7)', display: 'flex' }}>
+                            <div style={{ fontSize: '28px', color: 'rgba(255,255,255,0.9)', display: 'flex' }}>
                                 {author}
                             </div>
                         </div>
@@ -118,25 +120,25 @@ export default async function Image({ params }) {
 
                     {/* Pages badge */}
                     {pages && (
-                        <div style={{ display: 'flex', marginTop: '8px' }}>
-                            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 18px', borderRadius: '30px', fontSize: '16px', color: 'rgba(255,255,255,0.8)', display: 'flex' }}>
+                        <div style={{ display: 'flex', marginTop: '12px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '8px 24px', borderRadius: '30px', fontSize: '20px', color: 'rgba(255,255,255,0.85)', display: 'flex' }}>
                                 {pages} pages
                             </div>
                         </div>
                     )}
 
                     {/* Price */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px' }}>
-                        <div style={{ fontSize: '42px', fontWeight: 700, color: '#ffffff', display: 'flex' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '16px' }}>
+                        <div style={{ fontSize: '56px', fontWeight: 700, color: '#ffffff', display: 'flex' }}>
                             ৳{finalPrice.toLocaleString('en-US')}
                         </div>
                         {hasDiscount && (
-                            <div style={{ fontSize: '22px', color: 'rgba(255,255,255,0.4)', textDecoration: 'line-through', display: 'flex' }}>
+                            <div style={{ fontSize: '28px', color: 'rgba(255,255,255,0.5)', textDecoration: 'line-through', display: 'flex' }}>
                                 ৳{originalPrice.toLocaleString('en-US')}
                             </div>
                         )}
                         {hasDiscount && (
-                            <div style={{ background: '#c59849', padding: '4px 14px', borderRadius: '20px', fontSize: '14px', fontWeight: 700, color: '#fff', display: 'flex' }}>
+                            <div style={{ background: '#c59849', padding: '6px 16px', borderRadius: '24px', fontSize: '16px', fontWeight: 700, color: '#fff', display: 'flex' }}>
                                 {discountType === 'percentage' ? `-${discountValue}%` : `Save ৳${discountValue}`}
                             </div>
                         )}

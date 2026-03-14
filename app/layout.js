@@ -38,14 +38,6 @@ export const metadata = {
     description: "তারুণ্য প্রকাশন — বাংলাদেশের অন্যতম বিশ্বস্ত বই বিক্রয় প্রতিষ্ঠান।",
     url: "https://tarunnyoprokashon.com",
     siteName: "তারুণ্য প্রকাশন",
-    images: [
-      {
-        url: "/og.jpeg",
-        width: 1200,
-        height: 630,
-        alt: "তারুণ্য প্রকাশন",
-      },
-    ],
     locale: "bn_BD",
     type: "website",
   },
@@ -53,7 +45,6 @@ export const metadata = {
     card: "summary_large_image",
     title: "তারুণ্য প্রকাশন | বই ও প্রকাশনা",
     description: "তারুণ্য প্রকাশন — বাংলাদেশের অন্যতম বিশ্বস্ত বই বিক্রয় প্রতিষ্ঠান।",
-    images: ["/og.jpeg"],
   },
 };
 

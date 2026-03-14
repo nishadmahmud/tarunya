@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { getProductById, saveSalesOrder } from "../../../lib/api";
+import { getProductById, saveSalesOrder, getPaymentTypes, initiateSslPayment } from "../../../lib/api";
 import {
     MapPin,
     CreditCard,
@@ -53,7 +53,9 @@ export default function ShareCollectionPage() {
         email: "",
         address: "",
     });
-    const [paymentMethod, setPaymentMethod] = useState("Cash");
+    const [paymentTypes, setPaymentTypes] = useState([]);
+    const [isPaymentLoading, setIsPaymentLoading] = useState(true);
+    const [paymentMethod, setPaymentMethod] = useState(null);
     const [selectedCourier, setSelectedCourier] = useState("steadfast");
     const [isAgreed, setIsAgreed] = useState(false);
 
@@ -133,6 +135,32 @@ export default function ShareCollectionPage() {
         fetchCollection();
     }, [params.ids]);
 
+    // Fetch dynamic payment types
+    useEffect(() => {
+        const fetchPayments = async () => {
+            const userId = process.env.NEXT_PUBLIC_USER_ID;
+            if (!userId) {
+                setIsPaymentLoading(false);
+                return;
+            }
+            try {
+                const res = await getPaymentTypes(userId);
+                if (res?.data?.data && Array.isArray(res.data.data)) {
+                    setPaymentTypes(res.data.data);
+                    // Select Cash by default if available
+                    const cashMethod = res.data.data.find(p => p.type_name === "Cash");
+                    if (cashMethod) setPaymentMethod(cashMethod.id);
+                    else if (res.data.data.length > 0) setPaymentMethod(res.data.data[0].id);
+                }
+            } catch (error) {
+                console.error("Failed to fetch payment types:", error);
+            } finally {
+                setIsPaymentLoading(false);
+            }
+        };
+        fetchPayments();
+    }, []);
+
     // 2. Delivery fee calculation
     const calculateDelivery = useCallback(() => {
         if (!selectedDistrict && !selectedCity) {
@@ -171,9 +199,20 @@ export default function ShareCollectionPage() {
         }
 
         setIsSubmitting(true);
+        
+        const selectedPaymentObj = paymentTypes.find(p => p.id === paymentMethod);
+        if (!selectedPaymentObj) {
+            toast.error("অনুগ্রহ করে একটি পেমেন্ট মেথড সিলেক্ট করুন।");
+            setIsSubmitting(false);
+            return;
+        }
+
+        const payMode = selectedPaymentObj.type_name === "SSL" ? "Online" : "Cash";
+        const paymentTypeCategoryId = selectedPaymentObj.payment_type_category?.[0]?.id;
+
         const orderPayload = {
-            pay_mode: paymentMethod,
-            paid_amount: 0,
+            pay_mode: payMode,
+            paid_amount: payMode === "Online" ? grandTotal : 0,
             user_id: process.env.NEXT_PUBLIC_USER_ID,
             sub_total: subTotal,
             vat: 0,
@@ -200,13 +239,60 @@ export default function ShareCollectionPage() {
             delivery_city: selectedCity,
             delivery_district: selectedDistrict,
             detailed_address: formData.address,
+            payment_method: [
+                {
+                    payment_type_id: selectedPaymentObj.id,
+                    payment_type_category_id: paymentTypeCategoryId,
+                    payment_amount: grandTotal
+                }
+            ]
         };
 
         try {
             const response = await saveSalesOrder(orderPayload);
             if (response.success) {
-                toast.success("অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!");
-                const invoiceId = response.data?.invoice_id || response.invoice_id || "INV-" + Date.now();
+                const invoiceId = response.data?.invoice_id || response.invoice_id || response.data?.data?.invoice_id || "INV-" + Date.now();
+                
+                // If SSL, Initiate SSL Payment
+                if (payMode === "Online") {
+                    toast.success("অর্ডার সেভ হয়েছে! পেমেন্ট গেটওয়েতে রিডাইরেক্ট করা হচ্ছে...");
+                    try {
+                        const sslPayload = {
+                            user_id: process.env.NEXT_PUBLIC_USER_ID,
+                            amount: grandTotal,
+                            customer_name: formData.firstName,
+                            customer_email: formData.email || "customer@tarunnyoprokashon.com",
+                            customer_phone: formData.phone,
+                            customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict}`,
+                            customer_city: selectedDistrict || "Dhaka",
+                            customer_country: "Bangladesh",
+                            product_name: "Books from Tarunno Prokashon",
+                            invoice_id: invoiceId,
+                            product_category: "Books",
+                            payment_method: [
+                                {
+                                    payment_type_id: selectedPaymentObj.id,
+                                    payment_type_category_id: paymentTypeCategoryId,
+                                    payment_amount: grandTotal
+                                }
+                            ]
+                        };
+                        const sslRes = await initiateSslPayment(sslPayload);
+                        if (sslRes?.url) {
+                            window.location.href = sslRes.url;
+                            return; // Wait for redirect
+                        } else {
+                            console.error("SSL Response failed:", sslRes);
+                            toast.error("পেমেন্ট গেটওয়েতে সমস্যা হয়েছে। অর্ডারটি পেন্ডিং হিসেবে সেভ হয়েছে।");
+                        }
+                    } catch (sslErr) {
+                        console.error("SSL Initiation Error:", sslErr);
+                        toast.error("পেমেন্ট গেটওয়েতে সমস্যা হয়েছে। অর্ডারটি পেন্ডিং হিসেবে সেভ হয়েছে।");
+                    }
+                } else {
+                    toast.success("অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!");
+                }
+                
                 router.push(`/order-success?invoice=${invoiceId}`);
             } else {
                 toast.error("অর্ডারটি সম্পন্ন করা সম্ভব হয়নি।");
@@ -421,17 +507,50 @@ export default function ShareCollectionPage() {
                                     </div>
                                     পেমেন্ট মেথড
                                 </h3>
-                                <div className="p-6 rounded-[24px] border-2 border-brand-green bg-brand-green/5 ring-4 ring-brand-green/5 relative overflow-hidden group">
-                                    <div className="relative z-10 flex items-center justify-between">
-                                        <div>
-                                            <p className="font-black text-gray-900 text-lg">ক্যাশ অন ডেলিভারি</p>
-                                            <p className="text-[11px] font-bold text-brand-green uppercase tracking-widest mt-1">Pay on Receipt</p>
+                                <div className="space-y-3">
+                                    {isPaymentLoading ? (
+                                        <div className="py-4 flex justify-center items-center">
+                                            <svg className="animate-spin h-6 w-6 text-brand-green" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                            </svg>
                                         </div>
-                                        <CheckCircle2 className="w-8 h-8 text-brand-green" />
-                                    </div>
-                                    <div className="absolute top-0 right-0 w-24 h-24 bg-brand-green/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-brand-green/20 transition-colors"></div>
+                                    ) : paymentTypes.length > 0 ? (
+                                        paymentTypes.map((pt) => {
+                                            const isCash = pt.type_name === "Cash";
+                                            return (
+                                                <div 
+                                                    key={pt.id}
+                                                    onClick={() => setPaymentMethod(pt.id)}
+                                                    className={`cursor-pointer p-5 rounded-[24px] border-2 transition-all relative overflow-hidden group ${
+                                                        paymentMethod === pt.id ? 'border-brand-green bg-brand-green/5 ring-4 ring-brand-green/5' : 'border-gray-100 hover:border-brand-green/30'
+                                                    }`}
+                                                >
+                                                    <div className="relative z-10 flex items-center justify-between">
+                                                        <div>
+                                                            <p className="font-black text-gray-900 text-lg flex items-center gap-2">
+                                                                {isCash ? <Truck className="w-5 h-5 text-brand-green" /> : <CreditCard className="w-5 h-5 text-brand-green" />}
+                                                                {isCash ? "ক্যাশ অন ডেলিভারি" : "অনলাইন পেমেন্ট (SSL)"}
+                                                            </p>
+                                                            <p className={`text-[11px] font-bold uppercase tracking-widest mt-1 ${isCash ? 'text-brand-green' : 'text-gray-400'}`}>
+                                                                {isCash ? "Pay on Receipt" : "Secure Payment"}
+                                                            </p>
+                                                        </div>
+                                                        {paymentMethod === pt.id && <CheckCircle2 className="w-8 h-8 text-brand-green" />}
+                                                    </div>
+                                                    {paymentMethod === pt.id && (
+                                                        <div className="absolute top-0 right-0 w-24 h-24 bg-brand-green/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-brand-green/20 transition-colors"></div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="text-sm text-gray-500 py-4 text-center">
+                                            No payment methods available right now.
+                                        </div>
+                                    )}
                                 </div>
-                                <p className="mt-4 text-[10px] text-gray-400 font-bold text-center uppercase tracking-tighter">বই হাতে পেয়ে মূল্য পরিশোধ করুন</p>
+                                <p className="mt-4 text-[10px] text-gray-400 font-bold text-center uppercase tracking-tighter">নিরাপদ পদ্ধতিতে পেমেন্ট সম্পন্ন করুন</p>
                             </section>
                         </div>
                     </div>
