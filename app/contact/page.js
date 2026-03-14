@@ -27,7 +27,7 @@ export default function ContactPage() {
                             <div className="space-y-5">
                                 {[
                                     { label: 'ঠিকানা', value: 'Shop No: 13, 1st Floor, Islami Tower, 11/1, Banglabazar, Dhaka-1100.', icon: <MapPin className="w-6 h-6" /> },
-                                    { label: 'ফোন', value: '01979-456721', icon: <Phone className="w-6 h-6" /> },
+                                    { label: 'ফোন', value: '01979-456721, 01979-456722', icon: <Phone className="w-6 h-6" /> },
                                     { label: 'ইমেইল', value: 'tarunyaprokashon@gmail.com', icon: <Mail className="w-6 h-6" /> },
                                     { label: 'অফিসের সময়সূচী', value: 'শনি - বৃহস্পতি: সকাল ১০টা - রাত ৮টা', icon: <Clock className="w-6 h-6" /> },
                                 ].map((item, i) => (

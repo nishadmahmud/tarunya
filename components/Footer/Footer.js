@@ -106,6 +106,7 @@ export default function Footer({ categories = [] }) {
                                     <div className="flex flex-col">
                                         <span className="text-xs text-brand-gold/70 font-medium">ফোন করুন</span>
                                         <a href="tel:01979-456721" className="hover:text-brand-gold transition-colors">01979-456721</a>
+                                        <a href="tel:01979-456722" className="hover:text-brand-gold transition-colors">01979-456722</a>
                                     </div>
                                 </li>
                                 <li className="flex items-start gap-3 text-gray-100 text-sm md:text-base">
