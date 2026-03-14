@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX } from 'react-icons/fi';
+import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX, FiExternalLink } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { toast } from 'react-hot-toast';
@@ -452,12 +452,26 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             <FiBookOpen />
                             একটু পড়ে দেখুন
                         </h3>
-                        <button
-                            onClick={() => setIsLookInsideOpen(false)}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                        >
-                            <FiX size={24} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            {product.pdfFile && (
+                                <a
+                                    href={product.pdfFile}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-brand-green border border-brand-green/20 rounded-lg hover:bg-brand-green hover:text-white transition-all mr-2"
+                                    title="Open in new tab"
+                                >
+                                    <FiExternalLink size={16} />
+                                    <span className="hidden sm:inline">নতুন ট্যাবে খুলুন</span>
+                                </a>
+                            )}
+                            <button
+                                onClick={() => setIsLookInsideOpen(false)}
+                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            >
+                                <FiX size={24} />
+                            </button>
+                        </div>
                     </div>
 
                     <div className="flex-1 bg-gray-100 overflow-hidden relative">
@@ -466,11 +480,13 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             <object
                                 data={product.pdfFile}
                                 type="application/pdf"
-                                className="w-full h-full"
+                                className="w-full h-full touch-auto"
+                                style={{ WebkitOverflowScrolling: 'touch' }}
                             >
                                 <iframe
                                     src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
-                                    className="w-full h-full border-none"
+                                    className="w-full h-full border-none touch-auto"
+                                    style={{ WebkitOverflowScrolling: 'touch' }}
                                     title="Product PDF Preview Fallback"
                                 />
                             </object>

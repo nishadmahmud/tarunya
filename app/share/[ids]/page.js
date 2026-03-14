@@ -25,13 +25,14 @@ import AddressSelect from "../../../components/Checkout/AddressSelect";
 import BookDetailsModal from "../../../components/Share/BookDetailsModal";
 
 const courierOptions = [
-    { id: "steadfast", name: "Steadfast", color: "text-[#009b4d]", bg: "bg-[#009b4d]/10", border: "hover:border-[#009b4d]", selectedBorder: "border-[#009b4d]" },
-    { id: "pathao", name: "Pathao", color: "text-[#ed1c24]", bg: "bg-[#ed1c24]/10", border: "hover:border-[#ed1c24]", selectedBorder: "border-[#ed1c24]" },
-    { id: "redx", name: "RedX", color: "text-[#eb2227]", bg: "bg-[#eb2227]/10", border: "hover:border-[#eb2227]", selectedBorder: "border-[#eb2227]" },
-    { id: "gogobangla", name: "Gogo Bangla", color: "text-[#f37021]", bg: "bg-[#f37021]/10", border: "hover:border-[#f37021]", selectedBorder: "border-[#f37021]" },
-    { id: "sundarban", name: "সুন্দরবন কুরিয়ার", color: "text-[#f8981d]", bg: "bg-[#f8981d]/10", border: "hover:border-[#f8981d]", selectedBorder: "border-[#f8981d]" },
-    { id: "saparibahan", name: "S.A পরিবহন", color: "text-[#004f9f]", bg: "bg-[#004f9f]/10", border: "hover:border-[#004f9f]", selectedBorder: "border-[#004f9f]" },
-    { id: "postoffice", name: "সরকারি পোস্ট অফিস", color: "text-[#c8102e]", bg: "bg-[#c8102e]/10", border: "hover:border-[#c8102e]", selectedBorder: "border-[#c8102e]" },
+    { id: "steadfast", name: "Steadfast", color: "text-[#009b4d]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/idVIARrbJa/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1767913017056", scale: 1 },
+    { id: "pathao", name: "Pathao", color: "text-[#ed1c24]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/id7IYUlTKr/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1771516344575", scale: 1 },
+    { id: "redx", name: "RedX", color: "text-[#eb2227]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://redx.com.bd/images/new-redx-logo.svg", scale: 1 },
+    { id: "gogobangla", name: "Gogo Bangla", color: "text-[#f37021]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://play-lh.googleusercontent.com/zZQ1U5hhpFE69BBlOwztaMjbMze-t0FTWmpwpgFAXQYdQpIFK5_znB7kqEBOUnzFExs", scale: 2.9 },
+    { id: "sundarban", name: "সুন্দরবন কুরিয়ার", color: "text-[#f8981d]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", scale: 1 },
+    { id: "saparibahan", name: "S.A পরিবহন", color: "text-[#004f9f]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://www.satv.tv/wp-content/uploads/2021/09/SA-Paribahan-1.jpg", scale: 1.6 },
+    { id: "postoffice", name: "সরকারি পোস্ট অফিস", color: "text-[#c8102e]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://ecdn.dhakatribune.net/contents/cache/images/1200x630x1xxxxx1/uploads/dten/2020/04/bangladesh-post-office-1587482379713.gif", scale: 1.5 },
+    { id: "dhl", name: "DHL (দেশের বাহিরে)", color: "text-[#d40511]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/idv0ZbfQqf/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667569261953", scale: 1 },
 ];
 
 export default function ShareCollectionPage() {
@@ -54,6 +55,7 @@ export default function ShareCollectionPage() {
     });
     const [paymentMethod, setPaymentMethod] = useState("Cash");
     const [selectedCourier, setSelectedCourier] = useState("steadfast");
+    const [isAgreed, setIsAgreed] = useState(false);
 
     const formatPrice = (amount) => `৳${Number(amount).toLocaleString('en-US')}`;
 
@@ -270,7 +272,7 @@ export default function ShareCollectionPage() {
                 <div className="flex flex-col lg:grid lg:grid-cols-[1.5fr_1fr] gap-10">
                     
                     {/* Left Column */}
-                    <div className="space-y-10">
+                    <div className="space-y-10 pb-32">
                         {/* 1. Items Grid/List */}
                         <section className="bg-white rounded-[32px] border border-gray-100 p-6 md:p-8 shadow-xl shadow-gray-200/40">
                             <div className="flex items-center justify-between mb-8">
@@ -379,13 +381,34 @@ export default function ShareCollectionPage() {
                                         <button 
                                             key={c.id} 
                                             onClick={() => setSelectedCourier(c.id)} 
-                                            className={`px-3 py-3 rounded-2xl border-2 text-[11px] font-black transition-all flex items-center justify-center text-center leading-tight ${
+                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${
                                                 selectedCourier === c.id 
-                                                    ? 'border-brand-green bg-brand-green/5 text-brand-green shadow-sm' 
-                                                    : 'border-gray-50 bg-gray-50 text-gray-400 hover:border-gray-200'
+                                                    ? c.selectedBorder + " " + c.bg
+                                                    : 'border-gray-50 bg-gray-50 text-gray-400 hover:border-brand-green/20'
                                             }`}
                                         >
-                                            {c.name}
+                                            {c.logo ? (
+                                                <div className="relative w-full h-full flex items-center justify-center p-1">
+                                                    <Image
+                                                        src={c.logo}
+                                                        alt={c.name}
+                                                        width={100}
+                                                        height={35}
+                                                        style={{ transform: `scale(${c.scale || 1})` }}
+                                                        className="max-h-full max-w-full object-contain"
+                                                        unoptimized
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <span className={`font-black text-[10px] sm:text-[11px] ${selectedCourier === c.id ? 'text-brand-green' : 'text-gray-400'} tracking-tight leading-tight`}>
+                                                    {c.name}
+                                                </span>
+                                            )}
+                                            {selectedCourier === c.id && (
+                                                <div className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-green shadow-sm z-10">
+                                                    <div className="h-1 w-1 rounded-full bg-white" />
+                                                </div>
+                                            )}
                                         </button>
                                     ))}
                                 </div>
@@ -414,11 +437,26 @@ export default function ShareCollectionPage() {
                     </div>
 
                     {/* Right Column: Summary Card */}
-                    <div className="lg:sticky lg:top-8 h-fit">
+                    <div className="lg:sticky lg:top-24 self-start">
                         <section className="bg-white rounded-[40px] border border-gray-100 p-8 md:p-10 shadow-2xl shadow-gray-200/60 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
                             
                             <h2 className="text-2xl font-black text-gray-900 mb-8 relative z-10">অর্ডার সামারি</h2>
+
+                            {/* Products List */}
+                            <div className="mb-8 space-y-4 max-h-[300px] overflow-y-auto pr-2 relative z-10">
+                                {products.map((p) => (
+                                    <div key={p.id} className="flex gap-3 items-center">
+                                        <div className="relative w-9 h-12 rounded overflow-hidden border border-gray-100 flex-shrink-0">
+                                            <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-[11px] font-bold text-gray-900 leading-tight line-clamp-1">{p.name}</h3>
+                                            <p className="text-brand-green font-black text-[10px] mt-0.5">{formatPrice(p.numericPrice)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                             
                             <div className="space-y-5 pb-8 border-b border-gray-100 relative z-10">
                                 <div className="flex justify-between items-center text-gray-500 font-bold">
@@ -445,10 +483,29 @@ export default function ShareCollectionPage() {
                                 </div>
                             </div>
 
+                            {/* Agreement Acceptance */}
+                            <div className="mb-6 flex items-start gap-3 rounded-[24px] border border-gray-100 bg-gray-50/50 p-5 transition-all hover:bg-gray-50">
+                                <input
+                                    type="checkbox"
+                                    id="agreement"
+                                    checked={isAgreed}
+                                    onChange={(e) => setIsAgreed(e.target.checked)}
+                                    className="mt-1 h-5 w-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
+                                />
+                                <label htmlFor="agreement" className="text-[11px] leading-relaxed text-gray-600 cursor-pointer select-none">
+                                    আমি তারুণ্য প্রকাশন-এর {' '}
+                                    <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
+                                    <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
+                                    এবং {' '}
+                                    <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
+                                    -তে সম্মতি দিচ্ছি।
+                                </label>
+                            </div>
+
                             <button
                                 type="submit"
                                 form="share-checkout-form"
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || !isAgreed}
                                 className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-black py-5 rounded-[24px] shadow-2xl shadow-brand-green/30 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100 flex items-center justify-center gap-3 group relative overflow-hidden"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>

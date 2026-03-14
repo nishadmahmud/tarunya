@@ -19,14 +19,14 @@ import toast from "react-hot-toast";
 import AddressSelect from "../../components/Checkout/AddressSelect";
 
 const courierOptions = [
-    { id: "steadfast", name: "Steadfast", color: "text-[#009b4d]", bg: "bg-[#009b4d]/10", border: "hover:border-[#009b4d]", selectedBorder: "border-[#009b4d]" },
-    { id: "pathao", name: "Pathao", color: "text-[#ed1c24]", bg: "bg-[#ed1c24]/10", border: "hover:border-[#ed1c24]", selectedBorder: "border-[#ed1c24]" },
-    { id: "redx", name: "RedX", color: "text-[#eb2227]", bg: "bg-[#eb2227]/10", border: "hover:border-[#eb2227]", selectedBorder: "border-[#eb2227]" },
-    { id: "gogobangla", name: "Gogo Bangla", color: "text-[#f37021]", bg: "bg-[#f37021]/10", border: "hover:border-[#f37021]", selectedBorder: "border-[#f37021]" },
-    { id: "sundarban", name: "সুন্দরবন কুরিয়ার", color: "text-[#f8981d]", bg: "bg-[#f8981d]/10", border: "hover:border-[#f8981d]", selectedBorder: "border-[#f8981d]" },
-    { id: "saparibahan", name: "S.A পরিবহন", color: "text-[#004f9f]", bg: "bg-[#004f9f]/10", border: "hover:border-[#004f9f]", selectedBorder: "border-[#004f9f]" },
-    { id: "postoffice", name: "সরকারি পোস্ট অফিস", color: "text-[#c8102e]", bg: "bg-[#c8102e]/10", border: "hover:border-[#c8102e]", selectedBorder: "border-[#c8102e]" },
-    { id: "dhl", name: "DHL (দেশের বাহিরে)", color: "text-[#d40511]", bg: "bg-[#ffcc00]/20", border: "hover:border-[#d40511]", selectedBorder: "border-[#d40511]" },
+    { id: "steadfast", name: "Steadfast", color: "text-[#009b4d]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/idVIARrbJa/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1767913017056", scale: 1 },
+    { id: "pathao", name: "Pathao", color: "text-[#ed1c24]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/id7IYUlTKr/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1771516344575", scale: 1 },
+    { id: "redx", name: "RedX", color: "text-[#eb2227]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://redx.com.bd/images/new-redx-logo.svg", scale: 1 },
+    { id: "gogobangla", name: "Gogo Bangla", color: "text-[#f37021]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://play-lh.googleusercontent.com/zZQ1U5hhpFE69BBlOwztaMjbMze-t0FTWmpwpgFAXQYdQpIFK5_znB7kqEBOUnzFExs", scale: 2.9 },
+    { id: "sundarban", name: "সুন্দরবন কুরিয়ার", color: "text-[#f8981d]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", scale: 1 },
+    { id: "saparibahan", name: "S.A পরিবহন", color: "text-[#004f9f]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://www.satv.tv/wp-content/uploads/2021/09/SA-Paribahan-1.jpg", scale: 1.6 },
+    { id: "postoffice", name: "সরকারি পোস্ট অফিস", color: "text-[#c8102e]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://ecdn.dhakatribune.net/contents/cache/images/1200x630x1xxxxx1/uploads/dten/2020/04/bangladesh-post-office-1587482379713.gif", scale: 1.5 },
+    { id: "dhl", name: "DHL (দেশের বাহিরে)", color: "text-[#d40511]", bg: "bg-white", border: "hover:border-brand-green", selectedBorder: "border-brand-green ring-2 ring-brand-green/20", logo: "https://cdn.brandfetch.io/idv0ZbfQqf/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1667569261953", scale: 1 },
 ];
 
 export default function CheckoutPage() {
@@ -60,6 +60,7 @@ export default function CheckoutPage() {
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [couponLoading, setCouponLoading] = useState(false);
     const [couponError, setCouponError] = useState("");
+    const [isAgreed, setIsAgreed] = useState(false);
 
     const formRef = useRef(null);
 
@@ -545,9 +546,9 @@ export default function CheckoutPage() {
                                     {courierOptions.map((courier) => (
                                         <label
                                             key={courier.id}
-                                            className={`relative flex cursor-pointer rounded-xl border-2 p-3 transition-all ${selectedCourier === courier.id
+                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-xl border-2 p-3 transition-all h-[80px] sm:h-[90px] overflow-hidden ${selectedCourier === courier.id
                                                 ? courier.selectedBorder + " " + courier.bg
-                                                : "border-gray-100 " + courier.border
+                                                : "border-gray-100 bg-white hover:border-brand-green/30"
                                                 }`}
                                         >
                                             <input
@@ -558,14 +559,28 @@ export default function CheckoutPage() {
                                                 onChange={(e) => setSelectedCourier(e.target.value)}
                                                 className="sr-only"
                                             />
-                                            <div className="flex flex-1 items-center justify-center text-center">
-                                                <span className={`font-black text-sm ${courier.color} tracking-tight leading-tight`}>
-                                                    {courier.name}
-                                                </span>
-                                            </div>
+                                            {courier.logo ? (
+                                                <div className="relative w-full h-full flex items-center justify-center p-1">
+                                                    <Image
+                                                        src={courier.logo}
+                                                        alt={courier.name}
+                                                        width={120}
+                                                        height={40}
+                                                        style={{ transform: `scale(${courier.scale || 1})` }}
+                                                        className="max-h-full max-w-full object-contain"
+                                                        unoptimized
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="flex flex-1 items-center justify-center text-center">
+                                                    <span className={`font-black text-xs sm:text-sm ${courier.color} tracking-tight leading-tight`}>
+                                                        {courier.name}
+                                                    </span>
+                                                </div>
+                                            )}
                                             {selectedCourier === courier.id && (
-                                                <div className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-sm">
-                                                    <div className={`h-2 w-2 rounded-full bg-current ${courier.color}`} />
+                                                <div className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-green shadow-sm z-10">
+                                                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
                                                 </div>
                                             )}
                                         </label>
@@ -712,11 +727,30 @@ export default function CheckoutPage() {
                                     </span>
                                 </div>
 
+                                {/* Agreement Acceptance */}
+                                <div className="mb-5 flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/50 p-4 transition-all hover:bg-gray-50">
+                                    <input
+                                        type="checkbox"
+                                        id="agreement"
+                                        checked={isAgreed}
+                                        onChange={(e) => setIsAgreed(e.target.checked)}
+                                        className="mt-1 h-5 w-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
+                                    />
+                                    <label htmlFor="agreement" className="text-xs leading-relaxed text-gray-600 cursor-pointer select-none">
+                                        আমি তারুণ্য প্রকাশন-এর {' '}
+                                        <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
+                                        <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
+                                        এবং {' '}
+                                        <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
+                                        -তে সম্মতি দিচ্ছি।
+                                    </label>
+                                </div>
+
                                 {/* Submit Button */}
                                 <button
                                     type="submit"
                                     form="checkout-form"
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || !isAgreed}
                                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-4 text-sm font-extrabold text-white shadow-lg shadow-brand-green/20 transition-all hover:bg-brand-green-dark hover:translate-y-[-1px] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
                                 >
                                     {isSubmitting ? (
@@ -740,20 +774,6 @@ export default function CheckoutPage() {
                                     নিরাপদ চেকআউট · SSL এনক্রিপ্টেড
                                 </div>
                             </section>
-
-                            {/* Delivery Partners */}
-                            <div className="flex justify-center items-center gap-6">
-                                <svg viewBox="0 0 120 30" className="h-6 w-auto opacity-50 grayscale transition hover:grayscale-0 hover:opacity-100">
-                                    <text x="0" y="20" fontFamily="sans-serif" fontWeight="900" fontStyle="italic" fontSize="24" fill="#E11220">Pathao</text>
-                                </svg>
-                                <svg viewBox="0 0 110 30" className="h-6 w-auto opacity-50 grayscale transition hover:grayscale-0 hover:opacity-100">
-                                    <text x="0" y="20" fontFamily="sans-serif" fontWeight="900" fontSize="24" fill="#4D148C">Fed</text>
-                                    <text x="42" y="20" fontFamily="sans-serif" fontWeight="900" fontSize="24" fill="#FF6600">Ex</text>
-                                </svg>
-                                <svg viewBox="0 0 80 30" className="h-6 w-auto opacity-50 grayscale transition hover:grayscale-0 hover:opacity-100">
-                                    <text x="0" y="20" fontFamily="sans-serif" fontWeight="900" fontStyle="italic" fontSize="26" fill="#D40511">DHL</text>
-                                </svg>
-                            </div>
 
                             <div className="text-center text-xs text-gray-400 pb-4">
                                 <Link href="/" className="hover:underline">Terms</Link> · <Link href="/" className="hover:underline">Privacy</Link>
