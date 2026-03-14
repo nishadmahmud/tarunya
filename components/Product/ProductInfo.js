@@ -162,6 +162,20 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedColor]);
 
+    // Lock body scroll when PDF modal is open (prevents background scrolling on mobile)
+    useEffect(() => {
+        if (isLookInsideOpen) {
+            document.body.style.overflow = 'hidden';
+            document.body.style.touchAction = 'none';
+        } else {
+            document.body.style.overflow = '';
+            document.body.style.touchAction = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+            document.body.style.touchAction = '';
+        };
+    }, [isLookInsideOpen]);
 
     const handleLookInside = () => {
         setIsLookInsideOpen(true);
@@ -445,7 +459,10 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
             </div>
 
             {/* Look Inside Modal (PDF / Pages Preview) */}
-            <div className={`fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-all duration-300 ${isLookInsideOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+            <div
+                className={`fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-all duration-300 ${isLookInsideOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                onTouchMove={(e) => e.stopPropagation()}
+            >
                 <div className={`bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] overflow-hidden shadow-2xl relative flex flex-col transition-transform duration-300 ${isLookInsideOpen ? 'scale-100' : 'scale-95'}`}>
                     <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50">
                         <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
@@ -474,19 +491,19 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         </div>
                     </div>
 
-                    <div className="flex-1 bg-gray-100 overflow-hidden relative">
+                    <div className="flex-1 bg-gray-100 overflow-auto relative" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
                         {/* Using object tag for pre-fetching speed and native rendering */}
                         {product.pdfFile ? (
                             <object
                                 data={product.pdfFile}
                                 type="application/pdf"
-                                className="w-full h-full touch-auto"
-                                style={{ WebkitOverflowScrolling: 'touch' }}
+                                className="w-full h-full"
+                                style={{ touchAction: 'auto' }}
                             >
                                 <iframe
                                     src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
-                                    className="w-full h-full border-none touch-auto"
-                                    style={{ WebkitOverflowScrolling: 'touch' }}
+                                    className="w-full h-full border-none"
+                                    style={{ touchAction: 'auto' }}
                                     title="Product PDF Preview Fallback"
                                 />
                             </object>
