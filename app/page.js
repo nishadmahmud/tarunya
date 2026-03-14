@@ -10,7 +10,7 @@ import BlogTips from "../components/BlogTips/BlogTips";
 import FAQ from "../components/FAQ/FAQ";
 import BookFairBestSellers from "../components/BookFairBestSellers/BookFairBestSellers";
 // import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
-// import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
+import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
 // import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
 // import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
 // import TopPublishers from "../components/TopPublishers/TopPublishers";
@@ -27,7 +27,8 @@ import {
   getBannerFromServer,
   getBestDealsFromServer,
   getBestSellersFromServer,
-  getBookFairBestSellersFromServer
+  getBookFairBestSellersFromServer,
+  getAuthorsList
 } from "../lib/api";
 
 const isApiConfigured = () => {
@@ -44,6 +45,7 @@ export default async function Home() {
   let featuredProducts = [];
   let bookFairBestSellers = [];
   let blogPosts = [];
+  let authors = [];
 
   // Skip all API calls if environment is not configured — fallback data in each component will be used
   if (!isApiConfigured()) {
@@ -54,8 +56,8 @@ export default async function Home() {
         <ShopCategories categories={[]} flashSaleProducts={[]} />
         {/* <SeriesBooks /> */}
         <NewArrivals products={[]} />
-        {/* <PopularAuthors /> */}
-        <PromoBanners />
+        <PopularAuthors authors={[]} />
+        {/* <PromoBanners /> */}
         <FeaturedProducts products={[]} />
         <BookFairBestSellers />
         {/* <PreOrderBooks /> */}
@@ -304,6 +306,16 @@ export default async function Home() {
     }
   } catch (error) { console.error("Failed to fetch blogs:", error); }
 
+  try {
+    const res = await getAuthorsList();
+    if (Array.isArray(res)) {
+        authors = res.filter(a => a.active === 1).slice(0, 12);
+    } else if (res?.success && Array.isArray(res?.data)) {
+        // Fallback in case the API wraps it in the future
+        authors = res.data.filter(a => a.active === 1).slice(0, 12);
+    }
+  } catch (error) { console.error("Failed to fetch authors list:", error); }
+
   return (
     <>
       {(heroSlides.length > 0 || homeBanners.length > 0) && <Hero slides={heroSlides} banners={homeBanners} />}
@@ -312,7 +324,7 @@ export default async function Home() {
       {(categories.length > 0 || flashSaleProducts.length > 0) && <ShopCategories categories={categories} flashSaleProducts={flashSaleProducts} />}
       {/* <SeriesBooks /> */}
       {newArrivals.length > 0 && <NewArrivals products={newArrivals} />}
-      {/* <PopularAuthors /> */}
+      {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
       {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
       {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
