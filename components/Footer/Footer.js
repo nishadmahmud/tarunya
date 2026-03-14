@@ -153,34 +153,38 @@ export default function Footer({ categories = [] }) {
                     </div>
                 </div>
 
+                {/* Payment Gateway Row */}
+                <div className="pt-8 pb-4 border-b border-white/5 flex flex-col items-center">
+                    <p className="text-[10px] uppercase tracking-widest text-white/40 mb-3 text-center">Secure Payment via</p>
+                    <div className="bg-white/95 p-2 md:p-4 rounded-xl shadow-xl w-full max-w-5xl">
+                        <Image
+                            src="https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png"
+                            alt="SSLCommerz Payment Gateway"
+                            width={1200}
+                            height={120}
+                            className="w-full h-auto object-contain mx-auto"
+                            unoptimized
+                        />
+                    </div>
+                </div>
+
                 {/* Footer Credits */}
-                <div className="py-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex flex-col items-center md:items-start gap-2">
+                <div className="py-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
                         <p className="text-gray-300 text-xs md:text-sm">
                             &copy; {new Date().getFullYear()} <span className="text-brand-gold font-semibold">তারুণ্য প্রকাশন</span>। সর্বস্বত্ব সংরক্ষিত।
                         </p>
                         <p className="text-gray-400 text-[10px] md:text-xs">
                             Developed by <a href="https://squadinnovators.com/" target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:underline">Squad Innovetors</a>
                         </p>
-                        <div className="flex gap-4 mt-1">
-                            <Link href="/privacy" className="text-gray-400 text-xs hover:text-white transition-colors">গোপনীয়তা নীতি</Link>
-                            <Link href="/terms" className="text-gray-400 text-xs hover:text-white transition-colors">শর্তাবলী</Link>
-                            <Link href="/warranty" className="text-gray-400 text-xs hover:text-white transition-colors">রিটার্ন ও রিফান্ড</Link>
-                        </div>
                     </div>
 
-                    <div className="flex flex-col items-center md:items-end gap-2">
-                        <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1">Secure Payment via</p>
-                        <div className="bg-white/95 p-2 rounded-lg shadow-xl hover:bg-white transition-all duration-300">
-                            <Image
-                                src="https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-03.png"
-                                alt="SSLCommerz Payment Gateway"
-                                width={600}
-                                height={80}
-                                className="h-8 md:h-10 w-auto object-contain"
-                                unoptimized
-                            />
-                        </div>
+                    <div className="flex flex-wrap justify-center items-center gap-3 md:gap-5">
+                        <Link href="/privacy" className="text-gray-400 text-xs hover:text-white transition-colors">গোপনীয়তা নীতি</Link>
+                        <span className="text-gray-600 text-[10px]">•</span>
+                        <Link href="/terms" className="text-gray-400 text-xs hover:text-white transition-colors">শর্তাবলী</Link>
+                        <span className="text-gray-600 text-[10px]">•</span>
+                        <Link href="/warranty" className="text-gray-400 text-xs hover:text-white transition-colors">রিটার্ন ও রিফান্ড</Link>
                     </div>
                 </div>
             </div>
