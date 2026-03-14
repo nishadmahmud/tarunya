@@ -162,18 +162,51 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedColor]);
 
-    // Lock body scroll when PDF modal is open (prevents background scrolling on mobile)
+    // Detect mobile device
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                ('ontouchstart' in window) ||
+                (window.innerWidth <= 768)
+            );
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Lock body scroll when PDF modal is open (iOS-compatible position:fixed trick)
     useEffect(() => {
         if (isLookInsideOpen) {
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
             document.body.style.overflow = 'hidden';
-            document.body.style.touchAction = 'none';
         } else {
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
             document.body.style.overflow = '';
-            document.body.style.touchAction = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
         }
         return () => {
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
             document.body.style.overflow = '';
-            document.body.style.touchAction = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
         };
     }, [isLookInsideOpen]);
 
@@ -458,16 +491,28 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                 </div>
             </div>
 
+
             {/* Look Inside Modal (PDF / Pages Preview) */}
+            {isLookInsideOpen && (
             <div
-                className={`fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm transition-all duration-300 ${isLookInsideOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-                onTouchMove={(e) => e.stopPropagation()}
+                className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm"
+                style={{ overscrollBehavior: 'contain', touchAction: 'none' }}
+                onClick={(e) => { if (e.target === e.currentTarget) setIsLookInsideOpen(false); }}
+                onTouchMove={(e) => {
+                    // Only allow touch move inside the PDF iframe
+                    if (!e.target.closest('.pdf-content-area')) {
+                        e.preventDefault();
+                    }
+                }}
             >
-                <div className={`bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] overflow-hidden shadow-2xl relative flex flex-col transition-transform duration-300 ${isLookInsideOpen ? 'scale-100' : 'scale-95'}`}>
-                    <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50">
+                <div
+                    className="bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] shadow-2xl relative flex flex-col"
+                    style={{ overscrollBehavior: 'contain' }}
+                >
+                    <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50 shrink-0">
                         <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
                             <FiBookOpen />
-                            একটু পড়ে দেখুন
+                            একটু পড়ে দেখুন
                         </h3>
                         <div className="flex items-center gap-2">
                             {product.pdfFile && (
@@ -491,31 +536,47 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         </div>
                     </div>
 
-                    <div className="flex-1 bg-gray-100 overflow-auto relative" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
-                        {/* Using object tag for pre-fetching speed and native rendering */}
+                    <div
+                        className="pdf-content-area flex-1 relative"
+                        style={{
+                            overflow: 'auto',
+                            WebkitOverflowScrolling: 'touch',
+                            overscrollBehavior: 'contain',
+                            touchAction: 'pan-y',
+                        }}
+                    >
                         {product.pdfFile ? (
-                            <object
-                                data={product.pdfFile}
-                                type="application/pdf"
-                                className="w-full h-full"
-                                style={{ touchAction: 'auto' }}
-                            >
+                            isMobile ? (
                                 <iframe
                                     src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
-                                    className="w-full h-full border-none"
-                                    style={{ touchAction: 'auto' }}
-                                    title="Product PDF Preview Fallback"
+                                    className="w-full border-none"
+                                    style={{ height: '100%', minHeight: '100%', touchAction: 'auto' }}
+                                    title="Product PDF Preview"
+                                    allow="autoplay"
                                 />
-                            </object>
+                            ) : (
+                                <object
+                                    data={product.pdfFile}
+                                    type="application/pdf"
+                                    className="w-full h-full"
+                                >
+                                    <iframe
+                                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
+                                        className="w-full h-full border-none"
+                                        title="Product PDF Preview Fallback"
+                                    />
+                                </object>
+                            )
                         ) : (
                             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                 <FiBookOpen size={48} className="text-gray-300 mb-4" />
-                                <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
+                                <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+            )}
         </div>
     );
 }
