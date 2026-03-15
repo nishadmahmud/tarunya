@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX, FiExternalLink } from 'react-icons/fi';
+import Link from 'next/link';
+import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX, FiExternalLink, FiUser } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { toast } from 'react-hot-toast';
@@ -252,7 +253,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                     </div>
                     <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-2">
                         {product.name}
-                        {product.cover && (
+                        {product.cover && product.cover !== 'N/A' && (
                             <span className="text-gray-400 font-medium ml-2 text-lg md:text-xl">
                                 ({product.cover})
                             </span>
@@ -286,7 +287,16 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         {product.author && (
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-400 w-24">লেখক:</span>
-                                <span className="font-bold text-brand-green hover:underline cursor-pointer">{product.author}</span>
+                                {product.authorDetails?.id ? (
+                                    <Link 
+                                        href={`/author/${product.authorDetails.id}`}
+                                        className="font-bold text-brand-green hover:underline cursor-pointer"
+                                    >
+                                        {product.author}
+                                    </Link>
+                                ) : (
+                                    <span className="font-bold text-brand-green">{product.author}</span>
+                                )}
                             </div>
                         )}
                         {product.publisher && (

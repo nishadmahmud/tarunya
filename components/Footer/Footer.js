@@ -176,6 +176,9 @@ export default function Footer({ categories = [] }) {
                             &copy; {new Date().getFullYear()} <span className="text-brand-gold font-semibold">তারুণ্য প্রকাশন</span>। সর্বস্বত্ব সংরক্ষিত।
                         </p>
                         <p className="text-gray-400 text-[10px] md:text-xs">
+                            ট্রেড লাইসেন্স নং : TRAD/DSCC/002901/2021
+                        </p>
+                        <p className="text-gray-400 text-[10px] md:text-xs">
                             Developed by <a href="https://squadinnovators.com/" target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:underline">Squad Innovetors</a>
                         </p>
                     </div>

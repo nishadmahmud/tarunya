@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAuthorsList } from "../../../lib/api";
+import { getAuthorsList, getAuthorWiseProducts } from "../../../lib/api";
 import { User, BookOpen, GraduationCap, ArrowLeft, Heart, Share2 } from "lucide-react";
+import ProductCard from "../../../components/Shared/ProductCard";
 
 export async function generateMetadata({ params }) {
     try {
@@ -33,21 +34,68 @@ export default async function AuthorProfilePage({ params }) {
     const authorId = resolvedParams.id;
     
     let author = null;
+    let authorProducts = [];
     let loadingError = false;
 
     try {
         const res = await getAuthorsList();
+        let authors = [];
         if (Array.isArray(res)) {
-            author = res.find(a => String(a.id) === String(authorId));
+            authors = res;
         } else if (res?.success && Array.isArray(res?.data)) {
-            author = res.data.find(a => String(a.id) === String(authorId));
+            authors = res.data;
+        }
+
+        author = authors.find(a => String(a.id) === String(authorId));
+
+        if (author) {
+            // Fetch products separately
+            const productsRes = await getAuthorWiseProducts(authorId);
+            if (productsRes?.success && Array.isArray(productsRes?.data?.data)) {
+                authorProducts = productsRes.data.data;
+            } else if (Array.isArray(productsRes?.data)) {
+                authorProducts = productsRes.data;
+            }
         } else {
             loadingError = true;
         }
     } catch (e) {
-        console.error("Error fetching authors:", e);
+        console.error("Error fetching author details/products:", e);
         loadingError = true;
     }
+
+    const toMoney = (v) => `৳ ${Number(v || 0).toLocaleString("en-IN")}`;
+    const normalizeDiscount = (discount, type) => {
+        const d = Number(discount || 0);
+        if (!d || d <= 0) return null;
+        return String(type).toLowerCase() === "percentage"
+            ? `-${d}%`
+            : `৳ ${d.toLocaleString("en-IN")}`;
+    };
+
+    const mappedProducts = authorProducts.map(p => {
+        const originalPrice = Number(p.retails_price || 0);
+        const discountValue = Number(p.discount || 0);
+        const discountType = p.discount_type;
+        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
+
+        const discountedPrice = hasDiscount
+            ? (String(discountType).toLowerCase() === 'percentage'
+                ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
+                : Math.max(0, originalPrice - discountValue))
+            : originalPrice;
+
+        return {
+            id: p.id,
+            name: p.name,
+            brand: author.name, // The author is the brand in this context
+            price: toMoney(discountedPrice),
+            oldPrice: hasDiscount ? toMoney(originalPrice) : null,
+            discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
+            imageUrl: p.image_path || "/no-image.svg",
+            pages: p.pages || 'N/A'
+        };
+    });
 
     if (loadingError || !author) {
         return (
@@ -185,20 +233,24 @@ export default async function AuthorProfilePage({ params }) {
                             </div>
                         </div>
 
-                        {/* Books Section Placeholder */}
+                        {/* Books Section */}
                         <div className="mt-16 pt-12 border-t border-gray-200">
                             <h2 className="text-2xl font-black text-gray-900 mb-8 flex items-center justify-between">
-                                <span>{author.name}-এর বইসমূহ</span>
-                                <Link href="#" className="text-sm font-bold text-brand-green hover:underline">
-                                    সব দেখুন
-                                </Link>
+                                <span>{author.name}-এর বইসমূহ ({mappedProducts.length})</span>
                             </h2>
                             
-                            {/* Empty State for Books (since we don't have the API array directly connected yet) */}
-                            <div className="bg-white border border-gray-100 border-dashed rounded-3xl p-12 text-center">
-                                <BookOpen className="w-12 h-12 text-gray-200 mx-auto mb-4" />
-                                <p className="text-gray-500 font-medium">লেখকের বইগুলো খুব শীঘ্রই এখানে আপডেট করা হবে।</p>
-                            </div>
+                            {mappedProducts.length > 0 ? (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    {mappedProducts.map((product) => (
+                                        <ProductCard key={product.id} product={product} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="bg-white border border-gray-100 border-dashed rounded-3xl p-12 text-center">
+                                    <BookOpen className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                                    <p className="text-gray-500 font-medium">লেখকের বইগুলো খুব শীঘ্রই এখানে আপডেট করা হবে।</p>
+                                </div>
+                            )}
                         </div>
 
                     </div>

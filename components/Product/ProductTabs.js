@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { FiStar, FiUser, FiCamera, FiCheck, FiInfo } from 'react-icons/fi';
 import { getProductReviews, saveProductReview, uploadReviewMedia } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -137,23 +138,25 @@ export default function ProductTabs({ product, initialReviews = [], onReviewSubm
     return (
         <div className="mt-12 md:mt-24 w-full">
             {/* Tabs Header */}
-            <div className="flex items-center border-b border-gray-200 mb-8">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`cursor-pointer px-6 md:px-8 pb-4 text-[15px] md:text-[16px] font-medium transition-all relative ${
-                            activeTab === tab.id
-                                ? 'text-brand-green'
-                                : 'text-gray-500 hover:text-gray-700'
-                        }`}
-                    >
-                        {tab.label}
-                        {activeTab === tab.id && (
-                            <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-brand-green rounded-t-lg shadow-[0_-2px_8px_rgba(22,163,74,0.3)]"></span>
-                        )}
-                    </button>
-                ))}
+            <div className="border-b border-gray-200 mb-8 overflow-x-auto overflow-y-hidden scrollbar-hide">
+                <div className="flex items-center min-w-max">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`cursor-pointer px-4 md:px-8 pb-4 text-[14px] md:text-[16px] font-medium transition-all relative whitespace-nowrap outline-none ${
+                                activeTab === tab.id
+                                    ? 'text-brand-green'
+                                    : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                        >
+                            {tab.label}
+                            {activeTab === tab.id && (
+                                <span className="absolute bottom-[-1px] left-0 w-full h-[3px] bg-brand-green rounded-t-lg shadow-[0_-2px_8px_rgba(22,163,74,0.3)]"></span>
+                            )}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Content Area */}
@@ -197,18 +200,58 @@ export default function ProductTabs({ product, initialReviews = [], onReviewSubm
                 )}
 
                 {activeTab === 'author' && (
-                    <div className="prose prose-sm md:prose-base max-w-full text-gray-600">
+                    <div className="bg-white">
                         {product.authorDetails ? (
-                            <>
-                                <p className="font-semibold text-gray-800 text-lg mb-4">{product.authorDetails.name}</p>
-                                <div 
-                                    className="leading-relaxed"
-                                    dangerouslySetInnerHTML={{ __html: product.authorDetails.description || product.authorDetails.bio || ' লেখকের জীবনী পাওয়া যায়নি।' }} 
-                                />
-                            </>
+                            <div className="flex flex-col md:flex-row gap-8 items-start">
+                                {/* Author Avatar */}
+                                <Link 
+                                    href={`/author/${product.authorDetails.id}`}
+                                    className="shrink-0 group"
+                                >
+                                    <div className="w-32 h-32 md:w-44 md:h-44 rounded-full bg-gradient-to-br from-brand-green-light to-brand-cream border-4 border-brand-green/10 flex items-center justify-center group-hover:border-brand-green/30 transition-all duration-300 overflow-hidden relative shadow-lg">
+                                        {product.authorDetails.image ? (
+                                            <img
+                                                src={product.authorDetails.image}
+                                                alt={product.authorDetails.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        ) : (
+                                            <FiUser className="w-16 h-16 text-brand-green/30" />
+                                        )}
+                                    </div>
+                                </Link>
+
+                                <div className="flex-1">
+                                    <Link 
+                                        href={`/author/${product.authorDetails.id}`}
+                                        className="inline-block"
+                                    >
+                                        <h3 className="text-2xl font-black text-gray-900 hover:text-brand-green transition-colors mb-2">
+                                            {product.authorDetails.name}
+                                        </h3>
+                                    </Link>
+                                    <p className="text-brand-green font-bold text-sm mb-4">
+                                        {product.authorDetails.education || "লেখক"}
+                                    </p>
+                                    <div 
+                                        className="prose prose-sm md:prose-base max-w-full text-gray-600 leading-relaxed"
+                                        dangerouslySetInnerHTML={{ 
+                                            __html: product.authorDetails.description || product.authorDetails.bio || ' লেখকের জীবনী পাওয়া যায়নি।' 
+                                        }} 
+                                    />
+                                    <div className="mt-6">
+                                        <Link 
+                                            href={`/author/${product.authorDetails.id}`}
+                                            className="inline-flex items-center gap-2 text-brand-green font-bold text-sm hover:underline"
+                                        >
+                                            লেখকের সব বই দেখুন →
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         ) : (
                             <div className="py-6">
-                                <p className="font-semibold text-gray-800 text-lg mb-2">{product.author}</p>
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">{product.author}</h3>
                                 <p className="text-gray-500 italic">দুঃখিত, এই লেখকের বিস্তারিত তথ্য এই মুহূর্তে পাওয়া যায়নি।</p>
                             </div>
                         )}

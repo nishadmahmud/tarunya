@@ -111,21 +111,7 @@ export default function ProductDetailsPage() {
                     const spec = p.specifications?.find(s => s.name.toLowerCase() === name.toLowerCase());
                     return spec ? spec.description : null;
                 };
-
-                // Fetch full author info if ID exists
-                let fullAuthor = null;
-                const authorId = p.author_id || p.author?.id;
-                if (authorId) {
-                    try {
-                        const authorRes = await getAuthorById(authorId);
-                        if (authorRes?.success && authorRes?.data) {
-                            fullAuthor = authorRes.data;
-                        }
-                    } catch (err) {
-                        console.error('Failed to load author details:', err);
-                    }
-                }
-
+                const authorData = p.author || null;
                 const mappedProduct = {
                     id: p.id,
                     name: p.name,
@@ -142,16 +128,16 @@ export default function ProductDetailsPage() {
                     images,
                     rawImeis,
                     description: p.description || '',
-                    brand: p.brand_name || p.brands?.name || 'তারুণ্য প্রকাশন',
-                    publisher: getSpec('Publisher') || p.publisher || 'তারুণ্য প্রকাশন',
-                    isbn: getSpec('ISBN') || p.isbn || '9789849697763',
-                    edition: getSpec('Edition') || p.edition || '১ম প্রকাশ, ২০২৩',
+                    brand: p.brand_name || p.brands?.name || 'N/A',
+                    publisher: getSpec('Publisher') || p.publisher || 'N/A',
+                    isbn: getSpec('ISBN') || p.isbn || 'N/A',
+                    edition: getSpec('Edition') || p.edition || 'N/A',
                     pages: getSpec('Number of Pages') || getSpec('Pages') || p.pages || p.total_pages || 'N/A',
-                    country: getSpec('Country') || p.country || 'বাংলাদেশ',
-                    language: getSpec('Language') || p.language || 'বাংলা এবং আরবি',
-                    cover: getSpec('Cover') || p.cover || '',
-                    author: getSpec('Author') || p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
-                    authorDetails: fullAuthor,
+                    country: getSpec('Country') || p.country || 'N/A',
+                    language: getSpec('Language') || p.language || 'N/A',
+                    cover: getSpec('Cover') || p.cover || 'N/A',
+                    author: getSpec('Author') || authorData?.name || p.author_name || (p.authors ? p.authors.name : 'N/A'),
+                    authorDetails: authorData,
                     category: {
                         id: p.category_id || p.category?.id,
                         name: p.category_name || p.category?.name,

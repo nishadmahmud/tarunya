@@ -220,13 +220,19 @@ export default async function Home() {
             : Math.max(0, originalPrice - discountValue))
           : originalPrice;
 
+        const slugName = p.name ? p.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : "product";
+        const slugWithId = p.id ? `${slugName}-${p.id}` : slugName;
+
         return {
           id: p.id,
           name: p.name,
+          brand: p.brands?.name || "N/A",
+          description: p.description ? p.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : '',
           price: toMoney(discountedPrice),
           oldPrice: hasDiscount ? toMoney(originalPrice) : null,
           discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
           imageUrl: p.image_path || p.image_url || "/no-image.svg",
+          slug: slugWithId,
         };
       });
     }

@@ -106,7 +106,7 @@ export default function CartSidebar() {
                                             <div>
                                                 <h3 className="text-sm font-bold text-gray-900 leading-tight pr-6">
                                                     {item.name}
-                                                    {item.cover && (
+                                                    {item.cover && item.cover !== 'N/A' && (
                                                         <span className="text-gray-400 font-medium ml-1">
                                                             ({item.cover})
                                                         </span>

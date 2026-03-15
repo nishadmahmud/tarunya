@@ -26,13 +26,6 @@ const notoBangla = Noto_Sans_Bengali({
 export const metadata = {
   title: "তারুণ্য প্রকাশন | বই ও প্রকাশনা",
   description: "তারুণ্য প্রকাশন — বাংলাদেশের অন্যতম বিশ্বস্ত বই বিক্রয় প্রতিষ্ঠান। সেরা মানের বই, দ্রুত ডেলিভারি এবং সাশ্রয়ী মূল্যে আপনার পছন্দের বই কিনুন।",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.png", type: "image/png" },
-    ],
-    apple: "/favicon.png",
-  },
   openGraph: {
     title: "তারুণ্য প্রকাশন | বই ও প্রকাশনা",
     description: "তারুণ্য প্রকাশন — বাংলাদেশের অন্যতম বিশ্বস্ত বই বিক্রয় প্রতিষ্ঠান।",
