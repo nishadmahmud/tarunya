@@ -250,7 +250,14 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                     <div className="bg-brand-green/10 text-brand-green text-xs font-bold px-2.5 py-1 rounded-md inline-block mb-3">
                         স্টকে আছে
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2">{product.name}</h1>
+                    <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 mb-2">
+                        {product.name}
+                        {product.cover && (
+                            <span className="text-gray-400 font-medium ml-2 text-lg md:text-xl">
+                                ({product.cover})
+                            </span>
+                        )}
+                    </h1>
                     
                     {/* Rating Summary */}
                     <div className="flex items-center gap-3 mb-4">
@@ -314,8 +321,8 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
 
             {/* Price section */}
             <div className="mb-6 pb-6 border-b border-gray-100">
-                <div className="flex items-baseline gap-3">
-                    <span className="text-3xl md:text-4xl font-extrabold text-gray-800">
+                <div className="flex items-baseline gap-2.5">
+                    <span className="text-2xl md:text-3xl font-extrabold text-gray-800">
                         {displayPrice}
                     </span>
                     {displayOldPrice && (
@@ -324,8 +331,8 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         </span>
                     )}
                     {product.discount && (
-                        <span className="text-sm font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md">
-                            {product.discount}
+                        <span className="text-lg md:text-xl font-bold text-[#ef4444] ml-1">
+                            ({product.discount} ছাড়ে)
                         </span>
                     )}
                 </div>

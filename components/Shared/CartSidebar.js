@@ -104,11 +104,24 @@ export default function CartSidebar() {
                                         {/* Info */}
                                         <div className="flex-1 flex flex-col justify-between">
                                             <div>
-                                                <h3 className="text-sm font-bold text-gray-900 leading-tight pr-6">{item.name}</h3>
+                                                <h3 className="text-sm font-bold text-gray-900 leading-tight pr-6">
+                                                    {item.name}
+                                                    {item.cover && (
+                                                        <span className="text-gray-400 font-medium ml-1">
+                                                            ({item.cover})
+                                                        </span>
+                                                    )}
+                                                </h3>
+
+                                                {/* Author and Pages */}
+                                                <div className="mt-1 flex flex-col text-[11px] text-gray-500">
+                                                    {item.author && <div>লেখক: <span className="text-gray-700 font-medium">{item.author}</span></div>}
+                                                    {item.pages && item.pages !== 'N/A' && <div>পৃষ্ঠা: <span className="text-gray-700 font-medium">{item.pages}</span></div>}
+                                                </div>
 
                                                 {/* Variants */}
                                                 {item.variants && (
-                                                    <div className="mt-1.5 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500">
+                                                    <div className="mt-1.5 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-400 font-medium">
                                                         {item.variants.storage && (
                                                             <span className="bg-gray-100 px-2 py-0.5 rounded-md">{item.variants.storage}</span>
                                                         )}

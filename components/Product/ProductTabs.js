@@ -129,6 +129,7 @@ export default function ProductTabs({ product, initialReviews = [], onReviewSubm
         { label: 'আইএসবিএন', value: product.isbn },
         { label: 'সংস্করণ', value: product.edition },
         { label: 'পৃষ্ঠা সংখ্যা', value: product.pages },
+        { label: 'বাঁধাই', value: product.cover },
         { label: 'দেশ', value: product.country },
         { label: 'ভাষা', value: product.language, isPill: true },
     ];

@@ -149,6 +149,7 @@ export default function ProductDetailsPage() {
                     pages: getSpec('Number of Pages') || getSpec('Pages') || p.pages || p.total_pages || 'N/A',
                     country: getSpec('Country') || p.country || 'বাংলাদেশ',
                     language: getSpec('Language') || p.language || 'বাংলা এবং আরবি',
+                    cover: getSpec('Cover') || p.cover || '',
                     author: getSpec('Author') || p.author_name || (p.authors ? p.authors.name : 'অজানা লেখক'),
                     authorDetails: fullAuthor,
                     category: {

@@ -22,12 +22,13 @@ export default function ProductCard({ product }) {
         <div className="relative group">
             <Link href={`/product/${slug}`} className="bg-white rounded-xl flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden relative block border border-gray-100 hover:border-brand-green/20">
 
-                {/* Discount Badge */}
+                {/* Discount Badge - Bigger & More Prominent */}
                 {product.discount && (
-                    <div className="absolute top-2.5 left-2.5 z-10">
-                        <span className="bg-brand-gold text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">
-                            {product.discount}
-                        </span>
+                    <div className="absolute top-0 left-0 z-10">
+                        <div className="bg-red-500 text-white text-[12px] font-black px-3 py-1.5 rounded-br-xl shadow-md flex items-center gap-1">
+                            <span>{product.discount}</span>
+                            <span className="text-[10px] opacity-90 uppercase">ছাড়</span>
+                        </div>
                     </div>
                 )}
 
@@ -48,21 +49,34 @@ export default function ProductCard({ product }) {
                 <div className="flex flex-col text-left px-3 py-3 flex-1">
                     {/* Author/Brand if available */}
                     {product.brand && (
-                        <span className="text-[10px] md:text-[11px] font-semibold text-brand-green mb-1 truncate">
-                            {product.brand}
-                        </span>
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                            <span className="text-[10px] md:text-[11px] font-semibold text-brand-green truncate">
+                                {product.brand}
+                            </span>
+                            {product.pages && product.pages !== 'N/A' && (
+                                <span className="text-[9px] md:text-[10px] text-gray-400 shrink-0">
+                                    {product.pages} পৃষ্ঠা
+                                </span>
+                            )}
+                        </div>
                     )}
-                    <h3 className="text-gray-800 font-bold text-[12px] md:text-[14px] leading-snug line-clamp-2 mb-2">
+
+                    <h3 className="text-gray-800 font-bold text-[11px] md:text-[13px] leading-snug line-clamp-2 mb-2">
                         {product.name}
                     </h3>
-                    <div className="flex items-center gap-2 mt-auto">
-                        <span className="text-brand-green-dark font-extrabold text-[14px] md:text-[16px]">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-auto">
+                        <span className="text-brand-green-dark font-extrabold text-[13px] md:text-[15px]">
                             {product.price}
                         </span>
                         {product.oldPrice && (
-                            <span className="text-gray-400 text-[10px] md:text-[11px] font-medium line-through">
-                                {product.oldPrice}
-                            </span>
+                            <>
+                                <span className="text-gray-400 text-[9px] md:text-[10px] font-medium line-through">
+                                    {product.oldPrice}
+                                </span>
+                                <span className="text-red-500 font-bold text-[10px] md:text-[11px]">
+                                    ({product.discount} ছাড়ে)
+                                </span>
+                            </>
                         )}
                     </div>
                 </div>
