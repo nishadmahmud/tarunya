@@ -22,7 +22,6 @@ export default function Hero({ slides = [], banners = [] }) {
             link: '/'
         }
     ];
-
     const displayBanners = banners && banners.length >= 2 ? banners.slice(0, 2) : defaultBanners;
 
     const defaultSlides = [
@@ -45,7 +44,6 @@ export default function Hero({ slides = [], banners = [] }) {
             image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1200&auto=format&fit=crop",
         },
     ];
-
     const displaySlides = slides && slides.length > 0 ? slides : defaultSlides;
 
     useEffect(() => {

@@ -9,16 +9,8 @@ export default function NewArrivals({ products = [] }) {
     const [activeBrand, setActiveBrand] = useState("সকল");
     const sliderRef = useRef(null);
 
-    const defaultProducts = [
-        { id: 1, name: "আত্মবিশ্বাসী হওয়ার গল্প", brand: "আত্মউন্নয়ন", price: "৳ 350", oldPrice: "৳ 420", discount: "-17%", imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400" },
-        { id: 2, name: "বাংলা ব্যাকরণ সমগ্র", brand: "শিক্ষা", price: "৳ 480", oldPrice: "৳ 550", discount: "-13%", imageUrl: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400" },
-        { id: 3, name: "রবীন্দ্রনাথের শ্রেষ্ঠ গল্প", brand: "সাহিত্য", price: "৳ 420", oldPrice: null, discount: null, imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400" },
-        { id: 4, name: "বিজ্ঞানের সহজ পাঠ", brand: "বিজ্ঞান", price: "৳ 300", oldPrice: "৳ 380", discount: "-21%", imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400" },
-        { id: 5, name: "ছোটদের মজার গল্প", brand: "শিশু-কিশোর", price: "৳ 250", oldPrice: null, discount: null, imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400" },
-        { id: 6, name: "ইতিহাসের পাতা থেকে", brand: "ইতিহাস", price: "৳ 500", oldPrice: "৳ 600", discount: "-17%", imageUrl: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=400" },
-    ];
-
-    const sourceProducts = products && products.length > 0 ? products : defaultProducts;
+    const defaultProducts = [];
+    const sourceProducts = products && products.length > 0 ? products : [];
     const brands = ["সকল", ...new Set(sourceProducts.map(p => p.brand).filter(Boolean))];
     const filteredProducts = activeBrand === "সকল" ? sourceProducts : sourceProducts.filter(p => p.brand === activeBrand);
 

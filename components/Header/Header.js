@@ -23,17 +23,8 @@ export default function Header({ categories = [] }) {
   const { user, openAuthModal } = useAuth();
   const router = useRouter();
 
-  const defaultCategories = [
-    { name: "উপন্যাস", slug: "novels" },
-    { name: "কবিতা", slug: "poetry" },
-    { name: "শিশু-কিশোর", slug: "children" },
-    { name: "আত্মউন্নয়ন", slug: "self-help" },
-    { name: "ধর্মীয় বই", slug: "religious" },
-    { name: "ইতিহাস", slug: "history" },
-    { name: "বিজ্ঞান", slug: "science" }
-  ];
-
-  const displayCategories = categories && categories.length > 0 ? categories : defaultCategories;
+  const defaultCategories = [];
+  const displayCategories = categories && categories.length > 0 ? categories : [];
 
   const handleUserClick = () => {
     if (user) {

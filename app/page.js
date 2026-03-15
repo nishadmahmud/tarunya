@@ -13,7 +13,7 @@ import BookFairBestSellers from "../components/BookFairBestSellers/BookFairBestS
 import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
 // import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
 // import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
-// import TopPublishers from "../components/TopPublishers/TopPublishers";
+import TopPublishers from "../components/TopPublishers/TopPublishers";
 // import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
 // import Testimonials from "../components/Testimonials/Testimonials";
 // import FAQ from "../components/FAQ/FAQ";
@@ -28,7 +28,8 @@ import {
   getBestDealsFromServer,
   getBestSellersFromServer,
   getBookFairBestSellersFromServer,
-  getAuthorsList
+  getAuthorsList,
+  getTopBrands
 } from "../lib/api";
 
 const isApiConfigured = () => {
@@ -46,6 +47,7 @@ export default async function Home() {
   let bookFairBestSellers = [];
   let blogPosts = [];
   let authors = [];
+  let brands = [];
 
   // Skip all API calls if environment is not configured — fallback data in each component will be used
   if (!isApiConfigured()) {
@@ -110,10 +112,10 @@ export default async function Home() {
         Array.isArray(s.image_paths) ? s.image_paths : [],
         Array.isArray(s.images) ? s.images : []
       ];
-      
+
       // Pick the best array
       let best = imageCandidates.reduce((a, b) => b.length > a.length ? b : a, []);
-      
+
       // Fallback to singular image_path string if no arrays found
       if (best.length === 0 && s.image_path && typeof s.image_path === 'string') {
         images = [s.image_path];
@@ -315,12 +317,18 @@ export default async function Home() {
   try {
     const res = await getAuthorsList();
     if (Array.isArray(res)) {
-        authors = res.filter(a => a.active === 1).slice(0, 12);
+      authors = res.filter(a => a.active === 1).slice(0, 12);
     } else if (res?.success && Array.isArray(res?.data)) {
-        // Fallback in case the API wraps it in the future
-        authors = res.data.filter(a => a.active === 1).slice(0, 12);
+      authors = res.data.filter(a => a.active === 1).slice(0, 12);
     }
   } catch (error) { console.error("Failed to fetch authors list:", error); }
+
+  try {
+    const res = await getTopBrands();
+    if (res?.success && Array.isArray(res?.data)) {
+      brands = res.data.slice(0, 12);
+    }
+  } catch (error) { console.error("Failed to fetch brands/publishers:", error); }
 
   return (
     <>
@@ -333,11 +341,12 @@ export default async function Home() {
       {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
       {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
+      {brands.length > 0 && <TopPublishers brands={brands} />}
       {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
       {/* <PreOrderBooks /> */}
       {bestDealsCards.length > 0 && <BestDeals deals={bestDealsCards} />}
       {/* <CuratedReadingLists /> */}
-      {/* <TopPublishers /> */}
+
       {blogPosts.length > 0 && <BlogTips posts={blogPosts} />}
       {/* <CTABanner /> */}
       {/* <AppDownloadBanner /> */}

@@ -5,15 +5,8 @@ import Image from 'next/image';
 import { FiPhone, FiMail, FiMapPin, FiFacebook, FiInstagram, FiYoutube } from 'react-icons/fi';
 
 export default function Footer({ categories = [] }) {
-    const defaultCategories = [
-        { name: "উপন্যাস", slug: "novels" },
-        { name: "কবিতা", slug: "poetry" },
-        { name: "শিশু-কিশোর", slug: "children" },
-        { name: "আত্মউন্নয়ন", slug: "self-help" },
-        { name: "ধর্মীয় বই", slug: "religious" },
-    ];
-
-    const displayCategories = categories && categories.length > 0 ? categories.slice(0, 5) : defaultCategories;
+    const defaultCategories = [];
+    const displayCategories = categories && categories.length > 0 ? categories.slice(0, 5) : [];
 
     return (
         <footer className="bg-brand-green-dark text-white overflow-hidden">

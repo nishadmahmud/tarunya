@@ -49,22 +49,10 @@ export default function CategoryPage() {
 
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-    // English to Bangla Category Name Mapping
-    const categoryTranslations = {
-        'novels': 'উপন্যাস',
-        'poetry': 'কবিতা',
-        'children': 'শিশু-কিশোর',
-        'self-help': 'আত্মউন্নয়ন',
-        'religious': 'ধর্মীয় বই',
-        'history': 'ইতিহাস',
-        'science': 'বিজ্ঞান',
-        'biography': 'জীবনী',
-    };
-
     const [categoryId, setCategoryId] = useState(rawSlug);
     const [categoryName, setCategoryName] = useState(() => {
         const decoded = decodeURIComponent(rawSlug).toLowerCase();
-        return categoryTranslations[decoded] || decoded.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        return decoded.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     });
 
     // Instead of holding 1 page, we hold ALL products for this category.
@@ -160,28 +148,13 @@ export default function CategoryPage() {
                         }
                     }
                 } else if (isMounted) {
-                    // Fallback Dummy Data for Category Grid
-                    const fallbackBooks = [
-                        { id: 'f1', name: "খরাজ খাতা", brand_name: "আহমাদ মোস্তফা কামাল", retails_price: 350, discount: 50, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop", current_stock: 10 },
-                        { id: 'f2', name: "জীবন যেখানে যেমন", brand_name: "আরিফ আজাদ", retails_price: 400, discount: 20, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop", current_stock: 50 },
-                        { id: 'f3', name: "প্রোডাক্টিভ মুসলিম", brand_name: "মোহাম্মদ ফারিস", retails_price: 600, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop", current_stock: 20 },
-                        { id: 'f4', name: "নেপোলিয়ন হিল: থিঙ্ক অ্যান্ড গ্রো রিচ", brand_name: "নেপোলিয়ন হিল", retails_price: 450, discount: 15, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop", current_stock: 5 },
-                        { id: 'f5', name: "রিচ ড্যাড পুওর ড্যাড", brand_name: "রবার্ট কিয়োসাকি", retails_price: 500, discount: 100, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=400&auto=format&fit=crop", current_stock: 100 },
-                        { id: 'f6', name: "দ্য সিক্রেট", brand_name: "রোন্ডা বাইর্ন", retails_price: 550, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=400&auto=format&fit=crop", current_stock: 15 },
-                    ];
-                    setAllProducts(fallbackBooks.map(mapProduct));
+                    setAllProducts([]);
                     setIsLoading(false);
                 }
             } catch (err) {
                 console.error('Failed to fetch category products:', err);
                 if (isMounted) {
-                    const fallbackBooks = [
-                        { id: 'f1', name: "খরাজ খাতা", brand_name: "আহমাদ মোস্তফা কামাল", retails_price: 350, discount: 50, discount_type: "amount", image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop", current_stock: 10 },
-                        { id: 'f2', name: "জীবন যেখানে যেমন", brand_name: "আরিফ আজাদ", retails_price: 400, discount: 20, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=400&auto=format&fit=crop", current_stock: 50 },
-                        { id: 'f3', name: "প্রোডাক্টিভ মুসলিম", brand_name: "মোহাম্মদ ফারিস", retails_price: 600, discount: 0, discount_type: "0", image_url: "https://images.unsplash.com/photo-1614113489855-66422ad300a4?q=80&w=400&auto=format&fit=crop", current_stock: 20 },
-                        { id: 'f4', name: "নেপোলিয়ন হিল: থিঙ্ক অ্যান্ড গ্রো রিচ", brand_name: "নেপোলিয়ন হিল", retails_price: 450, discount: 15, discount_type: "percentage", image_url: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400&auto=format&fit=crop", current_stock: 5 },
-                    ];
-                    setAllProducts(fallbackBooks.map(mapProduct));
+                    setAllProducts([]);
                     setIsLoading(false);
                 }
             }
