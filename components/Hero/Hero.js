@@ -65,34 +65,16 @@ export default function Hero({ slides = [], banners = [] }) {
                                 key={slide.id || idx}
                                 className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${currentSlide === idx ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                             >
-                                <Image
-                                    src={slide.image || slide.image_path || "/images/hero-fallback.jpg"}
-                                    alt={slide.title || "স্লাইডার"}
-                                    fill
-                                    unoptimized
-                                    className="object-cover z-0"
-                                    priority={idx === 0}
-                                />
-                                {/* Dark overlay for text readability */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent z-10"></div>
-
-                                {/* Text Content Overlay */}
-                                {slide.title && (
-                                    <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 md:px-12 max-w-lg">
-                                        <span className="text-[10px] md:text-xs font-bold text-brand-gold uppercase tracking-widest mb-2 md:mb-3">
-                                            {slide.badge}
-                                        </span>
-                                        <h1 className="text-xl sm:text-2xl md:text-4xl font-black text-white leading-tight mb-2 md:mb-4">
-                                            {slide.title}
-                                        </h1>
-                                        <p className="text-white/80 text-[11px] md:text-sm mb-4 md:mb-6 leading-relaxed hidden sm:block">
-                                            {slide.subtitle}
-                                        </p>
-                                        <Link href="#" className="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-green-dark text-white font-bold text-[11px] md:text-sm px-4 md:px-6 py-2 md:py-3 rounded-lg transition-all w-fit shadow-lg hover:shadow-xl">
-                                            {slide.buttonText || "সংগ্রহ দেখুন"} <FiArrowRight size={16} />
-                                        </Link>
-                                    </div>
-                                )}
+                                <Link href={slide.buttonLink || "#"}>
+                                    <Image
+                                        src={slide.image || slide.image_path || "/images/hero-fallback.jpg"}
+                                        alt={slide.title || "স্লাইডার"}
+                                        fill
+                                        unoptimized
+                                        className="object-cover z-0"
+                                        priority={idx === 0}
+                                    />
+                                </Link>
                             </div>
                         ))}
 

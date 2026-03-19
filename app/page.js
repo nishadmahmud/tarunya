@@ -102,36 +102,36 @@ export default async function Home() {
 
   try {
     const res = await getSlidersFromServer();
-    const sliderData = res?.success ? res?.sliders : null;
-    let images = [];
-    if (Array.isArray(sliderData) && sliderData.length > 0) {
-      const s = sliderData[0];
-      // Collect all possible image arrays
-      const imageCandidates = [
-        Array.isArray(s.image_path) ? s.image_path : [],
-        Array.isArray(s.image_paths) ? s.image_paths : [],
-        Array.isArray(s.images) ? s.images : []
-      ];
+    if (res?.success && Array.isArray(res?.sliders)) {
+      heroSlides = res.sliders.flatMap((s, sIdx) => {
+        // Collect all possible images from this slider object
+        let images = [];
+        if (Array.isArray(s.image_path)) {
+          images = s.image_path;
+        } else if (typeof s.image_path === 'string' && s.image_path) {
+          images = [s.image_path];
+        } else if (Array.isArray(s.image_paths)) {
+          images = s.image_paths;
+        } else if (Array.isArray(s.images)) {
+          images = s.images;
+        }
 
-      // Pick the best array
-      let best = imageCandidates.reduce((a, b) => b.length > a.length ? b : a, []);
+        // If still no images, use fallback
+        if (images.length === 0) {
+          images = ["/images/hero-fallback.jpg"];
+        }
 
-      // Fallback to singular image_path string if no arrays found
-      if (best.length === 0 && s.image_path && typeof s.image_path === 'string') {
-        images = [s.image_path];
-      } else {
-        images = best;
-      }
+        return images.map((img, imgIdx) => ({
+          id: `${s.id || sIdx}-${imgIdx}`,
+          title: s.title || "",
+          subtitle: s.subtitle || "",
+          badge: s.badge || "নতুন সংযোজন",
+          buttonText: s.button_text || "সংগ্রহ দেখুন",
+          buttonLink: s.link || "/category/all",
+          image: img,
+        }));
+      });
     }
-
-    heroSlides = images.map((img, idx) => ({
-      id: idx,
-      title: "",
-      subtitle: "",
-      buttonText: "",
-      buttonLink: "",
-      image: img,
-    }));
   } catch (error) { console.error("Failed to fetch sliders:", error); }
 
   try {
