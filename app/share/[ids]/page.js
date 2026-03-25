@@ -42,7 +42,7 @@ export default function ShareCollectionPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    
+
     // Form States
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -65,22 +65,22 @@ export default function ShareCollectionPage() {
     useEffect(() => {
         const fetchCollection = async () => {
             if (!params.ids) return;
-            
+
             const rawIds = Array.isArray(params.ids) ? params.ids[0] : params.ids;
             const decodedIds = decodeURIComponent(rawIds);
             const ids = decodedIds.split(",");
-            
+
             setIsLoading(true);
-            
+
             try {
                 const fetchedProducts = [];
                 for (const id of ids) {
                     const trimmedId = id.trim();
                     if (!trimmedId) continue;
-                    
+
                     const res = await getProductById(trimmedId);
                     const p = res?.data || res;
-                    
+
                     if (p && p.id) {
                         // Price logic
                         const originalPrice = Number(p.retails_price || 0);
@@ -199,7 +199,7 @@ export default function ShareCollectionPage() {
         }
 
         setIsSubmitting(true);
-        
+
         const selectedPaymentObj = paymentTypes.find(p => p.id === paymentMethod);
         if (!selectedPaymentObj) {
             toast.error("অনুগ্রহ করে একটি পেমেন্ট মেথড সিলেক্ট করুন।");
@@ -252,7 +252,7 @@ export default function ShareCollectionPage() {
             const response = await saveSalesOrder(orderPayload);
             if (response.success) {
                 const invoiceId = response.data?.invoice_id || response.invoice_id || response.data?.data?.invoice_id || "INV-" + Date.now();
-                
+
                 // If SSL, Initiate SSL Payment
                 if (payMode === "Online") {
                     toast.success("অর্ডার সেভ হয়েছে! পেমেন্ট গেটওয়েতে রিডাইরেক্ট করা হচ্ছে...");
@@ -266,7 +266,7 @@ export default function ShareCollectionPage() {
                             customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict}`,
                             customer_city: selectedDistrict || "Dhaka",
                             customer_country: "Bangladesh",
-                            product_name: "Books from Tarunno Prokashon",
+                            product_name: "Books from Tarunya Prokashon",
                             invoice_id: invoiceId,
                             product_category: "Books",
                             payment_method: [
@@ -292,7 +292,7 @@ export default function ShareCollectionPage() {
                 } else {
                     toast.success("অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!");
                 }
-                
+
                 router.push(`/order-success?invoice=${invoiceId}`);
             } else {
                 toast.error("অর্ডারটি সম্পন্ন করা সম্ভব হয়নি।");
@@ -327,7 +327,7 @@ export default function ShareCollectionPage() {
             <div className="bg-white border-b border-gray-100 pt-10 pb-16 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
-                
+
                 <div className="max-w-7xl mx-auto px-4 relative z-10">
                     <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-green transition-all text-sm font-bold mb-8 group">
                         <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-brand-green/10 group-hover:text-brand-green transition-colors">
@@ -335,7 +335,7 @@ export default function ShareCollectionPage() {
                         </div>
                         হোম পেজ এ ফিরে যান
                     </Link>
-                    
+
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
                             <div className="flex items-center gap-2 mb-4">
@@ -356,7 +356,7 @@ export default function ShareCollectionPage() {
 
             <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-20">
                 <div className="flex flex-col lg:grid lg:grid-cols-[1.5fr_1fr] gap-10">
-                    
+
                     {/* Left Column */}
                     <div className="space-y-10 pb-32">
                         {/* 1. Items Grid/List */}
@@ -373,8 +373,8 @@ export default function ShareCollectionPage() {
 
                             <div className="space-y-4">
                                 {products.map((p) => (
-                                    <div 
-                                        key={p.id} 
+                                    <div
+                                        key={p.id}
                                         onClick={() => setSelectedProduct(p)}
                                         className="group flex gap-5 items-center p-4 rounded-2xl hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-all cursor-pointer"
                                     >
@@ -419,7 +419,7 @@ export default function ShareCollectionPage() {
                                     <span className="text-xs font-black">নিরাপদ ডেলিভারি নিশ্চিত</span>
                                 </div>
                             </div>
-                            
+
                             <form id="share-checkout-form" onSubmit={handleSubmit} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-3">
@@ -437,12 +437,12 @@ export default function ShareCollectionPage() {
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <AddressSelect 
-                                    selectedDistrict={selectedDistrict} 
-                                    setSelectedDistrict={setSelectedDistrict} 
-                                    selectedCity={selectedCity} 
-                                    setSelectedCity={setSelectedCity} 
+
+                                <AddressSelect
+                                    selectedDistrict={selectedDistrict}
+                                    setSelectedDistrict={setSelectedDistrict}
+                                    selectedCity={selectedCity}
+                                    setSelectedCity={setSelectedCity}
                                     variant="premium"
                                 />
 
@@ -464,14 +464,13 @@ export default function ShareCollectionPage() {
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3 flex-1">
                                     {courierOptions.map((c) => (
-                                        <button 
-                                            key={c.id} 
-                                            onClick={() => setSelectedCourier(c.id)} 
-                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${
-                                                selectedCourier === c.id 
+                                        <button
+                                            key={c.id}
+                                            onClick={() => setSelectedCourier(c.id)}
+                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${selectedCourier === c.id
                                                     ? c.selectedBorder + " " + c.bg
                                                     : 'border-gray-50 bg-gray-50 text-gray-400 hover:border-brand-green/20'
-                                            }`}
+                                                }`}
                                         >
                                             {c.logo ? (
                                                 <div className="relative w-full h-full flex items-center justify-center p-1">
@@ -499,7 +498,7 @@ export default function ShareCollectionPage() {
                                     ))}
                                 </div>
                             </section>
-                            
+
                             <section className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-xl shadow-gray-200/40">
                                 <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
@@ -519,12 +518,11 @@ export default function ShareCollectionPage() {
                                         paymentTypes.map((pt) => {
                                             const isCash = pt.type_name === "Cash";
                                             return (
-                                                <div 
+                                                <div
                                                     key={pt.id}
                                                     onClick={() => setPaymentMethod(pt.id)}
-                                                    className={`cursor-pointer p-5 rounded-[24px] border-2 transition-all relative overflow-hidden group ${
-                                                        paymentMethod === pt.id ? 'border-brand-green bg-brand-green/5 ring-4 ring-brand-green/5' : 'border-gray-100 hover:border-brand-green/30'
-                                                    }`}
+                                                    className={`cursor-pointer p-5 rounded-[24px] border-2 transition-all relative overflow-hidden group ${paymentMethod === pt.id ? 'border-brand-green bg-brand-green/5 ring-4 ring-brand-green/5' : 'border-gray-100 hover:border-brand-green/30'
+                                                        }`}
                                                 >
                                                     <div className="relative z-10 flex items-center justify-between">
                                                         <div>
@@ -559,7 +557,7 @@ export default function ShareCollectionPage() {
                     <div className="lg:sticky lg:top-24 self-start">
                         <section className="bg-white rounded-[40px] border border-gray-100 p-8 md:p-10 shadow-2xl shadow-gray-200/60 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
-                            
+
                             <h2 className="text-2xl font-black text-gray-900 mb-8 relative z-10">অর্ডার সামারি</h2>
 
                             {/* Products List */}
@@ -576,7 +574,7 @@ export default function ShareCollectionPage() {
                                     </div>
                                 ))}
                             </div>
-                            
+
                             <div className="space-y-5 pb-8 border-b border-gray-100 relative z-10">
                                 <div className="flex justify-between items-center text-gray-500 font-bold">
                                     <span className="text-sm">বইয়ের মোট দাম</span>
@@ -635,12 +633,12 @@ export default function ShareCollectionPage() {
                             <div className="mt-8 pt-8 border-t border-gray-50 flex items-center justify-center gap-6">
                                 <div className="flex flex-col items-center gap-2">
                                     <Shield className="w-5 h-5 text-brand-green opacity-50" />
-                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">100% Secure<br/>Checkout</span>
+                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">100% Secure<br />Checkout</span>
                                 </div>
                                 <div className="w-px h-8 bg-gray-100"></div>
                                 <div className="flex flex-col items-center gap-2">
                                     <Truck className="w-5 h-5 text-brand-green opacity-50" />
-                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">Fastest<br/>Delivery</span>
+                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">Fastest<br />Delivery</span>
                                 </div>
                             </div>
                         </section>

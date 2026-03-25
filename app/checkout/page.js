@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
     // Load saved details on mount
     useEffect(() => {
-        const savedDetails = localStorage.getItem("Tarunno ProkashonCheckoutDetails");
+        const savedDetails = localStorage.getItem("Tarunya ProkashonCheckoutDetails");
         if (savedDetails) {
             try {
                 const parsed = JSON.parse(savedDetails);
@@ -256,7 +256,7 @@ export default function CheckoutPage() {
                 district: selectedDistrict,
                 city: selectedCity
             };
-            localStorage.setItem("Tarunno ProkashonCheckoutDetails", JSON.stringify(detailsToSave));
+            localStorage.setItem("Tarunya ProkashonCheckoutDetails", JSON.stringify(detailsToSave));
         } catch (error) {
             console.error("Failed to save checkout details to local storage", error);
         }
@@ -341,7 +341,7 @@ export default function CheckoutPage() {
                             customer_address: `${formData.address}, ${selectedCity}, ${selectedDistrict}`,
                             customer_city: selectedDistrict || "Dhaka",
                             customer_country: "Bangladesh",
-                            product_name: "Books from Tarunno Prokashon",
+                            product_name: "Books from Tarunya Prokashon",
                             invoice_id: invoiceId,
                             product_category: "Books",
                             payment_method: [
@@ -367,7 +367,7 @@ export default function CheckoutPage() {
                 } else {
                     toast.success("Order placed successfully!");
                 }
-                
+
                 router.push(`/order-success?invoice=${invoiceId}`);
             } else {
                 toast.error("Failed to place order. Please try again.");

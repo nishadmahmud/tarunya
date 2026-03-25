@@ -25,7 +25,7 @@ export default function FloatingChat() {
     const toggleOpen = () => setIsOpen(!isOpen);
 
     const whatsappLink = "https://wa.me/8801979456721";
-    const messengerLink = "https://m.me/tarunnyoprokashon"; // Placeholder, standard pattern
+    const messengerLink = "https://m.me/107452717556893"; 
 
     return (
         <div className="fixed bottom-20 md:bottom-8 right-6 z-[9999] flex flex-col items-center gap-4">

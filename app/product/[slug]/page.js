@@ -76,9 +76,19 @@ export default function ProductDetailsPage() {
                 }
 
                 const originalPrice = Number(p.retails_price || 0);
-                const discountValue = Number(p.discount || 0);
-                const discountType = String(p.discount_type || '').toLowerCase();
-                const hasDiscount = discountValue > 0 && discountType !== '0';
+                let discountValue = Number(p.discount || 0);
+                let discountType = String(p.discount_type || '').toLowerCase();
+                let hasDiscount = discountValue > 0 && discountType !== '0';
+
+                // If no product discount, check for active campaigns
+                if (!hasDiscount && Array.isArray(p.campaigns)) {
+                    const activeCampaign = p.campaigns.find(c => c.status === 'active');
+                    if (activeCampaign) {
+                        discountValue = Number(activeCampaign.discount || 0);
+                        discountType = String(activeCampaign.discount_type || '').toLowerCase();
+                        hasDiscount = discountValue > 0 && discountType !== '0';
+                    }
+                }
 
                 const price = hasDiscount
                     ? discountType === 'percentage'

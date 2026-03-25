@@ -74,7 +74,7 @@ export default function TermsPage() {
                 <section>
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">৮. যোগাযোগ</h2>
                     <p className="text-gray-600 leading-relaxed">
-                        আমাদের শর্তাবলী সম্পর্কে কোনো প্রশ্ন থাকলে, অনুগ্রহ করে info@tarunno.com এ ইমেইল করুন অথবা আমাদের 'যোগাযোগ করুন' পেইজে ভিজিট করুন।
+                        আমাদের শর্তাবলী সম্পর্কে কোনো প্রশ্ন থাকলে, অনুগ্রহ করে info@Tarunya.com এ ইমেইল করুন অথবা আমাদের 'যোগাযোগ করুন' পেইজে ভিজিট করুন।
                     </p>
                 </section>
             </div>

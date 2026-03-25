@@ -2,11 +2,16 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiPhone, FiMail, FiMapPin, FiFacebook, FiInstagram, FiYoutube } from 'react-icons/fi';
+import { FiPhone, FiMail, FiMapPin, FiFacebook } from 'react-icons/fi';
+import { FaFacebookMessenger, FaWhatsapp } from 'react-icons/fa';
 
 export default function Footer({ categories = [] }) {
     const defaultCategories = [];
     const displayCategories = categories && categories.length > 0 ? categories.slice(0, 5) : [];
+
+    const facebookLink = "https://web.facebook.com/Tarunyaprokashon";
+    const messengerLink = "https://m.me/107452717556893";
+    const whatsappLink = "https://wa.me/8801979456721";
 
     return (
         <footer className="bg-brand-green-dark text-white overflow-hidden">
@@ -19,7 +24,7 @@ export default function Footer({ categories = [] }) {
                     <div className="md:col-span-4 lg:col-span-5">
                         <Link href="/" className="inline-block mb-6 group">
                             <Image
-                                src="/Tarunno Logo Board.png"
+                                src="/Tarunya Logo Board.png"
                                 alt="তারুণ্য প্রকাশন"
                                 width={180}
                                 height={60}
@@ -31,14 +36,14 @@ export default function Footer({ categories = [] }) {
                             বাংলাদেশের অন্যতম নির্ভরযোগ্য প্রকাশনা প্রতিষ্ঠান। আমরা বিশ্বাস করি মানসম্মত বই-ই পারে উন্নত সমাজ গড়তে। সেরা মানের বই, আকর্ষণীয় প্রচ্ছদ ও পাঠযোগ্য ফন্টে প্রকাশ করাই আমাদের অঙ্গীকার।
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-brand-gold hover:scale-110 transition-all duration-300 group">
+                            <a href={facebookLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all duration-300 group" title="Facebook">
                                 <FiFacebook size={18} className="group-hover:rotate-6" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-brand-gold hover:scale-110 transition-all duration-300 group">
-                                <FiInstagram size={18} className="group-hover:-rotate-6" />
+                            <a href={messengerLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-[#0084FF] hover:scale-110 transition-all duration-300 group" title="Messenger">
+                                <FaFacebookMessenger size={18} className="group-hover:-rotate-6" />
                             </a>
-                            <a href="#" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-brand-gold hover:scale-110 transition-all duration-300 group">
-                                <FiYoutube size={18} className="group-hover:rotate-6" />
+                            <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all duration-300 group" title="WhatsApp">
+                                <FaWhatsapp size={20} className="group-hover:rotate-6" />
                             </a>
                         </div>
                     </div>

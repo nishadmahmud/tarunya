@@ -259,15 +259,15 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             </span>
                         )}
                     </h1>
-                    
+
                     {/* Rating Summary */}
                     <div className="flex items-center gap-3 mb-4">
                         <div className="flex text-brand-gold">
                             {[...Array(5)].map((_, i) => (
-                                <FaStar 
-                                    key={i} 
-                                    size={14} 
-                                    className={reviewSummary && i < Math.round(reviewSummary.average_rating) ? 'fill-brand-gold' : 'text-gray-300'} 
+                                <FaStar
+                                    key={i}
+                                    size={14}
+                                    className={reviewSummary && i < Math.round(reviewSummary.average_rating) ? 'fill-brand-gold' : 'text-gray-300'}
                                 />
                             ))}
                         </div>
@@ -281,14 +281,14 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             <span className="text-sm text-gray-400 font-medium">(০ টি রিভিউ)</span>
                         )}
                     </div>
-                    
+
                     {/* Book Meta Details */}
                     <div className="flex flex-col gap-2.5 text-sm text-gray-600 mb-6">
                         {product.author && (
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-400 w-24">লেখক:</span>
                                 {product.authorDetails?.id ? (
-                                    <Link 
+                                    <Link
                                         href={`/author/${product.authorDetails.id}`}
                                         className="font-bold text-brand-green hover:underline cursor-pointer"
                                     >
@@ -320,7 +320,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                     </div>
                 </div>
 
-                <button 
+                <button
                     onClick={handleShare}
                     className="p-2 text-gray-400 hover:text-brand-green hover:bg-brand-green/10 rounded-full transition-colors shrink-0"
                     title="Share link"
@@ -346,7 +346,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         </span>
                     )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">সকল মূল্যে ভ্যাট অন্তর্ভুক্ত</p>
+                <p className="text-xs text-gray-500 mt-1"></p>
             </div>
 
             {/* Variants */}
@@ -511,88 +511,88 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
 
             {/* Look Inside Modal (PDF / Pages Preview) */}
             {isLookInsideOpen && (
-            <div
-                className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm"
-                style={{ overscrollBehavior: 'contain', touchAction: 'none' }}
-                onClick={(e) => { if (e.target === e.currentTarget) setIsLookInsideOpen(false); }}
-                onTouchMove={(e) => {
-                    // Only allow touch move inside the PDF iframe
-                    if (!e.target.closest('.pdf-content-area')) {
-                        e.preventDefault();
-                    }
-                }}
-            >
                 <div
-                    className="bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] shadow-2xl relative flex flex-col"
-                    style={{ overscrollBehavior: 'contain' }}
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/80 backdrop-blur-sm"
+                    style={{ overscrollBehavior: 'contain', touchAction: 'none' }}
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsLookInsideOpen(false); }}
+                    onTouchMove={(e) => {
+                        // Only allow touch move inside the PDF iframe
+                        if (!e.target.closest('.pdf-content-area')) {
+                            e.preventDefault();
+                        }
+                    }}
                 >
-                    <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50 shrink-0">
-                        <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
-                            <FiBookOpen />
-                            একটু পড়ে দেখুন
-                        </h3>
-                        <div className="flex items-center gap-2">
-                            {product.pdfFile && (
-                                <a
-                                    href={product.pdfFile}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-brand-green border border-brand-green/20 rounded-lg hover:bg-brand-green hover:text-white transition-all mr-2"
-                                    title="Open in new tab"
-                                >
-                                    <FiExternalLink size={16} />
-                                    <span className="hidden sm:inline">নতুন ট্যাবে খুলুন</span>
-                                </a>
-                            )}
-                            <button
-                                onClick={() => setIsLookInsideOpen(false)}
-                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                            >
-                                <FiX size={24} />
-                            </button>
-                        </div>
-                    </div>
-
                     <div
-                        className="pdf-content-area flex-1 relative"
-                        style={{
-                            overflow: 'auto',
-                            WebkitOverflowScrolling: 'touch',
-                            overscrollBehavior: 'contain',
-                            touchAction: 'pan-y',
-                        }}
+                        className="bg-white rounded-2xl md:rounded-3xl w-full max-w-3xl h-[85vh] shadow-2xl relative flex flex-col"
+                        style={{ overscrollBehavior: 'contain' }}
                     >
-                        {product.pdfFile ? (
-                            isMobile ? (
-                                <iframe
-                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
-                                    className="w-full border-none"
-                                    style={{ height: '100%', minHeight: '100%', touchAction: 'auto' }}
-                                    title="Product PDF Preview"
-                                    allow="autoplay"
-                                />
-                            ) : (
-                                <object
-                                    data={product.pdfFile}
-                                    type="application/pdf"
-                                    className="w-full h-full"
+                        <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-brand-cream/50 shrink-0">
+                            <h3 className="text-lg font-bold text-brand-green-dark mx-2 flex items-center gap-2">
+                                <FiBookOpen />
+                                একটু পড়ে দেখুন
+                            </h3>
+                            <div className="flex items-center gap-2">
+                                {product.pdfFile && (
+                                    <a
+                                        href={product.pdfFile}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-brand-green border border-brand-green/20 rounded-lg hover:bg-brand-green hover:text-white transition-all mr-2"
+                                        title="Open in new tab"
+                                    >
+                                        <FiExternalLink size={16} />
+                                        <span className="hidden sm:inline">নতুন ট্যাবে খুলুন</span>
+                                    </a>
+                                )}
+                                <button
+                                    onClick={() => setIsLookInsideOpen(false)}
+                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
                                 >
+                                    <FiX size={24} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            className="pdf-content-area flex-1 relative"
+                            style={{
+                                overflow: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                overscrollBehavior: 'contain',
+                                touchAction: 'pan-y',
+                            }}
+                        >
+                            {product.pdfFile ? (
+                                isMobile ? (
                                     <iframe
                                         src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
-                                        className="w-full h-full border-none"
-                                        title="Product PDF Preview Fallback"
+                                        className="w-full border-none"
+                                        style={{ height: '100%', minHeight: '100%', touchAction: 'auto' }}
+                                        title="Product PDF Preview"
+                                        allow="autoplay"
                                     />
-                                </object>
-                            )
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                                <FiBookOpen size={48} className="text-gray-300 mb-4" />
-                                <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
-                            </div>
-                        )}
+                                ) : (
+                                    <object
+                                        data={product.pdfFile}
+                                        type="application/pdf"
+                                        className="w-full h-full"
+                                    >
+                                        <iframe
+                                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(product.pdfFile)}&embedded=true`}
+                                            className="w-full h-full border-none"
+                                            title="Product PDF Preview Fallback"
+                                        />
+                                    </object>
+                                )
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                                    <FiBookOpen size={48} className="text-gray-300 mb-4" />
+                                    <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
             )}
         </div>
     );

@@ -8,29 +8,29 @@ export async function generateMetadata({ params }) {
     try {
         const resolvedParams = await params;
         const brandId = resolvedParams.id;
-        
+
         const response = await getTopBrands();
         let brand = null;
         if (response?.success && Array.isArray(response?.data)) {
             brand = response.data.find(b => String(b.id) === String(brandId));
         }
-        
+
         if (!brand) {
-            return { title: 'Publisher Not Found - Tarunno Prokashon' }
+            return { title: 'Publisher Not Found - Tarunya Prokashon' }
         }
         return {
-            title: `${brand.name} - Tarunno Prokashon`,
-            description: `Browse books published by ${brand.name} at Tarunno Prokashon.`,
+            title: `${brand.name} - Tarunya Prokashon`,
+            description: `Browse books published by ${brand.name} at Tarunya Prokashon.`,
         };
     } catch (e) {
-        return { title: 'Publisher - Tarunno Prokashon' };
+        return { title: 'Publisher - Tarunya Prokashon' };
     }
 }
 
 export default async function PublisherPage({ params }) {
     const resolvedParams = await params;
     const brandId = resolvedParams.id;
-    
+
     let brand = null;
     let brandProducts = [];
     let loadingError = false;
@@ -115,7 +115,7 @@ export default async function PublisherPage({ params }) {
             {/* Header / Cover Area */}
             <div className="relative h-40 md:h-60 bg-gradient-to-r from-brand-green/80 to-emerald-800 w-full overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10 mix-blend-overlay"></div>
-                
+
                 {/* Back button */}
                 <div className="absolute top-6 left-6 z-10">
                     <Link
@@ -129,7 +129,7 @@ export default async function PublisherPage({ params }) {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                    
+
                     {/* Left Column: Brand Logo & Info */}
                     <div className="lg:col-span-4 flex flex-col items-center lg:items-start relative -mt-16 lg:-mt-24 z-10">
                         {/* Avatar / Logo */}
@@ -182,7 +182,7 @@ export default async function PublisherPage({ params }) {
                                 {mappedProducts.length}টি বই পাওয়া গেছে
                             </div>
                         </div>
-                        
+
                         {mappedProducts.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                 {mappedProducts.map((product) => (

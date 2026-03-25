@@ -17,8 +17,8 @@ export function AuthProvider({ children }) {
     // Load user from localStorage on mount
     useEffect(() => {
         try {
-            const storedToken = localStorage.getItem("Tarunno Prokashon_token");
-            const storedUser = localStorage.getItem("Tarunno Prokashon_user");
+            const storedToken = localStorage.getItem("Tarunya Prokashon_token");
+            const storedUser = localStorage.getItem("Tarunya Prokashon_user");
 
             if (storedToken && storedUser) {
                 setToken(storedToken);
@@ -26,8 +26,8 @@ export function AuthProvider({ children }) {
             }
         } catch (error) {
             console.error("Failed to load auth state from localStorage", error);
-            localStorage.removeItem("Tarunno Prokashon_token");
-            localStorage.removeItem("Tarunno Prokashon_user");
+            localStorage.removeItem("Tarunya Prokashon_token");
+            localStorage.removeItem("Tarunya Prokashon_user");
         } finally {
             setLoading(false);
         }
@@ -36,8 +36,8 @@ export function AuthProvider({ children }) {
     // Persist auth state
     const persistAuth = useCallback((newToken, newUser) => {
         try {
-            localStorage.setItem("Tarunno Prokashon_token", newToken);
-            localStorage.setItem("Tarunno Prokashon_user", JSON.stringify(newUser));
+            localStorage.setItem("Tarunya Prokashon_token", newToken);
+            localStorage.setItem("Tarunya Prokashon_user", JSON.stringify(newUser));
         } catch (error) {
             console.error("Failed to persist auth state", error);
         }
@@ -104,8 +104,8 @@ export function AuthProvider({ children }) {
 
     // Logout
     const logout = useCallback(() => {
-        localStorage.removeItem("Tarunno Prokashon_token");
-        localStorage.removeItem("Tarunno Prokashon_user");
+        localStorage.removeItem("Tarunya Prokashon_token");
+        localStorage.removeItem("Tarunya Prokashon_user");
         setUser(null);
         setToken(null);
     }, []);
@@ -121,7 +121,7 @@ export function AuthProvider({ children }) {
                 const updatedUser = { ...user, ...profileData };
                 setUser(updatedUser);
                 try {
-                    localStorage.setItem("Tarunno Prokashon_user", JSON.stringify(updatedUser));
+                    localStorage.setItem("Tarunya Prokashon_user", JSON.stringify(updatedUser));
                 } catch (e) {
                     console.error("Failed to persist updated user", e);
                 }

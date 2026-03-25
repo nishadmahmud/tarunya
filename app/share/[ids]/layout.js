@@ -1,9 +1,9 @@
 export async function generateMetadata({ params }) {
     const resolvedParams = await params;
     const ids = resolvedParams.ids || '';
-    
+
     const count = ids ? decodeURIComponent(ids).split(',').length : 0;
-    const title = count > 1 ? `Shared Collection (${count} items) - Tarunno Shop` : 'Shared Product Collection - Tarunno Shop';
+    const title = count > 1 ? `Shared Collection (${count} items) - Tarunya Shop` : 'Shared Product Collection - Tarunya Shop';
 
     return {
         title,

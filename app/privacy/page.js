@@ -58,7 +58,7 @@ const sections = [
         content: [
             "অ্যাকাউন্ট সেটিংস থেকে আপনি আপনার ব্যক্তিগত তথ্য যেকোনো সময় দেখা, আপডেট বা মুছে ফেলার অধিকার রাখেন।",
             "যেকোনো সময় আমাদের মার্কেটিং ইমেইল বা মেসেজের সাবস্ক্রিপশন বাতিল করতে পারেন।",
-            "আপনার সংগ্রহীত তথ্য সম্পর্কে বিস্তারিত জানতে info@tarunno.com-এ যোগাযোগ করতে পারেন।",
+            "আপনার সংগ্রহীত তথ্য সম্পর্কে বিস্তারিত জানতে info@Tarunya.com-এ যোগাযোগ করতে পারেন।",
         ],
     },
     {
@@ -106,7 +106,7 @@ export default function PrivacyPage() {
                     <div className="mt-10 p-5 bg-brand-green-light/30 rounded-xl border border-brand-green/10">
                         <p className="text-sm text-gray-600">
                             এই গোপনীয়তা নীতি সম্পর্কে আপনার যদি কোনো প্রশ্ন থাকে, তবে অনুগ্রহ করে আমাদের লিংকে যোগাযোগ করুন:{" "}
-                            <a href="mailto:info@tarunno.com" className="text-brand-green font-semibold hover:underline">info@tarunno.com</a> অথবা কল করুন:{" "}
+                            <a href="mailto:info@Tarunya.com" className="text-brand-green font-semibold hover:underline">info@Tarunya.com</a> অথবা কল করুন:{" "}
                             <a href="tel:01979456721" className="text-brand-green font-semibold hover:underline">০১৯৭৯৪৫৬৭২১</a>
                         </p>
                     </div>

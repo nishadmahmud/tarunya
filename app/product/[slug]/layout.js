@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
 
     if (!productId || !Number.isFinite(productId) || productId <= 0) {
         return {
-            title: 'Product Not Found | Tarunno Shop',
+            title: 'Product Not Found | Tarunya Shop',
         };
     }
 
@@ -27,14 +27,14 @@ export async function generateMetadata({ params }) {
 
         if (!product || !product.id) {
             return {
-                title: 'Product Not Found | Tarunno Shop',
+                title: 'Product Not Found | Tarunya Shop',
             };
         }
 
-        const title = `${product.name} - Tarunno Shop`;
+        const title = `${product.name} - Tarunya Shop`;
         const description = product.description
             ? product.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...'
-            : `Buy ${product.name} at the best price in Bangladesh from Tarunno Shop.`;
+            : `Buy ${product.name} at the best price in Bangladesh from Tarunya Shop.`;
 
         const images =
             (Array.isArray(product.images) && product.images.length > 0 && product.images) ||
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }) {
     } catch (error) {
         console.error('Failed to generate metadata for product:', error);
         return {
-            title: 'Product Details | Tarunno Shop',
+            title: 'Product Details | Tarunya Shop',
         };
     }
 }

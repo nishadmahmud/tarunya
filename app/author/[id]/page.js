@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
     try {
         const resolvedParams = await params;
         const authorId = resolvedParams.id;
-        
+
         const response = await getAuthorsList();
         let author = null;
         if (Array.isArray(response)) {
@@ -16,23 +16,23 @@ export async function generateMetadata({ params }) {
         } else if (response?.success && Array.isArray(response?.data)) {
             author = response.data.find(a => String(a.id) === String(authorId));
         }
-        
+
         if (!author) {
-            return { title: 'Author Not Found - Tarunno Prokashon' }
+            return { title: 'Author Not Found - Tarunya Prokashon' }
         }
         return {
-            title: `${author.name} - Tarunno Prokashon`,
-            description: author.description || `${author.name} is an author at Tarunno Prokashon.`,
+            title: `${author.name} - Tarunya Prokashon`,
+            description: author.description || `${author.name} is an author at Tarunya Prokashon.`,
         };
     } catch (e) {
-        return { title: 'Author - Tarunno Prokashon' };
+        return { title: 'Author - Tarunya Prokashon' };
     }
 }
 
 export default async function AuthorProfilePage({ params }) {
     const resolvedParams = await params;
     const authorId = resolvedParams.id;
-    
+
     let author = null;
     let authorProducts = [];
     let loadingError = false;
@@ -125,7 +125,7 @@ export default async function AuthorProfilePage({ params }) {
                 <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10 mix-blend-overlay"></div>
                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl"></div>
-                
+
                 {/* Back button */}
                 <div className="absolute top-6 left-6 z-10">
                     <Link
@@ -139,22 +139,22 @@ export default async function AuthorProfilePage({ params }) {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                    
+
                     {/* Left Column: Author Image & Quick Info (Pulled up into header) */}
                     <div className="lg:col-span-4 flex flex-col items-center lg:items-start relative -mt-24 lg:-mt-32 z-10">
                         {/* Avatar */}
-                            <div className="w-40 h-40 md:w-56 md:h-56 rounded-full border-8 border-[#FDFBF7] bg-white shadow-2xl overflow-hidden relative mb-6">
-                                {author.image ? (
-                                    <Image
-                                        src={author.image}
-                                        alt={author.name}
-                                        fill
-                                        unoptimized
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 160px, 224px"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                        <div className="w-40 h-40 md:w-56 md:h-56 rounded-full border-8 border-[#FDFBF7] bg-white shadow-2xl overflow-hidden relative mb-6">
+                            {author.image ? (
+                                <Image
+                                    src={author.image}
+                                    alt={author.name}
+                                    fill
+                                    unoptimized
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 160px, 224px"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-50">
                                     <User className="w-16 h-16 text-gray-300" />
                                 </div>
                             )}
@@ -188,7 +188,7 @@ export default async function AuthorProfilePage({ params }) {
                                     <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">বইসমূহ</p>
                                 </div>
                             </div>
-                            
+
                             <div className="flex gap-3">
                                 <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white rounded-xl font-bold hover:bg-green-700 transition-colors">
                                     <Heart className="w-4 h-4" />
@@ -238,7 +238,7 @@ export default async function AuthorProfilePage({ params }) {
                             <h2 className="text-2xl font-black text-gray-900 mb-8 flex items-center justify-between">
                                 <span>{author.name}-এর বইসমূহ ({mappedProducts.length})</span>
                             </h2>
-                            
+
                             {mappedProducts.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                     {mappedProducts.map((product) => (

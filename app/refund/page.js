@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-    title: 'Refund Policy | Tarunno Shop',
+    title: 'Refund Policy | Tarunya Shop',
     description: 'Our refund and return policy. Learn about our hassle-free return process.',
 };
 

@@ -1,158 +1,200 @@
-import { getSpecialOffers, isApiConfigured } from "../../lib/api";
+import { getCampaigns, isApiConfigured } from "../../lib/api";
 import Link from "next/link";
 import Image from "next/image";
-import { FiChevronRight, FiGift, FiTag, FiInfo } from "react-icons/fi";
-
+import { FiChevronRight, FiGift, FiTag } from "react-icons/fi";
+import ProductCard from "../../components/Shared/ProductCard";
+import NewsletterForm from "../../components/Shared/NewsletterForm";
 
 export const metadata = {
-    title: "বিশেষ অফার ও প্যাকেজ | তারুণ্য প্রকাশন",
-    description: "সাশ্রয়ী মূল্যে সেরা বইয়ের কালেকশন এবং আকর্ষণীয় কম্বো অফারগুলো দেখুন এখানে।",
+    title: "বিশেষ অফার ও ক্যাম্পেইন | তারুণ্য প্রকাশন",
+    description: "তারুণ্য প্রকাশনের বিশেষ অফার ও ক্যাম্পেইনগুলো দেখুন এবং সাশ্রয়ী মূল্যে আপনার প্রিয় বইগুলো সংগ্রহ করুন।",
 };
 
 export default async function SpecialOffersPage() {
-    let offers = [];
+    let campaigns = [];
+
+    const toMoney = (v) => `৳ ${Number(v || 0).toLocaleString("en-IN")}`;
+    const normalizeDiscount = (discount, type) => {
+        const d = Number(discount || 0);
+        if (!d || d <= 0) return null;
+        return String(type).toLowerCase() === "percentage"
+            ? `-${d}%`
+            : `৳ ${d.toLocaleString("en-IN")}`;
+    };
 
     if (isApiConfigured()) {
         try {
-            const res = await getSpecialOffers();
-            if (res?.success && Array.isArray(res?.data)) {
-                offers = res.data;
+            const res = await getCampaigns();
+            if (res?.success && res?.campaigns?.data) {
+                campaigns = res.campaigns.data.filter(c => c.status === "active");
             }
         } catch (error) {
-            console.error("Failed to fetch special offers:", error);
+            console.error("Failed to fetch campaigns:", error);
         }
     }
 
     return (
-        <div className="bg-white min-h-screen">
-            {/* Hero / Header Section */}
-            <div className="bg-brand-cream/30 py-10 md:py-16 border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div className="text-center md:text-left">
-                        <nav className="flex items-center justify-center md:justify-start gap-2 text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">
-                            <Link href="/" className="hover:text-brand-green transition-colors">হোম</Link>
-                            <FiChevronRight size={12} />
-                            <span className="text-brand-green font-bold">বিশেষ অফার</span>
-                        </nav>
-
-                        <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                            <span className="bg-brand-gold/10 text-brand-gold text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-brand-gold/20">
-                                ধামাকা অফার
-                            </span>
-                            <span className="bg-brand-green-light text-brand-green text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-brand-green/20">
-                                সীমিত সময়ের জন্য
-                            </span>
+        <div className="bg-[#fcf8f3] min-h-screen pb-20">
+            {/* Minimal Header */}
+            <div className="bg-white border-b border-gray-100 py-6 md:py-8 mb-8 md:mb-12">
+                <div className="max-w-7xl mx-auto px-4 md:px-6">
+                    <nav className="flex items-center gap-2 text-[10px] md:text-xs text-gray-400 mb-3 font-medium uppercase tracking-widest">
+                        <Link href="/" className="hover:text-brand-green transition-colors">হোম</Link>
+                        <FiChevronRight size={10} />
+                        <span className="text-brand-green font-bold">বিশেষ অফার</span>
+                    </nav>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+                                বিশেষ <span className="text-brand-green">অফার ও ক্যাম্পেইন</span>
+                            </h1>
+                            <p className="text-gray-500 text-xs md:text-sm mt-1">
+                                সাশ্রয়ী মূল্যে সেরা বইয়ের কালেকশনগুলো দেখুন
+                            </p>
                         </div>
-
-                        <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-4 tracking-tight">
-                            আপনার পছন্দের বই <br className="hidden md:block" />
-                            কিনুন <span className="text-brand-green">বিশেষ অফারে</span>
-                        </h1>
-                        <p className="text-gray-500 text-sm md:text-base max-w-xl leading-relaxed">
-                            সেরা সব বইয়ের কালেকশন এখন পাচ্ছেন আপনার বাজেটের মধ্যেই। আমাদের বিশেষ কম্বো প্যাক এবং ডিসকাউন্ট অফারগুলো দেখুন।
-                        </p>
-                    </div>
-
-                    {/* Concise Premium Graphic */}
-                    <div className="hidden md:flex relative w-40 h-40 flex-shrink-0 items-center justify-center">
-                        <div className="absolute inset-0 bg-brand-green rounded-full animate-pulse opacity-5"></div>
-                        <div className="relative w-28 h-28 bg-white border border-gray-100 shadow-xl rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-500 hover:border-brand-green/30">
-                            <FiGift className="text-brand-green w-12 h-12" />
+                        <div className="hidden md:flex items-center gap-3">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-brand-gold/10 rounded-full border border-brand-gold/20">
+                                <FiGift className="text-brand-gold" size={16} />
+                                <span className="text-xs font-bold text-brand-gold">ধামাকা ডিসকাউন্ট</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Offers Grid */}
-            <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-                {offers.length > 0 ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                        {offers.map((offer) => (
-                            <div
-                                key={offer.id}
-                                className="group relative bg-white rounded-[32px] md:rounded-[40px] border border-gray-100 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col md:flex-row"
-                            >
-                                {/* Visual Side */}
-                                <div className="md:w-5/12 relative min-h-[250px] overflow-hidden bg-gray-50 border-r border-gray-100">
-                                    <Image
-                                        src={offer.image}
-                                        alt={offer.title}
-                                        fill
-                                        unoptimized
-                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <div className="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 border border-gray-100">
-                                            <FiTag className="text-brand-gold w-3 h-3" />
-                                            <span className="text-[10px] font-black text-gray-900 uppercase tracking-wider">চলমান অফার</span>
+            <div className="max-w-7xl mx-auto px-4 md:px-6">
+                {campaigns.length > 0 ? (
+                    <div className="space-y-16 md:space-y-24">
+                        {campaigns.map((campaign) => {
+                            // Extract campaign-level discount info
+                            const campaignDiscountValue = Number(campaign.discount || 0);
+                            const campaignDiscountType = campaign.discount_type;
+
+                            return (
+                                <section key={campaign.id} className="relative">
+                                    {/* Campaign Card — Side-by-side layout */}
+                                    <div className="bg-white rounded-[24px] md:rounded-[32px] overflow-hidden mb-8 md:mb-12 shadow-lg border border-gray-100 flex flex-col md:flex-row group">
+                                        {/* Left: Campaign Info */}
+                                        <div className="flex-1 p-6 md:p-10 lg:p-12 flex flex-col justify-center order-2 md:order-1">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/10 text-brand-green text-[10px] md:text-xs font-black rounded-full mb-4 w-fit uppercase tracking-widest">
+                                                <FiTag size={12} />
+                                                সচল ক্যাম্পেইন
+                                            </div>
+                                            <h2 className="text-2xl md:text-4xl font-black text-gray-900 mb-3 md:mb-4 tracking-tight">
+                                                {campaign.name}
+                                            </h2>
+                                            <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-6 line-clamp-3 md:line-clamp-none">
+                                                {campaign.description}
+                                            </p>
+                                            {campaignDiscountValue > 0 && (
+                                                <div className="flex items-center gap-3">
+                                                    <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-black border border-red-100">
+                                                        <FiGift size={14} />
+                                                        {String(campaignDiscountType).toLowerCase() === 'percentage'
+                                                            ? `${campaignDiscountValue}% ছাড়`
+                                                            : `৳${campaignDiscountValue} ছাড়`
+                                                        }
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {/* Right: Full Image */}
+                                        <div className="w-full md:w-[45%] lg:w-[40%] aspect-[16/9] md:aspect-auto relative shrink-0 order-1 md:order-2">
+                                            <Image
+                                                src={campaign.bg_image || "/placeholder-banner.jpg"}
+                                                alt={campaign.name}
+                                                fill
+                                                unoptimized
+                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            />
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Content Side */}
-                                <div className="md:w-7/12 p-6 md:p-10 flex flex-col justify-center">
-                                    <h2 className="text-xl md:text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-brand-green transition-colors">
-                                        {offer.title}
-                                    </h2>
-                                    <div className="h-1.5 w-12 bg-gradient-to-r from-brand-green to-brand-gold rounded-full mb-6"></div>
-                                    <p className="text-gray-500 text-sm leading-relaxed mb-8 line-clamp-3">
-                                        {offer.description}
-                                    </p>
+                                    {/* Products Grid */}
+                                    {campaign.products && campaign.products.length > 0 && (
+                                        <div>
+                                            <div className="flex items-center gap-4 mb-8">
+                                                <h3 className="text-lg md:text-2xl font-black text-gray-900">ক্যাম্পেইন স্পেশাল বইসমূহ</h3>
+                                                <div className="flex-1 h-px bg-gray-200"></div>
+                                            </div>
+                                            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                                                {campaign.products.map((p) => {
+                                                    // Mapping logic consistent with home page and including campaign discount
+                                                    // Pivot info if available (contains campaign-specific discount for this product)
+                                                    const pivotDiscount = Number(p.pivot?.discount || 0);
+                                                    const pivotType = p.pivot?.discount_type;
 
-                                    <div className="mt-auto flex flex-col sm:flex-row gap-4">
-                                        <Link href={offer.link || '#'} className="flex-1 py-3.5 bg-brand-green text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-brand-green/20 hover:bg-brand-green-dark hover:shadow-brand-green/30 transition-all flex items-center justify-center gap-2 active:scale-95">
-                                            অফারটি নিন <FiGift size={16} />
-                                        </Link>
-                                        <button className="flex-1 py-3.5 bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 border border-gray-200 hover:border-brand-green/30">
-                                            বিস্তারিত <FiInfo size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                                                    // Product's own discount
+                                                    const prodDiscount = Number(p.discount || 0);
+                                                    const prodType = p.discount_type;
+
+                                                    // Use pivot discount if valid, otherwise fallback to general campaign discount, 
+                                                    // but only if product doesn't have its own stronger discount
+                                                    const hasProdDiscount = prodDiscount > 0 && String(prodType) !== '0';
+                                                    
+                                                    const finalDiscountValue = hasProdDiscount ? prodDiscount : (pivotDiscount > 0 ? pivotDiscount : campaignDiscountValue);
+                                                    const finalDiscountType = hasProdDiscount ? prodType : (pivotDiscount > 0 ? pivotType : campaignDiscountType);
+                                                    
+                                                    const hasDiscount = finalDiscountValue > 0 && String(finalDiscountType) !== '0';
+                                                    
+                                                    const originalPrice = Number(p.retails_price || 0);
+                                                    const discountedPrice = hasDiscount
+                                                        ? (String(finalDiscountType).toLowerCase() === 'percentage'
+                                                            ? Math.max(0, Math.round(originalPrice * (1 - finalDiscountValue / 100)))
+                                                            : Math.max(0, originalPrice - finalDiscountValue))
+                                                        : originalPrice;
+
+                                                    const mappedProduct = {
+                                                        id: p.id,
+                                                        name: p.name,
+                                                        brand: p.brands?.name || "অন্যান্য",
+                                                        price: toMoney(discountedPrice),
+                                                        oldPrice: hasDiscount ? toMoney(originalPrice) : null,
+                                                        discount: hasDiscount ? normalizeDiscount(finalDiscountValue, finalDiscountType) : null,
+                                                        imageUrl: p.image_path || (Array.isArray(p.image_paths) && p.image_paths[0]) || "/no-image.svg",
+                                                        pages: p.total_pages || p.pages || null
+                                                    };
+
+                                                    return <ProductCard key={p.id} product={mappedProduct} />;
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
+                                </section>
+                            );
+                        })}
                     </div>
                 ) : (
-                    <div className="text-center py-24 md:py-32 bg-gray-50 rounded-[40px] md:rounded-[60px] border-2 border-dashed border-gray-200 mx-4">
-                        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl">
-                            <FiTag size={40} className="text-gray-300" />
+                    <div className="text-center py-20 bg-white rounded-[40px] border border-gray-100 shadow-sm">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <FiTag size={32} className="text-gray-300" />
                         </div>
-                        <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4">বর্তমানে কোনো অফার নেই</h2>
-                        <p className="text-gray-500 max-w-md mx-auto text-base md:text-lg px-4">
-                            আমরা খুব শীঘ্রই নতুন এবং আকর্ষণীয় সব অফার নিয়ে আসছি। আমাদের সাথেই থাকুন!
+                        <h2 className="text-2xl font-black text-gray-900 mb-2">বর্তমানে কোনো সক্রিয় অফার নেই</h2>
+                        <p className="text-gray-500 text-sm max-w-xs mx-auto mb-8">
+                            খুব শীঘ্রই নতুন ক্যাম্পেইন শুরু হবে। নতুন আপডেট পেতে আমাদের সাথে থাকুন।
                         </p>
-                        <Link href="/" className="mt-10 inline-flex items-center gap-3 bg-brand-green text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg overflow-hidden relative group">
-                            <span className="relative z-10 flex items-center gap-2">হোমে ফিরুন <FiChevronRight /></span>
-                            <div className="absolute inset-0 bg-brand-green-dark translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <Link href="/" className="inline-flex items-center gap-2 bg-brand-green text-white px-8 py-3.5 rounded-xl font-bold uppercase tracking-widest hover:bg-brand-green-dark transition-all shadow-lg active:scale-95">
+                            হোমে ফিরুন <FiChevronRight />
                         </Link>
                     </div>
                 )}
             </div>
 
-            {/* Newsletter / CTA */}
-            <div className="max-w-7xl mx-auto px-6 pb-20 md:pb-32">
-                <div className="bg-brand-green rounded-[40px] md:rounded-[60px] p-8 md:p-20 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 border border-white/10 shadow-3xl">
-                    {/* Decoration */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-gold/10 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/2"></div>
-
+            {/* Newsletter section remains same but updated to match new style if needed, 
+                keeping it for conversion but refining it. */}
+            <div className="max-w-7xl mx-auto px-4 md:px-6 mt-20 md:mt-32">
+                <div className="bg-brand-green-dark rounded-[32px] md:rounded-[48px] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10">
                     <div className="relative z-10 text-center md:text-left">
-                        <h2 className="text-2xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">নতুন অফারের আপডেট <br /> পেতে চান?</h2>
-                        <p className="text-white/70 text-base md:text-lg max-w-xl">
-                            আমাদের নিউজলেটারে সাবস্ক্রাইব করুন এবং বইমেলা, বিশেষ উৎসব ও নতুন বইয়ের অফার সবার আগে জানুন।
+                        <h2 className="text-2xl md:text-4xl font-black text-white mb-4">অফার মিস করতে চান না?</h2>
+                        <p className="text-brand-cream/70 text-sm md:text-base max-w-md">
+                            আপনার ইমেইল দিয়ে সাবস্ক্রাইব করে রাখুন। প্রতিটি নতুন ক্যাম্পেইন শুরু হওয়ার সাথে সাথেই আপনাকে জানিয়ে দেওয়া হবে।
                         </p>
                     </div>
                     <div className="w-full md:w-auto relative z-10">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <input
-                                type="email"
-                                placeholder="আপনার ইমেইল দিন"
-                                className="px-8 py-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 min-w-full md:min-w-[350px] backdrop-blur-sm"
-                            />
-                            <button className="px-8 py-4 bg-brand-gold text-white rounded-2xl font-black uppercase tracking-widest hover:bg-white hover:text-brand-green transition-all shadow-lg active:scale-95 whitespace-nowrap">
-                                সাবস্ক্রাইব
-                            </button>
-                        </div>
+                        <NewsletterForm />
                     </div>
+                    {/* Background decorations */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 opacity-20"></div>
                 </div>
             </div>
         </div>

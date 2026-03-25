@@ -44,7 +44,7 @@ export async function generateMetadata({ params }) {
         categoryName = 'Category';
     }
 
-    const title = `${categoryName} - Tarunno Shop`;
+    const title = `${categoryName} - Tarunya Shop`;
 
     return {
         title,

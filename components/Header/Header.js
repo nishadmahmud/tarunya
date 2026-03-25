@@ -146,7 +146,7 @@ export default function Header({ categories = [] }) {
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0 z-10" aria-label="হোম">
               <Image
-                src="/Tarunno Logo Board.png"
+                src="/Tarunya Logo Board.png"
                 alt="তারুণ্য প্রকাশন"
                 width={180}
                 height={45}
@@ -323,7 +323,7 @@ export default function Header({ categories = [] }) {
       <div className={`fixed inset-y-0 left-0 w-[280px] bg-white z-[70] transform transition-transform duration-300 ease-in-out flex flex-col md:hidden shadow-2xl ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="bg-brand-green p-4 flex justify-between items-center">
           <Link href="/" onClick={closeSidebar} aria-label="হোম">
-            <Image src="/Tarunno Logo Board.png" alt="তারুণ্য প্রকাশন" width={140} height={36} className="h-8 w-auto object-contain drop-shadow-md" unoptimized />
+            <Image src="/Tarunya Logo Board.png" alt="তারুণ্য প্রকাশন" width={140} height={36} className="h-8 w-auto object-contain drop-shadow-md" unoptimized />
           </Link>
           <button onClick={closeSidebar} className="p-2 text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-colors"><FiX size={22} /></button>
         </div>
