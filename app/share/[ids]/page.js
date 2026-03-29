@@ -167,13 +167,11 @@ export default function ShareCollectionPage() {
             setDeliveryFee(0);
             return;
         }
-        let fee = 130;
-        if (selectedCity === "Demra" || selectedCity?.includes("Savar") || selectedDistrict === "Gazipur" || selectedCity?.includes("Keraniganj")) {
-            fee = 90;
-        } else if (selectedDistrict === "Dhaka") {
-            fee = 70;
+        let fee = 100;
+        if (selectedDistrict === "Dhaka") {
+            fee = 60;
         } else {
-            fee = 130;
+            fee = 100;
         }
         setDeliveryFee(fee);
     }, [selectedDistrict, selectedCity]);

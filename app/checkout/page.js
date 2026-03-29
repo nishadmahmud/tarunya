@@ -129,19 +129,12 @@ export default function CheckoutPage() {
             return;
         }
 
-        let fee = 130; // Default: Outside Dhaka
+        let fee = 100; // Default: Outside Dhaka
 
-        if (
-            selectedCity === "Demra" ||
-            selectedCity?.includes("Savar") ||
-            selectedDistrict === "Gazipur" ||
-            selectedCity?.includes("Keraniganj")
-        ) {
-            fee = 90;
-        } else if (selectedDistrict === "Dhaka") {
-            fee = 70;
+        if (selectedDistrict === "Dhaka") {
+            fee = 60;
         } else {
-            fee = 130;
+            fee = 100;
         }
         updateDeliveryFee(fee);
     }, [selectedDistrict, selectedCity, updateDeliveryFee]);
@@ -799,12 +792,7 @@ export default function CheckoutPage() {
                                     </div>
                                     <div className="flex justify-between text-sm text-gray-600">
                                         <span>ডেলিভারি চার্জ ({
-                                            selectedCity ? (selectedCity === "Demra" || selectedCity?.includes("Savar") || selectedDistrict === "Gazipur" || selectedCity?.includes("Keraniganj"))
-                                                ? "বিশেষ এলাকা"
-                                                : selectedDistrict === "Dhaka"
-                                                    ? "ঢাকা সিটি"
-                                                    : "ঢাকার বাইরে"
-                                                : "এলাকা নির্বাচন করুন"
+                                            selectedDistrict ? (selectedDistrict === "Dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে") : "এলাকা নির্বাচন করুন"
                                         })</span>
                                         <span className="font-medium">{deliveryFee > 0 ? formatPrice(deliveryFee) : "—"}</span>
                                     </div>
