@@ -30,7 +30,8 @@ import {
   getBestSellersFromServer,
   getBookFairBestSellersFromServer,
   getAuthorsList,
-  getTopBrands
+  getTopBrands,
+  getUpcomingProductsFromServer
 } from "../lib/api";
 
 const isApiConfigured = () => {
@@ -49,6 +50,7 @@ export default async function Home() {
   let blogPosts = [];
   let authors = [];
   let brands = [];
+  let upcomingProducts = [];
 
   // Skip all API calls if environment is not configured — fallback data in each component will be used
   if (!isApiConfigured()) {
@@ -333,6 +335,35 @@ export default async function Home() {
     }
   } catch (error) { console.error("Failed to fetch brands/publishers:", error); }
 
+  try {
+    const res = await getUpcomingProductsFromServer();
+    const items = res?.success ? (res.data?.data || res.data) : null;
+    if (Array.isArray(items)) {
+      upcomingProducts = items.map((p) => {
+        const originalPrice = Number(p.retails_price || 0);
+        const discountValue = Number(p.discount || 0);
+        const discountType = p.discount_type;
+        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
+
+        const discountedPrice = hasDiscount
+          ? (String(discountType).toLowerCase() === 'percentage'
+            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
+            : Math.max(0, originalPrice - discountValue))
+          : originalPrice;
+
+        return {
+          id: p.id,
+          name: p.name,
+          brand: p.brands?.name || "অন্যান্য",
+          price: toMoney(discountedPrice),
+          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
+          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
+          imageUrl: p.image_path || p.image_url || "/no-image.svg",
+        };
+      });
+    }
+  } catch (error) { console.error("Failed to fetch upcoming products:", error); }
+
   return (
     <>
       {(heroSlides.length > 0 || homeBanners.length > 0) && <Hero slides={heroSlides} banners={homeBanners} />}
@@ -344,7 +375,7 @@ export default async function Home() {
       {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
       {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
-      <UpcomingBooks products={[]} />
+      <UpcomingBooks products={upcomingProducts} />
       {brands.length > 0 && <TopPublishers brands={brands} />}
       {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
       {/* <PreOrderBooks /> */}
