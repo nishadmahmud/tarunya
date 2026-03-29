@@ -24,8 +24,18 @@ export default function MobileBottomNav() {
                 </Link>
 
                 {/* Offers */}
-                <Link href="/special-offers" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors ${isActive('/special-offers') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
-                    <FiPercent size={19} />
+                <Link href="/special-offers" className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-colors relative ${isActive('/special-offers') ? 'text-brand-gold' : 'text-white/50 hover:text-white/80'}`}>
+                    <div className="relative">
+                        <FiPercent size={19} />
+                        {!isActive('/special-offers') && (
+                            <span className="absolute -top-2 -right-3 flex h-4 w-auto min-w-[12px]">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 px-1 bg-red-600 text-[6px] text-white font-black items-center justify-center uppercase tracking-tighter shadow-sm">
+                                    HOT
+                                </span>
+                            </span>
+                        )}
+                    </div>
                     <span className="text-[9px] font-bold">অফার</span>
                 </Link>
 
