@@ -154,7 +154,8 @@ export default function ProductDetailsPage() {
                         slug: p.category_slug || p.category?.slug || (p.category_name || p.category?.name)?.toLowerCase().replace(/\s+/g, '-')
                     },
                     youtubeLink: p.youtube_link || p.video_link || null,
-                    pdfFile: p.pdf_file || null
+                    pdfFile: p.pdf_file || null,
+                    shortDescription: p.short_description || null
                 };
 
                 if (!cancelled) {
@@ -236,7 +237,8 @@ export default function ProductDetailsPage() {
                             slug: "islamic-books"
                         },
                         youtubeLink: "https://www.youtube.com/watch?v=wzXQ0FkXmGQ",
-                        pdfFile: "https://www.outletexpense.xyz/uploads/3-Emdad/1773408731_69b411db20c98.pdf"
+                        pdfFile: "https://www.outletexpense.xyz/uploads/3-Emdad/1773408731_69b411db20c98.pdf",
+                        shortDescription: "এটি একটি ডেমো বইয়ের সংক্ষিপ্ত বিবরণ। এখানে বইয়ের মূল আকর্ষণীয় দিকগুলো সংক্ষেপে তুলে ধরা হয়েছে।"
                     };
 
                     setProductData(dummyProduct);

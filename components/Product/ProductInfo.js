@@ -260,6 +260,12 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             </span>
                         )}
                     </h1>
+                    
+                    {product.shortDescription && (
+                        <p className="text-sm text-gray-500 mb-4 leading-relaxed max-w-full overflow-hidden text-wrap break-words">
+                            {product.shortDescription}
+                        </p>
+                    )}
 
                     {/* Rating Summary */}
                     <div className="flex items-center gap-3 mb-4">
