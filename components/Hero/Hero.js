@@ -22,7 +22,7 @@ export default function Hero({ slides = [], banners = [] }) {
             link: '/'
         }
     ];
-    const displayBanners = banners && banners.length >= 2 ? banners.slice(0, 2) : defaultBanners;
+    const displayBanners = banners && banners.length > 0 ? banners.slice(0, 2) : defaultBanners;
 
     const defaultSlides = [
         {
@@ -71,7 +71,7 @@ export default function Hero({ slides = [], banners = [] }) {
                                         alt={slide.title || "স্লাইডার"}
                                         fill
                                         unoptimized
-                                        className="object-cover z-0"
+                                        className="object-cover object-bottom z-0"
                                         priority={idx === 0}
                                     />
                                 </Link>
@@ -94,13 +94,13 @@ export default function Hero({ slides = [], banners = [] }) {
                     {/* Side Banners */}
                     <div className="lg:w-[35%] w-full flex flex-row lg:flex-col gap-3">
                         {displayBanners.map((banner, idx) => (
-                            <Link href="#" key={banner.id || idx} className="w-1/2 lg:w-full lg:flex-1 relative overflow-hidden rounded-xl bg-gray-100 group block shadow-sm hover:shadow-md transition-shadow">
+                            <Link href={banner.link || "#"} key={banner.id || idx} className="w-1/2 lg:w-full lg:flex-1 relative overflow-hidden rounded-xl bg-gray-100 group block shadow-sm hover:shadow-md transition-shadow">
                                 <Image
                                     src={banner.image || banner.image_path || banner.image_url}
                                     alt={banner.title || `ব্যানার ${idx + 1}`}
                                     fill
                                     unoptimized
-                                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                    className="object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
                                 />
                             </Link>
                         ))}

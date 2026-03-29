@@ -93,11 +93,12 @@ export default async function Home() {
 
   try {
     const res = await getBannerFromServer();
-    if (res?.success && Array.isArray(res?.banners)) {
-      homeBanners = res.banners.map(b => ({
+    const bannerData = res?.banners || res?.data?.banners || res?.data;
+    if (res?.success && Array.isArray(bannerData)) {
+      homeBanners = bannerData.map(b => ({
         id: b.id,
-        image: b.image_path,
-        link: b.button_url || "/"
+        image: b.image_path || b.image_url || b.image,
+        link: b.button_url || b.link || "/"
       }));
     }
   } catch (error) { console.error("Failed to fetch banners:", error); }
