@@ -224,13 +224,14 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
     };
 
     const handleShare = () => {
-        const url = window.location.href;
-        navigator.clipboard.writeText(url)
+        // Build a short shareable URL using only the product ID (avoids long encoded Bengali slugs)
+        const shortUrl = `${window.location.origin}/product/${product.id}`;
+        navigator.clipboard.writeText(shortUrl)
             .then(() => {
-                toast.success('লিংক কপি করা হয়েছে!');
+                toast.success('লিংক কপি করা হয়েছে!');
             })
             .catch(() => {
-                toast.error('লিংক কপি করা যায়নি।');
+                toast.error('লিংক কপি করা যায়নি।');
             });
     };
 

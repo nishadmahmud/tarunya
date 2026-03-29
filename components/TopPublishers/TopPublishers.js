@@ -40,7 +40,7 @@ export default function TopPublishers({ brands = [] }) {
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-6 mt-8">
                     {brands.map((brand, idx) => (
                         <Link
-                            href={`/publisher/${brand.id}`}
+                            href={`/publisher/${brand.name ? brand.name.toLowerCase().replace(/\s+/g, '-') : brand.id}`}
                             key={brand.id}
                             className="flex flex-col items-center text-center group"
                         >

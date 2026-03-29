@@ -225,7 +225,7 @@ export default function Header({ categories = [] }) {
               {displayCategories.map((cat, idx) => (
                 <Link
                   key={cat.id || idx}
-                  href={`/category/${cat.slug || cat.category_id || cat.id}`}
+                  href={`/category/${(cat.name ? cat.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'category')}-${cat.category_id || cat.id}`}
                   className="text-white/80 text-[13px] font-medium hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-md transition-all flex-shrink-0"
                 >
                   {cat.name}
@@ -344,7 +344,7 @@ export default function Header({ categories = [] }) {
           {/* Categories at Top */}
           <div className="px-5 py-3 bg-gray-50 text-[10px] font-extrabold text-gray-400 uppercase tracking-widest flex items-center gap-2"><FiGrid size={12} /> বই বিভাগ</div>
           {displayCategories.map((cat, idx) => (
-            <Link key={cat.id || idx} href={`/category/${cat.slug || cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-all">
+            <Link key={cat.id || idx} href={`/category/${(cat.name ? cat.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'category')}-${cat.category_id || cat.id}`} onClick={closeSidebar} className="flex items-center justify-between px-5 py-3 text-sm text-gray-600 font-medium border-b border-gray-50 hover:text-brand-green hover:bg-brand-green-light/30 transition-all">
               <span>{cat.name}</span><FiChevronRight size={14} className="text-gray-300" />
             </Link>
           ))}

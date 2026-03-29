@@ -35,7 +35,7 @@ export default function ShopCategories({ categories = [], flashSaleProducts = []
                     </div>
                     <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
                         {displayCategories.map((cat, idx) => (
-                            <Link key={idx} href={`/category/${cat.slug || cat.category_id || cat.id || cat.name}`} className="group flex flex-col items-center p-2 md:p-4 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
+                            <Link key={idx} href={`/category/${(cat.name ? cat.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'category')}-${cat.category_id || cat.id}`} className="group flex flex-col items-center p-2 md:p-4 rounded-2xl bg-gray-50 hover:bg-brand-green/5 transition-all duration-300 hover:scale-105">
                                 <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-xl bg-white text-brand-green text-xl md:text-3xl shadow-sm group-hover:shadow-md transition-all overflow-hidden relative">
                                     {cat.imageUrl ? (
                                         <Image

@@ -4,6 +4,7 @@ import ShopCategories from "../components/ShopCategories/ShopCategories";
 import NewArrivals from "../components/NewArrivals/NewArrivals";
 // import PromoBanners from "../components/PromoBanners/PromoBanners";
 import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
+import UpcomingBooks from "../components/UpcomingBooks/UpcomingBooks";
 import BestDeals from "../components/BestDeals/BestDeals";
 import BlogTips from "../components/BlogTips/BlogTips";
 // import CTABanner from "../components/CTABanner/CTABanner";
@@ -61,6 +62,7 @@ export default async function Home() {
         <PopularAuthors authors={[]} />
         {/* <PromoBanners /> */}
         <FeaturedProducts products={[]} />
+        <UpcomingBooks products={[]} />
         <BookFairBestSellers />
         {/* <PreOrderBooks /> */}
         <BestDeals deals={[]} />
@@ -341,6 +343,7 @@ export default async function Home() {
       {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
       {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
+      <UpcomingBooks products={[]} />
       {brands.length > 0 && <TopPublishers brands={brands} />}
       {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
       {/* <PreOrderBooks /> */}

@@ -4,15 +4,20 @@ import { getTopBrands, getBrandwiseProducts } from "../../../lib/api";
 import { BookOpen, ArrowLeft, Share2, Building2 } from "lucide-react";
 import ProductCard from "../../../components/Shared/ProductCard";
 
+const toSlug = (name) => name ? name.toLowerCase().replace(/\s+/g, '-') : '';
+
 export async function generateMetadata({ params }) {
     try {
         const resolvedParams = await params;
-        const brandId = resolvedParams.id;
+        const urlSlug = decodeURIComponent(resolvedParams.slug || '').toLowerCase();
 
         const response = await getTopBrands();
         let brand = null;
         if (response?.success && Array.isArray(response?.data)) {
-            brand = response.data.find(b => String(b.id) === String(brandId));
+            brand = response.data.find(b =>
+                String(b.id) === urlSlug ||
+                toSlug(b.name) === urlSlug
+            );
         }
 
         if (!brand) {
@@ -29,7 +34,7 @@ export async function generateMetadata({ params }) {
 
 export default async function PublisherPage({ params }) {
     const resolvedParams = await params;
-    const brandId = resolvedParams.id;
+    const urlSlug = decodeURIComponent(resolvedParams.slug || '').toLowerCase();
 
     let brand = null;
     let brandProducts = [];
@@ -38,11 +43,14 @@ export default async function PublisherPage({ params }) {
     try {
         const res = await getTopBrands();
         if (res?.success && Array.isArray(res?.data)) {
-            brand = res.data.find(b => String(b.id) === String(brandId));
+            brand = res.data.find(b =>
+                String(b.id) === urlSlug ||
+                toSlug(b.name) === urlSlug
+            );
         }
 
         if (brand) {
-            const productsRes = await getBrandwiseProducts(brandId);
+            const productsRes = await getBrandwiseProducts(brand.id);
             if (productsRes?.success && Array.isArray(productsRes?.data?.data)) {
                 brandProducts = productsRes.data.data;
             } else if (Array.isArray(productsRes?.data)) {

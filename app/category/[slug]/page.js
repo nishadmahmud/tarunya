@@ -51,9 +51,19 @@ export default function CategoryPage() {
 
     const [categoryId, setCategoryId] = useState(rawSlug);
     const [categoryName, setCategoryName] = useState(() => {
-        const decoded = decodeURIComponent(rawSlug).toLowerCase();
+        const decoded = decodeURIComponent(rawSlug).trim();
+        if (decoded.includes('-')) {
+            const parts = decoded.split('-');
+            // If the last part is a number (the ID), remove it from the display name
+            if (!isNaN(parts[parts.length - 1])) {
+                parts.pop();
+            }
+            return parts.join(' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
         return decoded.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     });
+    // Store a name-based slug for use in pagination URLs (derived once category is resolved)
+    const [categorySlug, setCategorySlug] = useState(rawSlug);
 
     // Instead of holding 1 page, we hold ALL products for this category.
     const [allProducts, setAllProducts] = useState([]);
@@ -74,6 +84,16 @@ export default function CategoryPage() {
         const fetchCategoryData = async () => {
             setIsLoading(true);
             let resolvedCatId = rawSlug;
+            
+            // Extract ID from name-id format (e.g., "name-48" -> "48")
+            const decoded = decodeURIComponent(rawSlug).trim();
+            if (decoded.includes('-')) {
+                const parts = decoded.split('-');
+                const possibleId = parts[parts.length - 1];
+                if (!isNaN(possibleId)) {
+                    resolvedCatId = possibleId;
+                }
+            }
 
             try {
                 const catRes = await getCategoriesFromServer();
@@ -91,7 +111,11 @@ export default function CategoryPage() {
                         resolvedCatId = found.category_id ?? found.id ?? resolvedCatId;
                         if (isMounted) {
                             setCategoryId(resolvedCatId);
-                            if (found.name) setCategoryName(found.name);
+                            if (found.name) {
+                                setCategoryName(found.name);
+                                const nameSlug = found.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') || 'category';
+                                setCategorySlug(`${nameSlug}-${resolvedCatId}`);
+                            }
 
                             // Use banner from API with fallbacks
                             const apiBanner = found.banner || found.banner_image || found.image_path || found.image_url;
@@ -341,7 +365,7 @@ export default function CategoryPage() {
                                     return (
                                         <Link
                                             key={pageNum}
-                                            href={`/category/${rawSlug}?page=${pageNum}`}
+                                            href={`/category/${categorySlug}?page=${pageNum}`}
                                             scroll={true}
                                             className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${pageNum === validCurrentPage
                                                 ? 'bg-brand-green text-white shadow-md'
