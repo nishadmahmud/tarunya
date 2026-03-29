@@ -16,6 +16,33 @@ function OrderSuccessContent() {
         
         if (inv) setInvoiceId(inv);
         if (tran) setTransactionId(tran);
+
+        // GA4: track purchase event
+        try {
+            const total = parseFloat(searchParams.get("total")) || 0;
+            const shipping = parseFloat(searchParams.get("shipping")) || 0;
+            const discount = parseFloat(searchParams.get("discount")) || 0;
+            const coupon = searchParams.get("coupon") || "";
+            let cartItems = [];
+            try {
+                const itemsParam = searchParams.get("items");
+                if (itemsParam) cartItems = JSON.parse(decodeURIComponent(itemsParam));
+            } catch (e) { /* ignore parse error */ }
+
+            if (inv && total > 0) {
+                const { trackPurchase } = require("../../lib/gtm");
+                trackPurchase({
+                    transactionId: inv,
+                    cartItems,
+                    cartTotal: total,
+                    shipping,
+                    discount,
+                    coupon,
+                });
+            }
+        } catch (e) {
+            console.error("GA4 purchase tracking error:", e);
+        }
     }, [searchParams]);
 
     return (

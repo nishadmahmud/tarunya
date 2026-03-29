@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { trackAddToCart, trackRemoveFromCart, trackViewCart } from "../lib/gtm";
 
 const CartContext = createContext();
 
@@ -63,9 +64,18 @@ export function CartProvider({ children }) {
         });
 
         setIsCartOpen(true); // Open sidebar automatically when adding
+
+        // GA4: track add_to_cart event
+        trackAddToCart(product, quantity);
     };
 
     const removeFromCart = (id, variantKey = "default") => {
+        // GA4: track remove_from_cart before removing
+        const removedItem = cartItems.find((item) => item.id === id && item.variantKey === variantKey);
+        if (removedItem) {
+            trackRemoveFromCart(removedItem, removedItem.quantity);
+        }
+
         setCartItems((prevItems) =>
             prevItems.filter((item) => !(item.id === id && item.variantKey === variantKey))
         );
@@ -87,7 +97,11 @@ export function CartProvider({ children }) {
     };
 
     const toggleCart = () => setIsCartOpen((prev) => !prev);
-    const openCart = () => setIsCartOpen(true);
+    const openCart = () => {
+        setIsCartOpen(true);
+        // GA4: track view_cart when cart opens
+        trackViewCart(cartItems, cartTotal);
+    };
     const closeCart = () => setIsCartOpen(false);
 
     const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);

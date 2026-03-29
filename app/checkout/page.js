@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import { saveSalesOrder, getCouponList, applyCoupon, getPaymentTypes, initiateSslPayment } from "../../lib/api";
+import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../lib/gtm";
 import {
     MapPin,
     CreditCard,
@@ -113,6 +114,14 @@ export default function CheckoutPage() {
         fetchPayments();
     }, []);
 
+    // GA4: track begin_checkout when page loads with items
+    useEffect(() => {
+        if (cartItems.length > 0) {
+            trackBeginCheckout(cartItems, subTotal);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Update delivery fee based on selection
     const updateDeliveryFeeCallback = useCallback(() => {
         if (!selectedDistrict && !selectedCity) {
@@ -140,6 +149,25 @@ export default function CheckoutPage() {
     useEffect(() => {
         updateDeliveryFeeCallback();
     }, [updateDeliveryFeeCallback]);
+
+    // GA4: track add_shipping_info when courier changes
+    useEffect(() => {
+        if (selectedCourier && cartItems.length > 0) {
+            const courierName = courierOptions.find(c => c.id === selectedCourier)?.name || selectedCourier;
+            trackAddShippingInfo(cartItems, subTotal, courierName);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCourier]);
+
+    // GA4: track add_payment_info when payment method changes
+    useEffect(() => {
+        if (paymentMethod && cartItems.length > 0) {
+            const selectedPaymentObj = paymentTypes.find(p => p.id === paymentMethod);
+            const paymentName = selectedPaymentObj?.type_name || 'Unknown';
+            trackAddPaymentInfo(cartItems, subTotal, paymentName);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [paymentMethod]);
 
     const grandTotal = subTotal + deliveryFee - couponDiscount;
 
@@ -368,7 +396,7 @@ export default function CheckoutPage() {
                     toast.success("Order placed successfully!");
                 }
 
-                router.push(`/order-success?invoice=${invoiceId}`);
+                router.push(`/order-success?invoice=${invoiceId}&total=${grandTotal}&shipping=${deliveryFee}&discount=${couponDiscount}&coupon=${couponCode || ''}&items=${encodeURIComponent(JSON.stringify(cartItems.map(i => ({ id: i.id, name: i.name, price: i.numericPrice, quantity: i.quantity }))))}`);
             } else {
                 toast.error("Failed to place order. Please try again.");
                 console.error("Order failed:", response);

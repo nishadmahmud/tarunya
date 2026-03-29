@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { getCategoriesFromServer, getCategoryWiseProducts } from '../../../lib/api';
 import CategorySidebar from '../../../components/Category/CategorySidebar';
 import ProductGrid from '../../../components/Category/ProductGrid';
+import { trackViewItemList } from '../../../lib/gtm';
 
 function mapProduct(p) {
     const originalPrice = Number(p.retails_price || 0);
@@ -133,10 +134,14 @@ export default function CategoryPage() {
                 // Fetch the FIRST page to get initial data and pagination limits fast
                 const firstPageData = await getCategoryWiseProducts(resolvedCatId, 1);
 
-                if (isMounted && firstPageData?.success && Array.isArray(firstPageData.data) && firstPageData.data.length > 0) {
+                    if (isMounted && firstPageData?.success && Array.isArray(firstPageData.data) && firstPageData.data.length > 0) {
                     // Start rendering first page immediately
                     let globalProductsArray = [...firstPageData.data];
-                    setAllProducts(globalProductsArray.map(mapProduct).sort((a, b) => b.stock - a.stock));
+                    const mappedProducts = globalProductsArray.map(mapProduct).sort((a, b) => b.stock - a.stock);
+                    setAllProducts(mappedProducts);
+
+                    // GA4: track view_item_list for this category
+                    trackViewItemList(mappedProducts, categoryName, String(resolvedCatId));
 
                     if (firstPageData.filter_options) setFilterOptions(firstPageData.filter_options);
                     setIsLoading(false); // First render ready!

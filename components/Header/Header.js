@@ -8,6 +8,7 @@ import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid }
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { searchProducts } from '../../lib/api';
+import { trackSearch } from '../../lib/gtm';
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -97,6 +98,9 @@ export default function Header({ categories = [] }) {
       const cats = Array.from(categorySet).sort();
       setSearchCategories(cats);
       setActiveSearchCategory('all');
+
+      // GA4: track search event
+      if (q) trackSearch(q);
     } catch (err) {
       console.error('Search failed', err);
       setSearchError('অনুসন্ধানে সমস্যা হয়েছে। আবার চেষ্টা করুন।');

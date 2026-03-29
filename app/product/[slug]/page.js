@@ -8,6 +8,7 @@ import ProductInfo from '../../../components/Product/ProductInfo';
 import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
 import { getAuthorById, getProductById, getRelatedProduct, getProductReviews } from '../../../lib/api';
+import { trackViewItem } from '../../../lib/gtm';
 
 export default function ProductDetailsPage() {
     const params = useParams();
@@ -161,6 +162,9 @@ export default function ProductDetailsPage() {
                 if (!cancelled) {
                     setProductData(mappedProduct);
                     setVariantImages(null); // reset on new product load
+
+                    // GA4: track view_item event
+                    trackViewItem(mappedProduct);
                 }
 
                 // Load reviews and summary
