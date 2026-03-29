@@ -23,6 +23,15 @@ function OrderSuccessContent() {
             const shipping = parseFloat(searchParams.get("shipping")) || 0;
             const discount = parseFloat(searchParams.get("discount")) || 0;
             const coupon = searchParams.get("coupon") || "";
+
+            // Read customer info from URL params
+            const customerName = searchParams.get("cname") || "";
+            const customerPhone = searchParams.get("cphone") || "";
+            const customerEmail = searchParams.get("cemail") || "";
+            const customerAddress = searchParams.get("caddress") || "";
+            const customerDistrict = searchParams.get("cdistrict") || "";
+            const customerCity = searchParams.get("ccity") || "";
+
             let cartItems = [];
             try {
                 const itemsParam = searchParams.get("items");
@@ -38,6 +47,14 @@ function OrderSuccessContent() {
                     shipping,
                     discount,
                     coupon,
+                    customerInfo: {
+                        name: customerName,
+                        phone: customerPhone,
+                        email: customerEmail,
+                        address: customerAddress,
+                        city: customerCity,
+                        district: customerDistrict,
+                    },
                 });
             }
         } catch (e) {

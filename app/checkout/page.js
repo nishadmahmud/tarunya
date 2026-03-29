@@ -395,8 +395,36 @@ export default function CheckoutPage() {
                 } else {
                     toast.success("Order placed successfully!");
                 }
+                // GA4: fire purchase event with customer data before navigating
+                const itemsForTracking = cartItems.map(i => ({
+                    id: i.id,
+                    name: i.name,
+                    numericPrice: i.numericPrice,
+                    quantity: i.quantity,
+                    categoryName: i.category?.name || i.categoryName || '',
+                    brand: i.brand || i.publisher || 'তারুণ্য প্রকাশন',
+                    variantKey: i.variantKey || '',
+                    variants: i.variants || null
+                }));
 
-                router.push(`/order-success?invoice=${invoiceId}&total=${grandTotal}&shipping=${deliveryFee}&discount=${couponDiscount}&coupon=${couponCode || ''}&items=${encodeURIComponent(JSON.stringify(cartItems.map(i => ({ id: i.id, name: i.name, price: i.numericPrice, quantity: i.quantity }))))}`);
+                trackPurchase({
+                    transactionId: invoiceId,
+                    cartItems: itemsForTracking,
+                    cartTotal: grandTotal,
+                    shipping: deliveryFee,
+                    discount: couponDiscount,
+                    coupon: couponCode || '',
+                    customerInfo: {
+                        name: formData.firstName,
+                        phone: formData.phone,
+                        email: formData.email,
+                        address: formData.address,
+                        city: selectedCity || '',
+                        district: selectedDistrict || '',
+                    },
+                });
+
+                router.push(`/order-success?invoice=${invoiceId}&total=${grandTotal}&shipping=${deliveryFee}&discount=${couponDiscount}&coupon=${couponCode || ''}&cname=${encodeURIComponent(formData.firstName)}&cphone=${encodeURIComponent(formData.phone)}&cemail=${encodeURIComponent(formData.email || '')}&caddress=${encodeURIComponent(formData.address)}&cdistrict=${encodeURIComponent(selectedDistrict || '')}&ccity=${encodeURIComponent(selectedCity || '')}&items=${encodeURIComponent(JSON.stringify(itemsForTracking))}`);
             } else {
                 toast.error("Failed to place order. Please try again.");
                 console.error("Order failed:", response);
