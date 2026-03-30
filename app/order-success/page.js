@@ -1,22 +1,18 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle, Package, Truck, ReceiptText, ArrowRight } from "lucide-react";
+import { CheckCircle, CreditCard, Truck, ReceiptText, ArrowRight } from "lucide-react";
+import { trackPurchase } from "../../lib/gtm";
 
 function OrderSuccessContent() {
     const searchParams = useSearchParams();
-    const [invoiceId, setInvoiceId] = useState("");
-    const [transactionId, setTransactionId] = useState("");
+    const invoiceId = searchParams.get("invoice") || "";
+    const transactionId = searchParams.get("tran_id") || searchParams.get("val_id") || "";
+    const purchaseTrackedRef = useRef(false);
 
     useEffect(() => {
-        const inv = searchParams.get("invoice");
-        const tran = searchParams.get("tran_id") || searchParams.get("val_id");
-        
-        if (inv) setInvoiceId(inv);
-        if (tran) setTransactionId(tran);
-
         // GA4: track purchase event
         try {
             const total = parseFloat(searchParams.get("total")) || 0;
@@ -38,10 +34,12 @@ function OrderSuccessContent() {
                 if (itemsParam) cartItems = JSON.parse(decodeURIComponent(itemsParam));
             } catch (e) { /* ignore parse error */ }
 
-            if (inv && total > 0) {
-                const { trackPurchase } = require("../../lib/gtm");
+            if (invoiceId && total > 0 && !purchaseTrackedRef.current) {
+                const purchaseKey = `tp_purchase_tracked_${invoiceId}`;
+                if (sessionStorage.getItem(purchaseKey)) return;
+
                 trackPurchase({
-                    transactionId: inv,
+                    transactionId: invoiceId,
                     cartItems,
                     cartTotal: total,
                     shipping,
@@ -56,11 +54,13 @@ function OrderSuccessContent() {
                         district: customerDistrict,
                     },
                 });
+                purchaseTrackedRef.current = true;
+                sessionStorage.setItem(purchaseKey, "1");
             }
         } catch (e) {
             console.error("GA4 purchase tracking error:", e);
         }
-    }, [searchParams]);
+    }, [invoiceId, searchParams]);
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import { saveSalesOrder, getCouponList, applyCoupon, getPaymentTypes, initiateSslPayment } from "../../lib/api";
-import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo, trackPurchase } from "../../lib/gtm";
+import { trackBeginCheckout, trackAddPaymentInfo, trackAddShippingInfo } from "../../lib/gtm";
 import {
     MapPin,
     CreditCard,
@@ -411,23 +411,6 @@ export default function CheckoutPage() {
                     variantKey: i.variantKey || '',
                     variants: i.variants || null
                 }));
-
-                trackPurchase({
-                    transactionId: invoiceId,
-                    cartItems: itemsForTracking,
-                    cartTotal: grandTotal,
-                    shipping: deliveryFee,
-                    discount: couponDiscount,
-                    coupon: couponCode || '',
-                    customerInfo: {
-                        name: formData.firstName,
-                        phone: formData.phone,
-                        email: formData.email,
-                        address: formData.address,
-                        city: selectedCity || '',
-                        district: selectedDistrict || '',
-                    },
-                });
 
                 router.push(`/order-success?invoice=${invoiceId}&total=${grandTotal}&shipping=${deliveryFee}&discount=${couponDiscount}&coupon=${couponCode || ''}&cname=${encodeURIComponent(formData.firstName)}&cphone=${encodeURIComponent(formData.phone)}&cemail=${encodeURIComponent(formData.email || '')}&caddress=${encodeURIComponent(formData.address)}&cdistrict=${encodeURIComponent(selectedDistrict || '')}&ccity=${encodeURIComponent(selectedCity || '')}&items=${encodeURIComponent(JSON.stringify(itemsForTracking))}`);
             } else {
