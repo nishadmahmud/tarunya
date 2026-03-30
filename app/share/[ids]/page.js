@@ -168,7 +168,20 @@ export default function ShareCollectionPage() {
             return;
         }
         let fee = 100;
-        if (selectedDistrict === "Dhaka") {
+        const district = (selectedDistrict || "").toLowerCase().trim();
+        const city = (selectedCity || "").toLowerCase().trim();
+
+        const isSubDhaka = 
+            district === "gazipur" || 
+            district === "narayanganj" || 
+            city.includes("savar") || 
+            city.includes("keraniganj") ||
+            city.includes("gazipur") ||
+            city.includes("narayanganj");
+
+        if (isSubDhaka) {
+            fee = 80;
+        } else if (district === "dhaka") {
             fee = 60;
         } else {
             fee = 100;
@@ -579,7 +592,16 @@ export default function ShareCollectionPage() {
                                     <span className="text-gray-900">{formatPrice(subTotal)}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-gray-500 font-bold">
-                                    <span className="text-sm">ডেলিভারি চার্জ</span>
+                                    <span className="text-sm">ডেলিভারি চার্জ ({
+                                        selectedDistrict ? (() => {
+                                            const d = selectedDistrict.toLowerCase().trim();
+                                            const c = (selectedCity || "").toLowerCase().trim();
+                                            if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
+                                                return "সাব-ঢাকা";
+                                            }
+                                            return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
+                                        })() : "এলাকা নির্বাচন করুন"
+                                    })</span>
                                     {deliveryFee > 0 ? (
                                         <span className="text-gray-900">{formatPrice(deliveryFee)}</span>
                                     ) : (

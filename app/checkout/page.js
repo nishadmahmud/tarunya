@@ -130,8 +130,20 @@ export default function CheckoutPage() {
         }
 
         let fee = 100; // Default: Outside Dhaka
+        const district = (selectedDistrict || "").toLowerCase().trim();
+        const city = (selectedCity || "").toLowerCase().trim();
 
-        if (selectedDistrict === "Dhaka") {
+        const isSubDhaka = 
+            district === "gazipur" || 
+            district === "narayanganj" || 
+            city.includes("savar") || 
+            city.includes("keraniganj") ||
+            city.includes("gazipur") ||
+            city.includes("narayanganj");
+
+        if (isSubDhaka) {
+            fee = 80;
+        } else if (district === "dhaka") {
             fee = 60;
         } else {
             fee = 100;
@@ -792,7 +804,14 @@ export default function CheckoutPage() {
                                     </div>
                                     <div className="flex justify-between text-sm text-gray-600">
                                         <span>ডেলিভারি চার্জ ({
-                                            selectedDistrict ? (selectedDistrict === "Dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে") : "এলাকা নির্বাচন করুন"
+                                            selectedDistrict ? (() => {
+                                                const d = selectedDistrict.toLowerCase().trim();
+                                                const c = (selectedCity || "").toLowerCase().trim();
+                                                if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
+                                                    return "সাব-ঢাকা";
+                                                }
+                                                return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
+                                            })() : "এলাকা নির্বাচন করুন"
                                         })</span>
                                         <span className="font-medium">{deliveryFee > 0 ? formatPrice(deliveryFee) : "—"}</span>
                                     </div>

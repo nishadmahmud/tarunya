@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getAuthorsList, getAuthorWiseProducts } from "../../../lib/api";
-import { User, BookOpen, GraduationCap, ArrowLeft, Heart, Share2 } from "lucide-react";
+import { User, BookOpen, GraduationCap, ArrowLeft, Share2 } from "lucide-react";
 import ProductCard from "../../../components/Shared/ProductCard";
+import AuthorShareButton from "../../../components/Author/AuthorShareButton";
 
 export async function generateMetadata({ params }) {
     try {
@@ -51,10 +52,11 @@ export default async function AuthorProfilePage({ params }) {
         if (author) {
             // Fetch products separately
             const productsRes = await getAuthorWiseProducts(authorId);
-            if (productsRes?.success && Array.isArray(productsRes?.data?.data)) {
-                authorProducts = productsRes.data.data;
-            } else if (Array.isArray(productsRes?.data)) {
+            // API returns { success: true, data: [...] } — data is a direct array
+            if (Array.isArray(productsRes?.data)) {
                 authorProducts = productsRes.data;
+            } else if (productsRes?.success && Array.isArray(productsRes?.data?.data)) {
+                authorProducts = productsRes.data.data;
             }
         } else {
             loadingError = true;
@@ -121,7 +123,7 @@ export default async function AuthorProfilePage({ params }) {
     return (
         <div className="min-h-screen bg-[#FDFBF7]">
             {/* Header / Cover Area */}
-            <div className="relative h-48 md:h-72 bg-gradient-to-r from-brand-green/90 to-emerald-900 w-full overflow-hidden">
+            <div className="relative h-20 md:h-32 bg-gradient-to-r from-brand-green/90 to-emerald-900 w-full overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10 mix-blend-overlay"></div>
                 <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl"></div>
@@ -141,7 +143,7 @@ export default async function AuthorProfilePage({ params }) {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
                     {/* Left Column: Author Image & Quick Info (Pulled up into header) */}
-                    <div className="lg:col-span-4 flex flex-col items-center lg:items-start relative -mt-24 lg:-mt-32 z-10">
+                    <div className="lg:col-span-4 flex flex-col items-center lg:items-start relative -mt-10 lg:-mt-16 z-10">
                         {/* Avatar */}
                         <div className="w-40 h-40 md:w-56 md:h-56 rounded-full border-8 border-[#FDFBF7] bg-white shadow-2xl overflow-hidden relative mb-6">
                             {author.image ? (
@@ -181,28 +183,22 @@ export default async function AuthorProfilePage({ params }) {
                                     <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">স্ট্যাটাস</p>
                                 </div>
                                 <div className="w-px h-10 bg-gray-100"></div>
-                                <div className="text-center flex-1">
-                                    <p className="text-2xl font-black text-gray-900 mb-1">
-                                        <BookOpen className="w-6 h-6 mx-auto text-brand-green" />
-                                    </p>
-                                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">বইসমূহ</p>
-                                </div>
+                                <Link href="#author-books" className="text-center flex-1 group/stat cursor-pointer">
+                                    <div className="transition-transform group-hover/stat:-translate-y-1">
+                                        <p className="text-2xl font-black text-gray-900 mb-1">
+                                            <BookOpen className="w-6 h-6 mx-auto text-brand-green" />
+                                        </p>
+                                        <p className="text-xs text-gray-500 font-bold uppercase tracking-wider group-hover/stat:text-brand-green transition-colors">বইসমূহ</p>
+                                    </div>
+                                </Link>
                             </div>
 
-                            <div className="flex gap-3">
-                                <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-green text-white rounded-xl font-bold hover:bg-green-700 transition-colors">
-                                    <Heart className="w-4 h-4" />
-                                    অনুসরণ করুন
-                                </button>
-                                <button className="w-12 flex items-center justify-center bg-gray-50 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-100 hover:text-brand-green transition-colors">
-                                    <Share2 className="w-4 h-4" />
-                                </button>
-                            </div>
+                                <AuthorShareButton />
                         </div>
                     </div>
 
                     {/* Right Column: Details & Content */}
-                    <div className="lg:col-span-8 pt-8 lg:pt-10">
+                    <div className="lg:col-span-8 pt-4 lg:pt-6">
                         {/* Title (LG only) */}
                         <div className="hidden lg:block mb-10 pb-8 border-b border-gray-200">
                             <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-3 tracking-tight">
@@ -234,7 +230,7 @@ export default async function AuthorProfilePage({ params }) {
                         </div>
 
                         {/* Books Section */}
-                        <div className="mt-16 pt-12 border-t border-gray-200">
+                        <div id="author-books" className="mt-16 pt-12 border-t border-gray-200 scroll-mt-24">
                             <h2 className="text-2xl font-black text-gray-900 mb-8 flex items-center justify-between">
                                 <span>{author.name}-এর বইসমূহ ({mappedProducts.length})</span>
                             </h2>
