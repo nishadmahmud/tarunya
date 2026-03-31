@@ -11,6 +11,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
+    const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
 
     const imeis = product.rawImeis || [];
     const hasVariants = imeis.length > 0;
@@ -457,7 +458,16 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
             )}
 
             <div className="mb-8 flex flex-col gap-3">
-                <p className="text-sm text-gray-600 font-medium">আনুমানিক ডেলিভারি: <span className="text-gray-900 font-bold underline decoration-brand-green cursor-pointer">১-৩ দিন</span></p>
+                <p className="text-sm text-gray-600 font-medium">
+                    আনুমানিক ডেলিভারি:{' '}
+                    <button
+                        type="button"
+                        onClick={() => setIsDeliveryModalOpen(true)}
+                        className="text-gray-900 font-bold underline decoration-brand-green cursor-pointer hover:text-brand-green transition-colors"
+                    >
+                        ১-৫ দিন
+                    </button>
+                </p>
 
                 {/* Action Links: Look Inside / Video */}
                 <div className="flex flex-wrap items-center gap-4">
@@ -597,6 +607,30 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                                     <p className="text-gray-500">দুঃখিত, এই বইটির প্রিভিউ পিডিফ পাওয়া যায়নি।</p>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isDeliveryModalOpen && (
+                <div
+                    className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm"
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsDeliveryModalOpen(false); }}
+                >
+                    <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-gray-100">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                            <h3 className="text-base font-extrabold text-gray-900">ডেলিভারি সময়</h3>
+                            <button
+                                type="button"
+                                onClick={() => setIsDeliveryModalOpen(false)}
+                                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                aria-label="Close delivery modal"
+                            >
+                                <FiX size={18} />
+                            </button>
+                        </div>
+                        <div className="px-5 py-4 space-y-2 text-sm text-gray-700">
+                            <p><span className="font-bold text-gray-900">ঢাকার ভিতরে:</span> ১-৩ দিন</p>
+                            <p><span className="font-bold text-gray-900">ঢাকার বাইরে:</span> ৩-৫ দিন</p>
                         </div>
                     </div>
                 </div>

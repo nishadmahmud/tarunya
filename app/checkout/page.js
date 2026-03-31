@@ -483,6 +483,15 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
 
+                                <div className="mb-5 rounded-xl border border-brand-green/20 bg-brand-green/5 p-4">
+                                    <p className="text-sm font-bold text-gray-900">আনুমানিক ডেলিভারি সময়</p>
+                                    <p className="mt-1 text-sm text-gray-700">ঢাকার ভিতরে: ১-৩ দিন</p>
+                                    <p className="text-sm text-gray-700">ঢাকার বাইরে: ৩-৫ দিন</p>
+                                    <p className="mt-2 text-xs text-gray-500">
+                                        কুরিয়ার ব্যস্ততা, আবহাওয়া, হরতাল বা সরকারি ছুটির কারণে ডেলিভারির সময় পরিবর্তিত হতে পারে।
+                                    </p>
+                                </div>
+
                                 <form
                                     id="checkout-form"
                                     ref={formRef}
