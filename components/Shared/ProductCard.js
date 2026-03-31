@@ -9,6 +9,12 @@ import { trackSelectItem } from '../../lib/gtm';
 export default function ProductCard({ product }) {
     const { toggleSelection, isSelected } = useShareSelection();
     const selected = isSelected(product.id);
+    const parsedStock = Number(product.current_stock);
+    const statusText = String(product.status || "").toLowerCase();
+    const isStockOut =
+        (!Number.isNaN(parsedStock) && parsedStock <= 0) ||
+        statusText.includes("stock out") ||
+        statusText.includes("out of stock");
 
     const nameSlug = product.name ? product.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'product';
     const slug = product.id ? `${nameSlug}-${product.id}` : nameSlug;
@@ -33,6 +39,14 @@ export default function ProductCard({ product }) {
                     </div>
                 )}
 
+
+                {isStockOut && (
+                    <div className="absolute top-0 right-0 z-10">
+                        <div className="bg-gray-900 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-bl-xl shadow-md">
+                            স্টক আউট
+                        </div>
+                    </div>
+                )}
                 {/* Book Cover — Portrait Ratio (3:4) */}
                 <div className="w-full aspect-[3/4] relative bg-brand-cream rounded-t-xl overflow-hidden">
                     <Image
