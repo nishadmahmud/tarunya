@@ -9,6 +9,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { searchProducts } from '../../lib/api';
 import { trackSearch } from '../../lib/gtm';
+import ProductCard from '../Shared/ProductCard';
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -290,30 +291,15 @@ export default function Header({ categories = [] }) {
                     <h3 className="font-bold text-gray-800">{activeSearchCategory === 'all' ? 'সকল বই' : activeSearchCategory}</h3>
                     <button onClick={closeSearchModal} className="text-xs text-brand-green hover:underline">বন্ধ করুন</button>
                   </div>
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredSearchResults.map(product => {
-                      const nameSlug = product.name ? product.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'product';
-                      const slug = product.id ? `${nameSlug}-${product.id}` : nameSlug;
-
-                      return (
-                        <Link key={product.id} href={`/product/${slug}`} onClick={closeSearchModal} className="group flex flex-col border border-gray-100 rounded-xl hover:shadow-md transition-shadow p-3 hover:border-brand-green/30">
-                          <div className="aspect-[3/4] relative bg-gray-50 rounded-lg mb-3 overflow-hidden">
-                            <Image src={product.imageUrl} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" unoptimized />
-                            {product.discount && (
-                              <div className="absolute top-2 left-2 bg-brand-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">{product.discount}</div>
-                            )}
-                          </div>
-                          <div className="flex-1 flex flex-col">
-                            <span className="text-[10px] font-semibold text-brand-green mb-1">{product.brand}</span>
-                            <h4 className="text-sm font-medium text-gray-800 mb-2 line-clamp-2 leading-tight group-hover:text-brand-green transition-colors">{product.name}</h4>
-                            <div className="mt-auto flex items-baseline gap-1.5 flex-wrap">
-                              <span className="font-bold text-brand-green-dark">{product.price}</span>
-                              {product.oldPrice && (<span className="text-[10px] text-gray-400 line-through">{product.oldPrice}</span>)}
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })}
+                  <div className="grid [grid-template-columns:repeat(auto-fill,minmax(150px,1fr))] gap-3 items-start">
+                    {filteredSearchResults.map(product => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        compact
+                        onCardClick={closeSearchModal}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>

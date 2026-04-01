@@ -6,7 +6,7 @@ import { useShareSelection } from '../../context/ShareSelectionContext';
 import { Plus, Check } from 'lucide-react';
 import { trackSelectItem } from '../../lib/gtm';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, compact = false, onCardClick = null }) {
     const { toggleSelection, isSelected } = useShareSelection();
     const selected = isSelected(product.id);
     const parsedStock = Number(product.current_stock);
@@ -25,14 +25,23 @@ export default function ProductCard({ product }) {
         toggleSelection(product.id * 1 || product.id); // Ensure it matches the type
     };
 
+    const handleCardClick = () => {
+        trackSelectItem(product);
+        if (onCardClick) onCardClick();
+    };
+
     return (
         <div className="relative group">
-            <Link href={`/product/${slug}`} onClick={() => trackSelectItem(product)} className="bg-white rounded-xl flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden relative block border border-gray-100 hover:border-brand-green/20">
+            <Link
+                href={`/product/${slug}`}
+                onClick={handleCardClick}
+                className={`bg-white flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden relative block border border-gray-100 hover:border-brand-green/20 ${compact ? 'rounded-lg max-w-[170px] w-full mx-auto' : 'rounded-xl'}`}
+            >
 
                 {/* Discount Badge - Bigger & More Prominent */}
                 {product.discount && (
                     <div className="absolute top-0 left-0 z-10">
-                        <div className="bg-red-500 text-white text-[12px] font-black px-3 py-1.5 rounded-br-xl shadow-md flex items-center gap-1">
+                        <div className={`bg-red-500 text-white font-black shadow-md flex items-center gap-1 ${compact ? 'text-[10px] px-2 py-1 rounded-br-lg' : 'text-[12px] px-3 py-1.5 rounded-br-xl'}`}>
                             <span>{product.discount}</span>
                             <span className="text-[10px] opacity-90 uppercase">ছাড়</span>
                         </div>
@@ -48,7 +57,7 @@ export default function ProductCard({ product }) {
                     </div>
                 )}
                 {/* Book Cover — Portrait Ratio (3:4) */}
-                <div className="w-full aspect-[3/4] relative bg-brand-cream rounded-t-xl overflow-hidden">
+                <div className={`w-full aspect-[3/4] relative bg-brand-cream overflow-hidden ${compact ? 'rounded-t-lg' : 'rounded-t-xl'}`}>
                     <Image
                         src={product.imageUrl || "/no-image.svg"}
                         alt={product.name}
@@ -61,34 +70,34 @@ export default function ProductCard({ product }) {
                 </div>
 
                 {/* Book Info */}
-                <div className="flex flex-col text-left px-3 py-3 flex-1">
+                <div className={`flex flex-col text-left flex-1 ${compact ? 'px-2 py-2' : 'px-3 py-3'}`}>
                     {/* Author/Brand if available */}
                     {product.brand && (
                         <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-[10px] md:text-[11px] font-semibold text-brand-green truncate">
+                            <span className={`${compact ? 'text-[9px] md:text-[10px]' : 'text-[10px] md:text-[11px]'} font-semibold text-brand-green truncate`}>
                                 {product.brand}
                             </span>
                             {product.pages && product.pages !== 'N/A' && (
-                                <span className="text-[9px] md:text-[10px] text-gray-400 shrink-0">
+                                <span className={`${compact ? 'text-[8px] md:text-[9px]' : 'text-[9px] md:text-[10px]'} text-gray-400 shrink-0`}>
                                     {product.pages} পৃষ্ঠা
                                 </span>
                             )}
                         </div>
                     )}
 
-                    <h3 className="text-gray-800 font-bold text-[11px] md:text-[13px] leading-snug line-clamp-2 mb-2">
+                    <h3 className={`text-gray-800 font-bold leading-snug line-clamp-2 ${compact ? 'text-[10px] md:text-[12px] mb-1.5' : 'text-[11px] md:text-[13px] mb-2'}`}>
                         {product.name}
                     </h3>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-auto">
-                        <span className="text-brand-green-dark font-extrabold text-[13px] md:text-[15px]">
+                        <span className={`text-brand-green-dark font-extrabold ${compact ? 'text-[12px] md:text-[13px]' : 'text-[13px] md:text-[15px]'}`}>
                             {product.price}
                         </span>
                         {product.oldPrice && (
                             <>
-                                <span className="text-gray-400 text-[9px] md:text-[10px] font-medium line-through">
+                                <span className={`${compact ? 'text-[8px] md:text-[9px]' : 'text-[9px] md:text-[10px]'} text-gray-400 font-medium line-through`}>
                                     {product.oldPrice}
                                 </span>
-                                <span className="text-red-500 font-bold text-[10px] md:text-[11px]">
+                                <span className={`${compact ? 'text-[9px] md:text-[10px]' : 'text-[10px] md:text-[11px]'} text-red-500 font-bold`}>
                                     ({product.discount} ছাড়ে)
                                 </span>
                             </>
@@ -100,7 +109,7 @@ export default function ProductCard({ product }) {
             {/* Book Selection Button (For Sharing) */}
             <button
                 onClick={handleSelect}
-                className={`absolute top-2.5 right-2.5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 ${
+                className={`absolute z-20 rounded-full flex items-center justify-center transition-all shadow-md active:scale-95 ${compact ? 'top-2 right-2 w-7 h-7' : 'top-2.5 right-2.5 w-8 h-8'} ${
                     selected 
                         ? 'bg-brand-green text-white rotate-0' 
                         : 'bg-white/90 text-gray-400 hover:text-brand-green hover:bg-white md:opacity-0 md:group-hover:opacity-100'

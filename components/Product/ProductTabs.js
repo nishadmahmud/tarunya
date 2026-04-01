@@ -135,6 +135,16 @@ export default function ProductTabs({ product, initialReviews = [], onReviewSubm
         { label: 'ভাষা', value: product.language, isPill: true },
     ];
 
+    const hasDisplayValue = (value) => {
+        if (value === null || value === undefined) return false;
+        const text = String(value).trim();
+        if (!text) return false;
+        const normalized = text.toLowerCase();
+        return normalized !== 'n/a' && normalized !== 'na' && normalized !== 'null' && normalized !== 'undefined';
+    };
+
+    const visibleSpecRows = specRows.filter((row) => hasDisplayValue(row.value));
+
     return (
         <div className="mt-12 md:mt-24 w-full">
             {/* Tabs Header */}
@@ -171,7 +181,7 @@ export default function ProductTabs({ product, initialReviews = [], onReviewSubm
                     <div className="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
                         <table className="w-full text-left border-collapse">
                             <tbody>
-                                {specRows.map((row, index) => (
+                                {visibleSpecRows.map((row, index) => (
                                     <tr 
                                         key={index} 
                                         className={`${index % 2 === 0 ? 'bg-gray-50/50' : 'bg-white'} border-b border-gray-100 last:border-0`}
