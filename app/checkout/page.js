@@ -485,8 +485,7 @@ export default function CheckoutPage() {
 
                                 <div className="mb-5 rounded-xl border border-brand-green/20 bg-brand-green/5 p-4">
                                     <p className="text-sm font-bold text-gray-900">আনুমানিক ডেলিভারি সময়</p>
-                                    <p className="mt-1 text-sm text-gray-700">ঢাকার ভিতরে: ১-৩ দিন</p>
-                                    <p className="text-sm text-gray-700">ঢাকার বাইরে: ৩-৫ দিন</p>
+                                    <p className="mt-1 text-sm text-gray-700">সারা বাংলাদেশে: ১-২ দিন</p>
                                     <p className="mt-2 text-xs text-gray-500">
                                         কুরিয়ার ব্যস্ততা, আবহাওয়া, হরতাল বা সরকারি ছুটির কারণে ডেলিভারির সময় পরিবর্তিত হতে পারে।
                                     </p>
@@ -690,12 +689,17 @@ export default function CheckoutPage() {
                                 </div>
 
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                    {courierOptions.map((courier) => (
+                                    {courierOptions.map((courier) => {
+                                        const isDisabledCourier = courier.id !== "steadfast";
+                                        return (
                                         <label
                                             key={courier.id}
-                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-xl border-2 p-3 transition-all h-[80px] sm:h-[90px] overflow-hidden ${selectedCourier === courier.id
-                                                ? courier.selectedBorder + " " + courier.bg
-                                                : "border-gray-100 bg-white hover:border-brand-green/30"
+                                            className={`relative flex flex-col items-center justify-center rounded-xl border-2 p-3 transition-all h-[80px] sm:h-[90px] overflow-hidden ${
+                                                isDisabledCourier
+                                                    ? "cursor-not-allowed opacity-60 border-gray-100 bg-gray-50"
+                                                    : selectedCourier === courier.id
+                                                        ? courier.selectedBorder + " " + courier.bg + " cursor-pointer"
+                                                        : "border-gray-100 bg-white hover:border-brand-green/30 cursor-pointer"
                                                 }`}
                                         >
                                             <input
@@ -704,6 +708,7 @@ export default function CheckoutPage() {
                                                 value={courier.id}
                                                 checked={selectedCourier === courier.id}
                                                 onChange={(e) => setSelectedCourier(e.target.value)}
+                                                disabled={isDisabledCourier}
                                                 className="sr-only"
                                             />
                                             {courier.logo ? (
@@ -731,7 +736,8 @@ export default function CheckoutPage() {
                                                 </div>
                                             )}
                                         </label>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </section>
                         </div>

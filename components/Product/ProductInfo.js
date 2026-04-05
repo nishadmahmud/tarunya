@@ -2,13 +2,15 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FiShare2, FiMinus, FiPlus, FiPlayCircle, FiBookOpen, FiX, FiExternalLink, FiUser } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { toast } from 'react-hot-toast';
 
 export default function ProductInfo({ product, onVariantImageChange, reviewSummary }) {
-    const { addToCart } = useCart();
+    const { addToCart, closeCart } = useCart();
+    const router = useRouter();
     const [quantity, setQuantity] = useState(1);
     const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
     const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
@@ -236,13 +238,22 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
             });
     };
 
-    const handleAddToCart = () => {
+    const getSelectedVariants = () => {
         const variants = {};
         if (selectedStorage) variants.storage = selectedStorage;
         if (selectedColor) variants.colors = { name: selectedColor };
         if (selectedRegion) variants.region = selectedRegion;
+        return Object.keys(variants).length > 0 ? variants : null;
+    };
 
-        addToCart(product, quantity, Object.keys(variants).length > 0 ? variants : null);
+    const handleAddToCart = () => {
+        addToCart(product, quantity, getSelectedVariants());
+    };
+
+    const handleBuyNow = () => {
+        addToCart(product, quantity, getSelectedVariants());
+        closeCart();
+        router.push('/checkout');
     };
 
     return (
@@ -465,7 +476,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                         onClick={() => setIsDeliveryModalOpen(true)}
                         className="text-gray-900 font-bold underline decoration-brand-green cursor-pointer hover:text-brand-green transition-colors"
                     >
-                        ১-৫ দিন
+                        ১-২ দিন
                     </button>
                 </p>
 
@@ -517,7 +528,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                     </button>
 
                     <button
-                        onClick={handleAddToCart}
+                        onClick={handleBuyNow}
                         className="cursor-pointer flex-[1.5] bg-brand-green text-white font-bold py-3 px-2 rounded-lg hover:bg-brand-green-dark shadow-lg shadow-brand-green/30 transition-all text-xs sm:text-sm whitespace-nowrap text-center"
                     >
                         এখুনি কিনুন
@@ -629,8 +640,7 @@ export default function ProductInfo({ product, onVariantImageChange, reviewSumma
                             </button>
                         </div>
                         <div className="px-5 py-4 space-y-2 text-sm text-gray-700">
-                            <p><span className="font-bold text-gray-900">ঢাকার ভিতরে:</span> ১-৩ দিন</p>
-                            <p><span className="font-bold text-gray-900">ঢাকার বাইরে:</span> ৩-৫ দিন</p>
+                            <p><span className="font-bold text-gray-900">সারা বাংলাদেশে:</span> ১-২ দিন</p>
                         </div>
                     </div>
                 </div>
