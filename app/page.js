@@ -15,6 +15,7 @@ import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
 // import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
 // import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
 import TopPublishers from "../components/TopPublishers/TopPublishers";
+import HomepagePrefetchManager from "../components/Performance/HomepagePrefetchManager";
 // import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
 // import Testimonials from "../components/Testimonials/Testimonials";
 // import FAQ from "../components/FAQ/FAQ";
@@ -88,13 +89,26 @@ export default async function Home() {
       : `৳ ${d.toLocaleString("en-IN")}`;
   };
 
+  // Start homepage API calls in parallel to reduce TTFB for the full page.
+  const categoriesReq = getCategoriesFromServer();
+  const bannersReq = getBannerFromServer();
+  const slidersReq = getSlidersFromServer();
+  const newArrivalsReq = getNewArrivalsFromServer();
+  const bestDealsReq = getBestDealsFromServer();
+  const bestSellersReq = getBestSellersFromServer();
+  const bookFairBestReq = getBookFairBestSellersFromServer();
+  const blogsReq = getBlogs();
+  const authorsReq = getAuthorsList();
+  const topBrandsReq = getTopBrands();
+  const upcomingReq = getUpcomingProductsFromServer();
+
   try {
-    const res = await getCategoriesFromServer();
+    const res = await categoriesReq;
     if (res?.success && res?.data) categories = res.data;
   } catch (error) { console.error("Failed to fetch categories:", error); }
 
   try {
-    const res = await getBannerFromServer();
+    const res = await bannersReq;
     const bannerData = res?.banners || res?.data?.banners || res?.data;
     if (res?.success && Array.isArray(bannerData)) {
       homeBanners = bannerData.map(b => ({
@@ -106,7 +120,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch banners:", error); }
 
   try {
-    const res = await getSlidersFromServer();
+    const res = await slidersReq;
     if (res?.success && Array.isArray(res?.sliders)) {
       heroSlides = res.sliders.flatMap((s, sIdx) => {
         // Collect all possible images from this slider object
@@ -140,7 +154,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch sliders:", error); }
 
   try {
-    const res = await getNewArrivalsFromServer();
+    const res = await newArrivalsReq;
     const items = res?.success ? res?.data?.data : null;
     if (Array.isArray(items)) {
       newArrivals = items.slice(0, 10).map((p) => {
@@ -169,7 +183,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch new arrivals:", error); }
 
   try {
-    const res = await getBestDealsFromServer();
+    const res = await bestDealsReq;
     const items = res?.success ? res?.data : null;
     if (Array.isArray(items)) {
       const sortedItems = [...items].sort((a, b) => {
@@ -246,7 +260,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch best deals:", error); }
 
   try {
-    const res = await getBestSellersFromServer();
+    const res = await bestSellersReq;
     const items = res?.success ? (res.data?.data || res.data) : null;
     if (Array.isArray(items)) {
       featuredProducts = items.map((p) => {
@@ -274,7 +288,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch best sellers:", error); }
 
   try {
-    const res = await getBookFairBestSellersFromServer();
+    const res = await bookFairBestReq;
     const items = res?.success ? (res.data?.data || res.data) : null;
     if (Array.isArray(items)) {
       bookFairBestSellers = items.map((p) => {
@@ -303,7 +317,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch book fair best sellers:", error); }
 
   try {
-    const res = await getBlogs();
+    const res = await blogsReq;
     if (res?.success && Array.isArray(res?.data)) {
       blogPosts = res.data.slice(0, 3).map(b => ({
         id: b.id,
@@ -320,7 +334,7 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch blogs:", error); }
 
   try {
-    const res = await getAuthorsList();
+    const res = await authorsReq;
     if (Array.isArray(res)) {
       authors = res.filter(a => a.active === 1).slice(0, 12);
     } else if (res?.success && Array.isArray(res?.data)) {
@@ -329,14 +343,14 @@ export default async function Home() {
   } catch (error) { console.error("Failed to fetch authors list:", error); }
 
   try {
-    const res = await getTopBrands();
+    const res = await topBrandsReq;
     if (res?.success && Array.isArray(res?.data)) {
       brands = res.data.slice(0, 12);
     }
   } catch (error) { console.error("Failed to fetch brands/publishers:", error); }
 
   try {
-    const res = await getUpcomingProductsFromServer();
+    const res = await upcomingReq;
     const items = res?.success ? (res.data?.data || res.data) : null;
     if (Array.isArray(items)) {
       upcomingProducts = items.map((p) => {
@@ -364,6 +378,20 @@ export default async function Home() {
     }
   } catch (error) { console.error("Failed to fetch upcoming products:", error); }
 
+  const prefetchProductCandidates = [
+    ...newArrivals,
+    ...featuredProducts,
+    ...bookFairBestSellers,
+    ...upcomingProducts,
+    ...flashSaleProducts,
+  ]
+    .filter((p) => p?.id && p?.name)
+    .map((p) => ({ id: p.id, name: p.name }));
+
+  const prefetchCategoryCandidates = (categories || [])
+    .map((c) => ({ id: c.category_id ?? c.id, name: c.name }))
+    .filter((c) => c?.id && c?.name);
+
   return (
     <>
       {(heroSlides.length > 0 || homeBanners.length > 0) && <Hero slides={heroSlides} banners={homeBanners} />}
@@ -387,6 +415,10 @@ export default async function Home() {
       {/* <AppDownloadBanner /> */}
       {/* <Testimonials /> */}
       <FAQ />
+      <HomepagePrefetchManager
+        productCandidates={prefetchProductCandidates}
+        categoryCandidates={prefetchCategoryCandidates}
+      />
     </>
   );
 }

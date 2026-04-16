@@ -2,11 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
 import { useShareSelection } from '../../context/ShareSelectionContext';
 import { Plus, Check } from 'lucide-react';
+import { getProductById, getProductReviews } from '../../lib/api';
 import { trackSelectItem } from '../../lib/gtm';
 
 export default function ProductCard({ product, compact = false, onCardClick = null }) {
+    const router = useRouter();
+    const hasPrefetchedRef = useRef(false);
     const { toggleSelection, isSelected } = useShareSelection();
     const selected = isSelected(product.id);
     const parsedStock = Number(product.current_stock);
@@ -30,11 +35,29 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
         if (onCardClick) onCardClick();
     };
 
+    const prefetchProductDetails = () => {
+        if (hasPrefetchedRef.current) return;
+        hasPrefetchedRef.current = true;
+
+        router.prefetch(`/product/${slug}`);
+
+        const numericId = Number(product.id);
+        if (!Number.isNaN(numericId) && numericId > 0) {
+            Promise.allSettled([
+                getProductById(numericId),
+                getProductReviews(numericId),
+            ]).catch(() => { /* no-op */ });
+        }
+    };
+
     return (
         <div className="relative group">
             <Link
                 href={`/product/${slug}`}
                 onClick={handleCardClick}
+                onMouseEnter={prefetchProductDetails}
+                onTouchStart={prefetchProductDetails}
+                onFocus={prefetchProductDetails}
                 className={`bg-white flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden relative block border border-gray-100 hover:border-brand-green/20 ${compact ? 'rounded-lg max-w-[170px] w-full mx-auto' : 'rounded-xl'}`}
             >
 
@@ -63,6 +86,7 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
                         alt={product.name}
                         fill
                         unoptimized
+                        sizes={compact ? "(max-width: 768px) 45vw, 170px" : "(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 280px"}
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     {/* Subtle book shadow overlay at bottom */}
