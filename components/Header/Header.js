@@ -217,7 +217,7 @@ export default function Header({ categories = [] }) {
         {/* ─── Category Strip (Desktop Only) ─── */}
         <div className="hidden md:block bg-brand-green-dark/95 backdrop-blur-sm border-t border-white/10">
           <div className="max-w-7xl mx-auto flex items-center px-6 py-2">
-            <Link href="#" className="text-white/70 text-[13px] font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/10 hover:text-white transition-all flex-shrink-0 mr-2 border-r border-white/10 pr-5">
+            <Link href="/category/all" className="text-white/70 text-[13px] font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/10 hover:text-white transition-all flex-shrink-0 mr-2 border-r border-white/10 pr-5">
               <FiGrid size={14} /> সকল বিভাগ
             </Link>
 

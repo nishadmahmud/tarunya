@@ -61,17 +61,6 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
                 className={`bg-white flex flex-col hover:shadow-lg transition-all duration-300 overflow-hidden relative block border border-gray-100 hover:border-brand-green/20 ${compact ? 'rounded-lg max-w-[170px] w-full mx-auto' : 'rounded-xl'}`}
             >
 
-                {/* Discount Badge - Bigger & More Prominent */}
-                {product.discount && (
-                    <div className="absolute top-0 left-0 z-10">
-                        <div className={`bg-red-500 text-white font-black shadow-md flex items-center gap-1 ${compact ? 'text-[10px] px-2 py-1 rounded-br-lg' : 'text-[12px] px-3 py-1.5 rounded-br-xl'}`}>
-                            <span>{product.discount}</span>
-                            <span className="text-[10px] opacity-90 uppercase">ছাড়</span>
-                        </div>
-                    </div>
-                )}
-
-
                 {isStockOut && (
                     <div className="absolute top-0 right-0 z-10">
                         <div className="bg-gray-900 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-bl-xl shadow-md">
@@ -90,7 +79,16 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     {/* Subtle book shadow overlay at bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/10 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+                    {/* Discount: bottom of cover — avoids covering titles usually printed high on the cover */}
+                    {product.discount && (
+                        <div className={`absolute z-10 ${compact ? 'bottom-1.5 left-1.5' : 'bottom-2 left-2'}`}>
+                            <div className={`bg-red-500 text-white font-black shadow-md flex items-center gap-0.5 ${compact ? 'text-[9px] px-1.5 py-0.5 rounded-md' : 'text-[11px] px-2 py-1 rounded-lg'}`}>
+                                <span>{product.discount}</span>
+                                <span className={`opacity-90 uppercase ${compact ? 'text-[8px]' : 'text-[9px]'}`}>ছাড়</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Book Info */}

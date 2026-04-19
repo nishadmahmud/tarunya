@@ -14,12 +14,16 @@ export default function CategorySidebar({
     selectedRegion,
     setSelectedRegion,
     selectedAvailability,
-    setSelectedAvailability
+    setSelectedAvailability,
+    categoryList = [],
+    selectedCategories = [],
+    setSelectedCategories
 }) {
     const [expandedSections, setExpandedSections] = useState({
         price: true,
         region: true,
-        availability: true
+        availability: true,
+        category: true
     });
 
     const toggleSection = (section) => {
@@ -41,6 +45,7 @@ export default function CategorySidebar({
         setSelectedPrice({ min: '', max: '' });
         setSelectedRegion([]);
         setSelectedAvailability('All');
+        if (setSelectedCategories) setSelectedCategories([]);
     };
 
     const { regionList } = derivedFilters;
@@ -180,6 +185,37 @@ export default function CategorySidebar({
                                                 />
                                             </div>
                                             <span className="text-sm font-medium text-gray-600 group-hover:text-brand-green transition-colors">{region}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    
+                    {/* Category Filter (Conditional) */}
+                    {categoryList && categoryList.length > 0 && (
+                        <div className="border-b border-gray-100 pb-6">
+                            <button
+                                onClick={() => toggleSection('category')}
+                                className="flex items-center justify-between w-full text-left font-bold text-brand-green mb-4 uppercase text-sm tracking-wider"
+                            >
+                                <span>বিভাগ</span>
+                                {expandedSections.category ? <FiChevronUp /> : <FiChevronDown />}
+                            </button>
+
+                            {expandedSections.category && (
+                                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                                    {categoryList.map(cat => (
+                                        <label key={cat.id || cat.category_id} className="flex items-center gap-3 cursor-pointer group">
+                                            <div className="relative flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedCategories.includes(cat.id || cat.category_id)}
+                                                    onChange={() => handleCheckboxChange(cat.id || cat.category_id, selectedCategories, setSelectedCategories)}
+                                                    className="peer h-4 w-4 border border-gray-300 rounded text-brand-green focus:ring-brand-green"
+                                                />
+                                            </div>
+                                            <span className="text-sm font-medium text-gray-600 group-hover:text-brand-green transition-colors">{cat.name}</span>
                                         </label>
                                     ))}
                                 </div>

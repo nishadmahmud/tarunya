@@ -12,8 +12,7 @@ import FAQ from "../components/FAQ/FAQ";
 import BookFairBestSellers from "../components/BookFairBestSellers/BookFairBestSellers";
 // import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
 import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
-// import PreOrderBooks from "../components/PreOrderBooks/PreOrderBooks";
-// import CuratedReadingLists from "../components/CuratedReadingLists/CuratedReadingLists";
+import FlashSaleSpotlight from "../components/FlashSaleSpotlight/FlashSaleSpotlight";
 import TopPublishers from "../components/TopPublishers/TopPublishers";
 import HomepagePrefetchManager from "../components/Performance/HomepagePrefetchManager";
 // import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
@@ -26,7 +25,6 @@ import {
   getNewArrivalsFromServer,
   getProducts,
   getBlogs,
-  getBannerFromServer,
   getBestDealsFromServer,
   getBestSellersFromServer,
   getBookFairBestSellersFromServer,
@@ -43,7 +41,6 @@ export default async function Home() {
   let categories = [];
   let newArrivals = [];
   let heroSlides = [];
-  let homeBanners = [];
   let bestDealsCards = [];
   let flashSaleProducts = [];
   let featuredProducts = [];
@@ -57,7 +54,7 @@ export default async function Home() {
   if (!isApiConfigured()) {
     return (
       <>
-        <Hero slides={[]} banners={[]} />
+        <Hero slides={[]} />
         <TrustStats />
         <ShopCategories categories={[]} flashSaleProducts={[]} />
         {/* <SeriesBooks /> */}
@@ -91,7 +88,6 @@ export default async function Home() {
 
   // Start homepage API calls in parallel to reduce TTFB for the full page.
   const categoriesReq = getCategoriesFromServer();
-  const bannersReq = getBannerFromServer();
   const slidersReq = getSlidersFromServer();
   const newArrivalsReq = getNewArrivalsFromServer();
   const bestDealsReq = getBestDealsFromServer();
@@ -106,18 +102,6 @@ export default async function Home() {
     const res = await categoriesReq;
     if (res?.success && res?.data) categories = res.data;
   } catch (error) { console.error("Failed to fetch categories:", error); }
-
-  try {
-    const res = await bannersReq;
-    const bannerData = res?.banners || res?.data?.banners || res?.data;
-    if (res?.success && Array.isArray(bannerData)) {
-      homeBanners = bannerData.map(b => ({
-        id: b.id,
-        image: b.image_path || b.image_url || b.image,
-        link: b.button_url || b.link || "/"
-      }));
-    }
-  } catch (error) { console.error("Failed to fetch banners:", error); }
 
   try {
     const res = await slidersReq;
@@ -394,12 +378,13 @@ export default async function Home() {
 
   return (
     <>
-      {(heroSlides.length > 0 || homeBanners.length > 0) && <Hero slides={heroSlides} banners={homeBanners} />}
+      {heroSlides.length > 0 && <Hero slides={heroSlides} />}
+      {flashSaleProducts.length > 0 && <FlashSaleSpotlight products={flashSaleProducts} />}
       {/* <TrustStats /> */}
 
-      {(categories.length > 0 || flashSaleProducts.length > 0) && <ShopCategories categories={categories} flashSaleProducts={flashSaleProducts} />}
       {/* <SeriesBooks /> */}
       {newArrivals.length > 0 && <NewArrivals products={newArrivals} />}
+      {categories.length > 0 && <ShopCategories categories={categories} />}
       {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
       {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}

@@ -283,28 +283,35 @@ export default function CategoryPage() {
     }, [filteredProducts, validCurrentPage, itemsPerPage]);
 
     return (
-        <div className="bg-gray-50 min-h-screen py-8 md:py-12">
+        <div className="bg-gray-50 min-h-screen pt-2 pb-6 sm:pt-3 sm:pb-8 md:pt-4 md:pb-10">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
-                {/* Top Banner Image */}
-                <div className="w-full relative rounded-2xl md:rounded-3xl overflow-hidden mb-6 md:mb-8" style={{ aspectRatio: '21/5' }}>
+                {/* Top banner: full width of max-w-7xl column + roomier title block */}
+                <div className="relative -mx-4 w-[calc(100%+2rem)] overflow-hidden rounded-xl md:-mx-6 md:w-[calc(100%+3rem)] md:rounded-2xl mb-3 md:mb-4">
                     <Image
                         src={bannerImage}
                         alt={`${categoryName} Banner`}
                         fill
                         unoptimized
-                        className="object-cover"
+                        className="object-cover object-center z-0"
+                        sizes="(max-width: 1280px) 100vw, 1280px"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-900/60 to-transparent flex items-center p-8 md:p-16">
-                        <div className="text-white">
-                            <h1 className="text-3xl md:text-6xl font-black mb-2 tracking-tight capitalize">{categoryName}</h1>
-                            <p className="text-lg md:text-2xl font-medium text-white/90">নতুন সংগ্রহ : এক নজরে দেখে নিন</p>
-                        </div>
+                    <div
+                        className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-gray-900/75 via-gray-900/40 to-transparent"
+                        aria-hidden
+                    />
+                    <div className="relative z-20 px-5 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight capitalize leading-tight text-white">
+                            {categoryName}
+                        </h1>
+                        <p className="mt-1.5 text-sm sm:text-base md:text-lg font-medium leading-snug text-white/90">
+                            নতুন সংগ্রহ : এক নজরে দেখে নিন
+                        </p>
                     </div>
                 </div>
 
                 {/* Breadcrumbs */}
-                <div className="text-[12px] md:text-sm text-gray-500 mb-6 md:mb-10 flex items-center gap-2 font-medium">
+                <div className="text-[12px] md:text-sm text-gray-500 mb-4 md:mb-6 flex items-center gap-2 font-medium">
                     <Link href="/" className="hover:text-brand-green transition-colors">হোম</Link>
                     <span>/</span>
                     <span className="hover:text-brand-green transition-colors cursor-pointer">বিভাগ</span>

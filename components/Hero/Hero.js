@@ -3,26 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiArrowRight } from 'react-icons/fi';
 
-export default function Hero({ slides = [], banners = [] }) {
+export default function Hero({ slides = [] }) {
     const [currentSlide, setCurrentSlide] = useState(0);
-
-    const defaultBanners = [
-        {
-            id: 'b1',
-            title: 'বইমেলা সংকলন',
-            image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=800&auto=format&fit=crop",
-            link: '/'
-        },
-        {
-            id: 'b2',
-            title: 'সেরা সংগ্রহ',
-            image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop",
-            link: '/'
-        }
-    ];
-    const displayBanners = banners && banners.length > 0 ? banners.slice(0, 2) : defaultBanners;
 
     const defaultSlides = [
         {
@@ -55,11 +38,9 @@ export default function Hero({ slides = [], banners = [] }) {
 
     return (
         <section className="w-full bg-brand-cream">
-            <div className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-6">
-                <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
-
-                    {/* Main Slider */}
-                    <div className="lg:w-[65%] w-full relative overflow-hidden rounded-2xl h-[220px] sm:h-[320px] md:h-[420px] shadow-md group">
+            <div className="max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-5">
+                <div className="w-full">
+                    <div className="w-full relative overflow-hidden rounded-xl h-[185px] sm:h-[235px] md:h-[290px] shadow-md group">
                         {displaySlides.map((slide, idx) => (
                             <div
                                 key={slide.id || idx}
@@ -79,33 +60,17 @@ export default function Hero({ slides = [], banners = [] }) {
                         ))}
 
                         {/* Slider Dots */}
-                        <div className="absolute bottom-4 left-6 md:left-12 z-30 flex gap-2">
+                        <div className="absolute bottom-3 left-5 md:left-10 z-30 flex gap-2">
                             {displaySlides.map((_, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => setCurrentSlide(idx)}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-brand-gold w-8' : 'bg-white/40 hover:bg-white/60 w-2'}`}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-brand-gold w-7' : 'bg-white/40 hover:bg-white/60 w-2'}`}
                                     aria-label={`স্লাইড ${idx + 1}`}
                                 />
                             ))}
                         </div>
                     </div>
-
-                    {/* Side Banners */}
-                    <div className="lg:w-[35%] w-full flex flex-row lg:flex-col gap-3">
-                        {displayBanners.map((banner, idx) => (
-                            <Link href={banner.link || "#"} key={banner.id || idx} className="w-1/2 lg:w-full lg:flex-1 relative overflow-hidden rounded-xl bg-gray-100 group block shadow-sm hover:shadow-md transition-shadow">
-                                <Image
-                                    src={banner.image || banner.image_path || banner.image_url}
-                                    alt={banner.title || `ব্যানার ${idx + 1}`}
-                                    fill
-                                    unoptimized
-                                    className="object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
-                                />
-                            </Link>
-                        ))}
-                    </div>
-
                 </div>
             </div>
         </section>

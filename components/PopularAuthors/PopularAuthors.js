@@ -15,7 +15,7 @@ export default function PopularAuthors({ authors = [] }) {
                         </h2>
                         <p className="text-xs md:text-sm text-gray-400 hidden sm:block">সর্বাধিক পঠিত ও প্রিয় লেখকদের বই সংগ্রহ</p>
                     </div>
-                    <Link href="#" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
+                    <Link href="/authors" className="text-xs md:text-sm font-bold text-brand-green hover:text-brand-green-dark transition-colors whitespace-nowrap">
                         সব দেখুন →
                     </Link>
                 </div>
