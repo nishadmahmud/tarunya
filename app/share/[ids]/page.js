@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { getProductById, saveSalesOrder, getPaymentTypes, initiateSslPayment } from "../../../lib/api";
+import { getProductById, saveSalesOrder, getPaymentTypes, initiateSslPayment, getProductReviews } from "../../../lib/api";
 import {
     MapPin,
     CreditCard,
@@ -18,7 +18,12 @@ import {
     ChevronRight,
     Star,
     BadgeCheck,
-    CheckCircle2
+    CheckCircle2,
+    Info,
+    FileText,
+    BookOpen,
+    ExternalLink,
+    X
 } from "lucide-react";
 import toast from "react-hot-toast";
 import AddressSelect from "../../../components/Checkout/AddressSelect";
@@ -58,6 +63,30 @@ export default function ShareCollectionPage() {
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [selectedCourier, setSelectedCourier] = useState("steadfast");
     const [isAgreed, setIsAgreed] = useState(false);
+    const [reviewSummary, setReviewSummary] = useState(null);
+    const [reviewsData, setReviewsData] = useState([]);
+    const [isLandingLoading, setIsLandingLoading] = useState(false);
+    const [activeLandingTab, setActiveLandingTab] = useState('description');
+    const [isLookInsideOpen, setIsLookInsideOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    useEffect(() => {
+        if (isLookInsideOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isLookInsideOpen]);
 
     const formatPrice = (amount) => `৳${Number(amount).toLocaleString('en-US')}`;
 
@@ -82,16 +111,27 @@ export default function ShareCollectionPage() {
                     const p = res?.data || res;
 
                     if (p && p.id) {
-                        // Price logic
-                        const originalPrice = Number(p.retails_price || 0);
-                        const discountValue = Number(p.discount || 0);
-                        const discountType = String(p.discount_type || '').toLowerCase();
-                        const hasDiscount = discountValue > 0 && discountType !== '0';
-                        const price = hasDiscount
-                            ? discountType === 'percentage'
-                                ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-                                : Math.max(0, originalPrice - discountValue)
-                            : originalPrice;
+                        // Price logic (Matches app/product/[slug]/page.js)
+                        const basePrice = Number(p.retails_price || 0);
+                        let discountVal = Number(p.discount || 0);
+                        let discType = String(p.discount_type || '').toLowerCase();
+                        let hasDisc = discountVal > 0 && discType !== '0';
+
+                        // Check for campaigns if no direct discount
+                        if (!hasDisc && Array.isArray(p.campaigns)) {
+                            const activeCampaign = p.campaigns.find(c => c.status === 'active');
+                            if (activeCampaign) {
+                                discountVal = Number(activeCampaign.discount || 0);
+                                discType = String(activeCampaign.discount_type || '').toLowerCase();
+                                hasDisc = discountVal > 0 && discType !== '0';
+                            }
+                        }
+
+                        const finalPrice = hasDisc
+                            ? discType === 'percentage'
+                                ? Math.max(0, Math.round(basePrice * (1 - discountVal / 100)))
+                                : Math.max(0, basePrice - discountVal)
+                            : basePrice;
 
                         const imageCandidates = [
                             Array.isArray(p.images) ? p.images : [],
@@ -109,22 +149,46 @@ export default function ShareCollectionPage() {
                         fetchedProducts.push({
                             id: p.id,
                             name: p.name,
-                            numericPrice: price,
+                            numericPrice: finalPrice,
+                            originalPrice: basePrice,
+                            hasDiscount: hasDisc,
+                            discountLabel: hasDisc ? (discType === 'percentage' ? `-${discountVal}%` : `৳${discountVal}`) : null,
                             image: displayImage,
                             images: bestImages.length > 0 ? bestImages : (p.image_path ? [p.image_path] : ["/no-image.svg"]),
                             description: p.description,
-                            author: getSpec('Author') || p.author_name || p.brand_name || p.brand?.name || 'অজানা লেখক',
+                            author: getSpec('Author') || p.author?.name || p.author_name || p.brand_name || 'অজানা লেখক',
+                            author_image: p.author?.image_path || p.author?.image || null,
+                            author_bio: p.author?.description || p.author?.bio || null,
+                            author_education: p.author?.education || p.author?.experience || 'লেখক',
                             publisher: getSpec('Publisher') || p.publisher_name || 'তারুণ্য প্রকাশন',
                             isbn: getSpec('ISBN') || p.barcode || p.sku || 'N/A',
                             edition: getSpec('Edition') || 'N/A',
                             pages: getSpec('Number of Pages') || getSpec('Pages') || 'N/A',
-                            country: getSpec('Country') || 'বাংলাদেশ',
-                            language: getSpec('Language') || 'বাংলা',
+                            country: getSpec('Country') || p.country || 'বাংলাদেশ',
+                            language: getSpec('Language') || p.language || 'বাংলা',
+                            pdfFile: p.pdf_file || null,
                             specifications: p.specifications || []
                         });
                     }
                 }
                 setProducts(fetchedProducts);
+
+                // If only one product, fetch more details like reviews
+                if (fetchedProducts.length === 1) {
+                    const pId = fetchedProducts[0].id;
+                    try {
+                        const reviewRes = await getProductReviews(pId);
+                        if (reviewRes?.summary) setReviewSummary(reviewRes.summary);
+                        if (reviewRes?.data) {
+                            const list = Array.isArray(reviewRes.data?.data) 
+                                ? reviewRes.data.data 
+                                : (Array.isArray(reviewRes.data) ? reviewRes.data : []);
+                            setReviewsData(list);
+                        }
+                    } catch (err) {
+                        console.error("Failed to fetch product reviews", err);
+                    }
+                }
             } catch (err) {
                 console.error("Failed to fetch collection products", err);
                 toast.error("বইগুলোর তথ্য লোড করতে সমস্যা হয়েছে।");
@@ -327,25 +391,14 @@ export default function ShareCollectionPage() {
         );
     }
 
-    return (
-        <div className="min-h-screen bg-[#fafafa] pb-24 font-noto-bangla">
-            {/* Modal */}
-            {selectedProduct && (
-                <BookDetailsModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-            )}
-
+    const renderMultiProductLayout = () => (
+        <>
             {/* Premium Header */}
             <div className="bg-white border-b border-gray-100 pt-10 pb-16 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
                 <div className="max-w-7xl mx-auto px-4 relative z-10">
-                    <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-brand-green transition-all text-sm font-bold mb-8 group">
-                        <div className="bg-gray-50 p-2 rounded-lg group-hover:bg-brand-green/10 group-hover:text-brand-green transition-colors">
-                            <ArrowLeft className="w-4 h-4" />
-                        </div>
-                        হোম পেজ এ ফিরে যান
-                    </Link>
 
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
@@ -414,265 +467,591 @@ export default function ShareCollectionPage() {
                         </section>
 
                         {/* 2. Customer Form */}
-                        <section className="bg-white rounded-[32px] border border-gray-100 p-6 md:p-10 shadow-xl shadow-gray-200/40">
-                            <div className="mb-10 flex flex-col md:flex-row md:items-center gap-4 justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-14 w-14 flex items-center justify-center rounded-[20px] bg-brand-gold/10 text-brand-gold">
-                                        <MapPin className="w-7 h-7" />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-black text-gray-900">ডেলিভারি ঠিকানা</h2>
-                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Shipping Details</p>
-                                    </div>
-                                </div>
-                                <div className="hidden md:flex items-center gap-2 text-brand-green bg-brand-green/5 px-4 py-2 rounded-full border border-brand-green/10">
-                                    <BadgeCheck className="w-4 h-4" />
-                                    <span className="text-xs font-black">নিরাপদ ডেলিভারি নিশ্চিত</span>
-                                </div>
-                            </div>
-
-                            <form id="share-checkout-form" onSubmit={handleSubmit} className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="space-y-3">
-                                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">আপনার নাম</label>
-                                        <div className="relative group/input">
-                                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
-                                            <input required name="firstName" value={formData.firstName} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-[20px] py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="যেমন: মো. রহিম উদ্দিন" />
-                                        </div>
-                                    </div>
-                                    <div className="space-y-3">
-                                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">ফোন নম্বর</label>
-                                        <div className="relative group/input">
-                                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
-                                            <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-[20px] py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="১১ ডিজিটের নম্বর" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <AddressSelect
-                                    selectedDistrict={selectedDistrict}
-                                    setSelectedDistrict={setSelectedDistrict}
-                                    selectedCity={selectedCity}
-                                    setSelectedCity={setSelectedCity}
-                                    variant="premium"
-                                />
-
-                                <div className="space-y-3">
-                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">বিস্তারিত ঠিকানা</label>
-                                    <textarea required name="address" rows={3} value={formData.address} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-[20px] py-4 px-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all resize-none" placeholder="বাসা নং, রোড নং, এলাকা এবং পরিচিত কোনো জায়গা..." />
-                                </div>
-                            </form>
-                        </section>
-
-                        {/* 3. Courier & Payment */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <section className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-xl shadow-gray-200/40 flex flex-col">
-                                <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
-                                        <Truck className="w-4 h-4" />
-                                    </div>
-                                    কুরিয়ার সার্ভিস
-                                </h3>
-                                <div className="grid grid-cols-2 gap-3 flex-1">
-                                    {courierOptions.map((c) => (
-                                        <button
-                                            key={c.id}
-                                            onClick={() => setSelectedCourier(c.id)}
-                                            className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${selectedCourier === c.id
-                                                    ? c.selectedBorder + " " + c.bg
-                                                    : 'border-gray-50 bg-gray-50 text-gray-400 hover:border-brand-green/20'
-                                                }`}
-                                        >
-                                            {c.logo ? (
-                                                <div className="relative w-full h-full flex items-center justify-center p-1">
-                                                    <Image
-                                                        src={c.logo}
-                                                        alt={c.name}
-                                                        width={100}
-                                                        height={35}
-                                                        style={{ transform: `scale(${c.scale || 1})` }}
-                                                        className="max-h-full max-w-full object-contain"
-                                                        unoptimized
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <span className={`font-black text-[10px] sm:text-[11px] ${selectedCourier === c.id ? 'text-brand-green' : 'text-gray-400'} tracking-tight leading-tight`}>
-                                                    {c.name}
-                                                </span>
-                                            )}
-                                            {selectedCourier === c.id && (
-                                                <div className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-green shadow-sm z-10">
-                                                    <div className="h-1 w-1 rounded-full bg-white" />
-                                                </div>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </section>
-
-                            <section className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-xl shadow-gray-200/40">
-                                <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
-                                        <CreditCard className="w-4 h-4" />
-                                    </div>
-                                    পেমেন্ট মেথড
-                                </h3>
-                                <div className="space-y-3">
-                                    {isPaymentLoading ? (
-                                        <div className="py-4 flex justify-center items-center">
-                                            <svg className="animate-spin h-6 w-6 text-brand-green" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                            </svg>
-                                        </div>
-                                    ) : paymentTypes.length > 0 ? (
-                                        paymentTypes.map((pt) => {
-                                            const isCash = pt.type_name === "Cash";
-                                            return (
-                                                <div
-                                                    key={pt.id}
-                                                    onClick={() => setPaymentMethod(pt.id)}
-                                                    className={`cursor-pointer p-5 rounded-[24px] border-2 transition-all relative overflow-hidden group ${paymentMethod === pt.id ? 'border-brand-green bg-brand-green/5 ring-4 ring-brand-green/5' : 'border-gray-100 hover:border-brand-green/30'
-                                                        }`}
-                                                >
-                                                    <div className="relative z-10 flex items-center justify-between">
-                                                        <div>
-                                                            <p className="font-black text-gray-900 text-lg flex items-center gap-2">
-                                                                {isCash ? <Truck className="w-5 h-5 text-brand-green" /> : <CreditCard className="w-5 h-5 text-brand-green" />}
-                                                                {isCash ? "ক্যাশ অন ডেলিভারি" : "অনলাইন পেমেন্ট (SSL)"}
-                                                            </p>
-                                                            <p className={`text-[11px] font-bold uppercase tracking-widest mt-1 ${isCash ? 'text-brand-green' : 'text-gray-400'}`}>
-                                                                {isCash ? "Pay on Receipt" : "Secure Payment"}
-                                                            </p>
-                                                        </div>
-                                                        {paymentMethod === pt.id && <CheckCircle2 className="w-8 h-8 text-brand-green" />}
-                                                    </div>
-                                                    {paymentMethod === pt.id && (
-                                                        <div className="absolute top-0 right-0 w-24 h-24 bg-brand-green/10 rounded-full blur-2xl -mr-12 -mt-12 group-hover:bg-brand-green/20 transition-colors"></div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <div className="text-sm text-gray-500 py-4 text-center">
-                                            No payment methods available right now.
-                                        </div>
-                                    )}
-                                </div>
-                                <p className="mt-4 text-[10px] text-gray-400 font-bold text-center uppercase tracking-tighter">নিরাপদ পদ্ধতিতে পেমেন্ট সম্পন্ন করুন</p>
-                            </section>
-                        </div>
+                        {renderCheckoutForm()}
                     </div>
 
                     {/* Right Column: Summary Card */}
                     <div className="lg:sticky lg:top-24 self-start">
-                        <section className="bg-white rounded-[40px] border border-gray-100 p-8 md:p-10 shadow-2xl shadow-gray-200/60 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
-
-                            <h2 className="text-2xl font-black text-gray-900 mb-8 relative z-10">অর্ডার সামারি</h2>
-
-                            {/* Products List */}
-                            <div className="mb-8 space-y-4 max-h-[300px] overflow-y-auto pr-2 relative z-10">
-                                {products.map((p) => (
-                                    <div key={p.id} className="flex gap-3 items-center">
-                                        <div className="relative w-9 h-12 rounded overflow-hidden border border-gray-100 flex-shrink-0">
-                                            <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="text-[11px] font-bold text-gray-900 leading-tight line-clamp-1">{p.name}</h3>
-                                            <p className="text-brand-green font-black text-[10px] mt-0.5">{formatPrice(p.numericPrice)}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="space-y-5 pb-8 border-b border-gray-100 relative z-10">
-                                <div className="flex justify-between items-center text-gray-500 font-bold">
-                                    <span className="text-sm">বইয়ের মোট দাম</span>
-                                    <span className="text-gray-900">{formatPrice(subTotal)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-gray-500 font-bold">
-                                    <span className="text-sm">ডেলিভারি চার্জ ({
-                                        selectedDistrict ? (() => {
-                                            const d = selectedDistrict.toLowerCase().trim();
-                                            const c = (selectedCity || "").toLowerCase().trim();
-                                            if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
-                                                return "সাব-ঢাকা";
-                                            }
-                                            return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
-                                        })() : "এলাকা নির্বাচন করুন"
-                                    })</span>
-                                    {deliveryFee > 0 ? (
-                                        <span className="text-gray-900">{formatPrice(deliveryFee)}</span>
-                                    ) : (
-                                        <span className="text-brand-gold text-[10px] font-black bg-brand-gold/10 px-2 py-1 rounded-md uppercase">বাকি আছে</span>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-8 mb-10 relative z-10">
-                                <div>
-                                    <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Bill</span>
-                                    <span className="text-3xl font-black text-brand-green">{formatPrice(grandTotal)}</span>
-                                </div>
-                                <div className="bg-brand-green/10 p-3 rounded-2xl">
-                                    <ShoppingBag className="w-8 h-8 text-brand-green" />
-                                </div>
-                            </div>
-
-                            {/* Agreement Acceptance */}
-                            <div className="mb-6 flex items-start gap-3 rounded-[24px] border border-gray-100 bg-gray-50/50 p-5 transition-all hover:bg-gray-50">
-                                <input
-                                    type="checkbox"
-                                    id="agreement"
-                                    checked={isAgreed}
-                                    onChange={(e) => setIsAgreed(e.target.checked)}
-                                    className="mt-1 h-5 w-5 rounded border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
-                                />
-                                <label htmlFor="agreement" className="text-[11px] leading-relaxed text-gray-600 cursor-pointer select-none">
-                                    আমি তারুণ্য প্রকাশন-এর {' '}
-                                    <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
-                                    <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
-                                    এবং {' '}
-                                    <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
-                                    -তে সম্মতি দিচ্ছি।
-                                </label>
-                            </div>
-
-                            <button
-                                type="submit"
-                                form="share-checkout-form"
-                                disabled={isSubmitting || !isAgreed}
-                                className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-black py-5 rounded-[24px] shadow-2xl shadow-brand-green/30 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100 flex items-center justify-center gap-3 group relative overflow-hidden"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                <span className="text-lg">{isSubmitting ? "প্রসেসিং হচ্ছে..." : "অর্ডার কনফার্ম করুন"}</span>
-                                {!isSubmitting && <ChevronRight className="w-5 h-5" />}
-                            </button>
-
-                            <div className="mt-8 pt-8 border-t border-gray-50 flex items-center justify-center gap-6">
-                                <div className="flex flex-col items-center gap-2">
-                                    <Shield className="w-5 h-5 text-brand-green opacity-50" />
-                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">100% Secure<br />Checkout</span>
-                                </div>
-                                <div className="w-px h-8 bg-gray-100"></div>
-                                <div className="flex flex-col items-center gap-2">
-                                    <Truck className="w-5 h-5 text-brand-green opacity-50" />
-                                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest text-center leading-tight">Fastest<br />Delivery</span>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Help Section */}
-                        <div className="mt-6 px-10 text-center">
-                            <p className="text-[11px] font-bold text-gray-400 leading-relaxed">
-                                কোনো সমস্যা হলে বা আরও জানতে আমাদের সাথে যোগাযোগ করতে পারেন। তারুণ্য প্রকাশন আপনার সেবায় সর্বদা নিয়োজিত।
-                            </p>
-                        </div>
+                        {renderOrderSummary()}
                     </div>
 
                 </div>
             </div>
+        </>
+    );
+
+    const renderSingleProductLayout = () => {
+        const p = products[0];
+
+        const specRows = [
+            { label: 'বইয়ের নাম', value: p.name },
+            { label: 'লেখক', value: p.author },
+            { label: 'প্রকাশক', value: p.publisher },
+            { label: 'আইএসবিএন', value: p.isbn },
+            { label: 'সংস্করণ', value: p.edition },
+            { label: 'পৃষ্ঠা সংখ্যা', value: p.pages },
+            { label: 'বাঁধাই', value: p.cover },
+            { label: 'দেশ', value: p.country },
+            { label: 'ভাষা', value: p.language },
+        ].filter(r => r.value && r.value !== 'N/A' && r.value !== 'null');
+
+        return (
+            <div className="pb-32">
+                {/* Landing Page Header / Breadcrumb */}
+                <div className="max-w-5xl mx-auto px-4 pb-10">
+                </div>
+
+                <div className="max-w-5xl mx-auto px-4 space-y-10">
+                    {/* Hero Section */}
+                    <section className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/30 overflow-hidden">
+                        <div className="flex flex-col md:flex-row">
+                            {/* Gallery Area */}
+                            <div className="md:w-5/12 bg-gray-50/50 p-8 flex items-center justify-center relative">
+                                <div className="absolute top-6 left-6 z-10 flex flex-col gap-2">
+                                    <span className="bg-brand-green text-white text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-green/20">In Stock</span>
+                                    {p.numericPrice < 500 && <span className="bg-brand-gold text-white text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-gold/20">Best Seller</span>}
+                                </div>
+                                <div className="w-full aspect-[3/4] relative rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-transform duration-700">
+                                    <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
+                                </div>
+                            </div>
+                            
+                            {/* Product Info Area */}
+                            <div className="md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="text-xs font-black text-brand-green uppercase tracking-widest">{p.author}</span>
+                                    <div className="h-px w-8 bg-gray-100"></div>
+                                    <div className="flex text-brand-gold">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star key={i} className={`w-3 h-3 ${reviewSummary && i < Math.round(reviewSummary.average_rating) ? 'fill-brand-gold' : 'text-gray-200'}`} />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6">
+                                    {p.name}
+                                </h1>
+
+                                <div className="flex items-center gap-4 mb-8 flex-wrap">
+                                    <span className="text-4xl font-black text-gray-900">{formatPrice(p.numericPrice)}</span>
+                                    {p.hasDiscount && (
+                                        <>
+                                            <span className="text-xl text-gray-400 line-through font-bold">{formatPrice(p.originalPrice)}</span>
+                                            <span className="text-red-500 text-xl font-black">
+                                                ({p.discountLabel} ছাড়ে)
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-10 pb-10 border-b border-gray-50">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                            <Shield className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Publisher</p>
+                                            <p className="text-xs font-bold text-gray-700">{p.publisher}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                            <CheckCircle2 className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Language</p>
+                                            <p className="text-xs font-bold text-gray-700">{p.language}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                            <ShoppingBag className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Pages</p>
+                                            <p className="text-xs font-bold text-gray-700">{p.pages}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                                            <BadgeCheck className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Edition</p>
+                                            <p className="text-xs font-bold text-gray-700">{p.edition}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-row gap-3">
+                                    <button 
+                                        onClick={() => document.getElementById('checkout-section').scrollIntoView({ behavior: 'smooth' })}
+                                        className="flex-1 bg-brand-green text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-green/20 hover:bg-brand-green-dark transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
+                                    >
+                                        অর্ডার করুন
+                                        <ChevronRight className="w-4 h-4 rotate-90" />
+                                    </button>
+                                    {p.pdfFile && (
+                                        <button 
+                                            onClick={() => setIsLookInsideOpen(true)}
+                                            className="flex-1 bg-white text-gray-700 border-2 border-gray-100 font-bold py-3.5 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
+                                        >
+                                            <FileText className="w-4 h-4 text-brand-green" />
+                                            একটু পড়ে দেখুন
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    {/* Modern Tabs Section */}
+                    <section className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/20 overflow-hidden">
+                        {/* Tab Switcher */}
+                        <div className="flex border-b border-gray-100 bg-gray-50/30 p-2 gap-2">
+                            {[
+                                { id: 'description', label: 'সারসংক্ষেপ', icon: Eye },
+                                { id: 'specification', label: 'বইয়ের তথ্য', icon: Info },
+                                { id: 'author', label: 'লেখক', icon: User }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveLandingTab(tab.id)}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-black transition-all ${
+                                        activeLandingTab === tab.id
+                                            ? 'bg-white text-brand-green shadow-sm ring-1 ring-gray-100'
+                                            : 'text-gray-400 hover:text-gray-600 hover:bg-white/50'
+                                    }`}
+                                >
+                                    <tab.icon className={`w-4 h-4 ${activeLandingTab === tab.id ? 'text-brand-green' : 'text-gray-300'}`} />
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Tab Content */}
+                        <div className="p-8 md:p-12 min-h-[300px] animate-in fade-in duration-500">
+                            {activeLandingTab === 'description' && (
+                                <div className="space-y-6">
+                                    <h2 className="text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-4">বইয়ের বিবরণ</h2>
+                                    <div 
+                                        className="prose prose-brand max-w-none text-gray-600 font-medium leading-[1.8] text-sm md:text-base break-words overflow-hidden" 
+                                        dangerouslySetInnerHTML={{ __html: p.description }} 
+                                    />
+                                </div>
+                            )}
+
+                            {activeLandingTab === 'specification' && (
+                                <div className="space-y-8">
+                                    <h2 className="text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-4">পূর্ণাঙ্গ তথ্যনির্দেশিকা</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                                        {specRows.map((row, idx) => (
+                                            <div key={idx} className="flex items-center justify-between py-3.5 border-b border-gray-50 group hover:border-brand-green/20 transition-colors">
+                                                <span className="text-[13px] font-black text-gray-400 uppercase tracking-tighter">{row.label}</span>
+                                                <span className="text-sm font-bold text-gray-900">{row.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeLandingTab === 'author' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-24 h-24 rounded-2xl bg-brand-green/5 border border-brand-green/10 flex items-center justify-center text-brand-green shrink-0 overflow-hidden">
+                                            {p.author_image ? (
+                                                <Image src={p.author_image} alt={p.author} width={96} height={96} className="object-cover" />
+                                            ) : (
+                                                <User className="w-10 h-10 opacity-30" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-gray-900 mb-1">{p.author}</h2>
+                                            <p className="text-brand-green font-bold text-xs uppercase tracking-widest">{p.author_education}</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                        <div 
+                                            className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none"
+                                            dangerouslySetInnerHTML={{ 
+                                                __html: p.author_bio || "এই লেখকের বিস্তারিত জীবনবৃত্তান্ত এই মুহূর্তে উপলব্ধ নেই। তবে তার প্রতিটি লেখনী পাঠকের হৃদয়ে এক বিশেষ স্থান দখল করে আছে।" 
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
+                    {/* Reviews Section */}
+                    {reviewsData.length > 0 && (
+                        <section className="bg-white rounded-3xl border border-gray-100 p-8 md:p-12 shadow-xl shadow-gray-200/20">
+                            <div className="flex items-center justify-between mb-10">
+                                <h2 className="text-2xl font-black text-gray-900 flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+                                        <Star className="w-6 h-6" />
+                                    </div>
+                                    পাঠক রিভিউ ({reviewsData.length})
+                                </h2>
+                                {reviewSummary && (
+                                    <div className="flex items-center gap-2 bg-brand-gold/10 px-4 py-2 rounded-full border border-brand-gold/20">
+                                        <span className="text-brand-gold font-black">{reviewSummary.average_rating_display}</span>
+                                        <Star className="w-4 h-4 text-brand-gold fill-brand-gold" />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-6">
+                                {reviewsData.slice(0, 3).map((r, idx) => (
+                                    <div key={r.id || idx} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 italic relative">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="w-8 h-8 rounded-lg bg-brand-green/10 flex items-center justify-center text-brand-green text-[10px] font-black">
+                                                {r.customer_name?.[0] || 'A'}
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-black text-gray-900">{r.customer_name || 'Anonymous'}</p>
+                                                <div className="flex text-brand-gold mt-0.5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star key={i} className={`w-2 h-2 ${i < r.rating ? 'fill-brand-gold' : 'text-gray-200'}`} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-600 text-sm leading-relaxed">"{r.comments}"</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Form & Summary Combined for Single Product */}
+                    <div id="checkout-section" className="pt-8">
+                        <h2 className="text-3xl font-black text-gray-900 mb-10 text-center">ডেলিভারি ও অর্ডার সম্পন্ন করুন</h2>
+                        <div className="space-y-10">
+                            {renderCheckoutForm()}
+                            {renderOrderSummary()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const renderCheckoutForm = () => (
+        <section className="bg-white rounded-3xl border border-gray-100 p-6 md:p-10 shadow-xl shadow-gray-200/40">
+            <div className="mb-10 flex flex-col md:flex-row md:items-center gap-4 justify-between">
+                <div className="flex items-center gap-4">
+                    <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-brand-gold/10 text-brand-gold">
+                        <MapPin className="w-7 h-7" />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-black text-gray-900">ডেলিভারি ঠিকানা</h2>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Shipping Details</p>
+                    </div>
+                </div>
+                <div className="hidden md:flex items-center gap-2 text-brand-green bg-brand-green/5 px-4 py-2 rounded-full border border-brand-green/10">
+                    <BadgeCheck className="w-4 h-4" />
+                    <span className="text-xs font-black">নিরাপদ ডেলিভারি নিশ্চিত</span>
+                </div>
+            </div>
+
+            <form id="share-checkout-form" onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">আপনার নাম</label>
+                        <div className="relative group/input">
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
+                            <input required name="firstName" value={formData.firstName} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="যেমন: মো. রহিম উদ্দিন" />
+                        </div>
+                    </div>
+                    <div className="space-y-3">
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">ফোন নম্বর</label>
+                        <div className="relative group/input">
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
+                            <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="১১ ডিজিটের নম্বর" />
+                        </div>
+                    </div>
+                </div>
+
+                <AddressSelect
+                    selectedDistrict={selectedDistrict}
+                    setSelectedDistrict={setSelectedDistrict}
+                    selectedCity={selectedCity}
+                    setSelectedCity={setSelectedCity}
+                    variant="premium"
+                />
+
+                <div className="space-y-3">
+                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">বিস্তারিত ঠিকানা</label>
+                    <textarea required name="address" rows={3} value={formData.address} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 px-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all resize-none" placeholder="বাসা নং, রোড নং, এলাকা এবং পরিচিত কোনো জায়গা..." />
+                </div>
+            </form>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                <section className="bg-gray-50/50 rounded-3xl border border-gray-100 p-8 flex flex-col">
+                    <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
+                            <Truck className="w-4 h-4" />
+                        </div>
+                        কুরিয়ার সার্ভিস
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 flex-1">
+                        {courierOptions.map((c) => (
+                            <button
+                                key={c.id}
+                                onClick={() => setSelectedCourier(c.id)}
+                                className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${selectedCourier === c.id
+                                        ? c.selectedBorder + " " + c.bg
+                                        : 'border-gray-50 bg-gray-100/50 text-gray-400 hover:border-brand-green/20'
+                                    }`}
+                            >
+                                {c.logo ? (
+                                    <div className="relative w-full h-full flex items-center justify-center p-1">
+                                        <Image
+                                            src={c.logo}
+                                            alt={c.name}
+                                            width={100}
+                                            height={35}
+                                            style={{ transform: `scale(${c.scale || 1})` }}
+                                            className="max-h-full max-w-full object-contain"
+                                            unoptimized
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className={`font-black text-[10px] sm:text-[11px] ${selectedCourier === c.id ? 'text-brand-green' : 'text-gray-400'} tracking-tight leading-tight`}>
+                                        {c.name}
+                                    </span>
+                                )}
+                                {selectedCourier === c.id && (
+                                    <div className="absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-green shadow-sm z-10">
+                                        <div className="h-1 w-1 rounded-full bg-white" />
+                                    </div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="bg-gray-50/50 rounded-3xl border border-gray-100 p-8">
+                    <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+                            <CreditCard className="w-4 h-4" />
+                        </div>
+                        পেমেন্ট মেথড
+                    </h3>
+                    <div className="space-y-3">
+                        {isPaymentLoading ? (
+                            <div className="py-4 flex justify-center items-center">
+                                <svg className="animate-spin h-6 w-6 text-brand-green" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                </svg>
+                            </div>
+                        ) : paymentTypes.length > 0 ? (
+                            paymentTypes.map((pt) => {
+                                const isCash = pt.type_name === "Cash";
+                                return (
+                                    <div
+                                        key={pt.id}
+                                        onClick={() => setPaymentMethod(pt.id)}
+                                        className={`cursor-pointer p-4 rounded-2xl border-2 transition-all relative overflow-hidden group ${paymentMethod === pt.id ? 'border-brand-green bg-white shadow-lg shadow-brand-green/10 ring-4 ring-brand-green/5' : 'border-gray-100 bg-white/50 hover:border-brand-green/30'
+                                            }`}
+                                    >
+                                        <div className="relative z-10 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`p-2 rounded-lg ${paymentMethod === pt.id ? 'bg-brand-green text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                                    {isCash ? <Truck className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
+                                                </div>
+                                                <div>
+                                                    <p className="font-black text-gray-900 text-sm">
+                                                        {isCash ? "ক্যাশ অন ডেলিভারি" : "অনলাইন পেমেন্ট (SSL)"}
+                                                    </p>
+                                                    <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 ${isCash ? 'text-brand-green' : 'text-gray-400'}`}>
+                                                        {isCash ? "Pay on Receipt" : "Secure Payment"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            {paymentMethod === pt.id && <CheckCircle2 className="w-5 h-5 text-brand-green" />}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="text-xs text-gray-500 py-4 text-center">
+                                No payment methods available.
+                            </div>
+                        )}
+                    </div>
+                </section>
+            </div>
+        </section>
+    );
+
+    const renderOrderSummary = () => (
+        <section className="bg-white rounded-3xl border border-gray-100 p-8 md:p-10 shadow-2xl shadow-gray-200/60 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
+
+            <h2 className="text-2xl font-black text-gray-900 mb-8 relative z-10">অর্ডার সামারি</h2>
+
+            {/* Products List (condensed for single product, or regular for multi) */}
+            <div className={`mb-8 space-y-4 ${products.length > 1 ? 'max-h-[300px] overflow-y-auto pr-2' : ''} relative z-10`}>
+                {products.map((p) => (
+                    <div key={p.id} className="flex gap-4 items-center p-3 rounded-2xl bg-gray-50/50 border border-gray-100">
+                        <div className="relative w-12 h-16 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0 shadow-sm">
+                            <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <h3 className="text-xs font-black text-gray-900 leading-tight line-clamp-1">{p.name}</h3>
+                            <p className="text-brand-green font-black text-sm mt-1">{formatPrice(p.numericPrice)}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="space-y-4 pb-8 border-b border-gray-100 relative z-10">
+                <div className="flex justify-between items-center text-gray-500 font-bold">
+                    <span className="text-sm">বইয়ের মোট দাম</span>
+                    <span className="text-gray-900 font-black">{formatPrice(subTotal)}</span>
+                </div>
+                <div className="flex justify-between items-center text-gray-500 font-bold">
+                    <span className="text-sm">ডেলিভারি চার্জ ({
+                        selectedDistrict ? (() => {
+                            const d = selectedDistrict.toLowerCase().trim();
+                            const c = (selectedCity || "").toLowerCase().trim();
+                            if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
+                                return "সাব-ঢাকা";
+                            }
+                            return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
+                        })() : "এলাকা নির্বাচন করুন"
+                    })</span>
+                    {deliveryFee > 0 ? (
+                        <span className="text-gray-900 font-black">{formatPrice(deliveryFee)}</span>
+                    ) : (
+                        <span className="text-brand-gold text-[10px] font-black bg-brand-gold/10 px-2.5 py-1 rounded-lg uppercase tracking-widest border border-brand-gold/20 animate-pulse">জেলা নির্বাচন করুন</span>
+                    )}
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-8 mb-10 relative z-10">
+                <div>
+                    <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Bill</span>
+                    <span className="text-4xl font-black text-brand-green tracking-tight">{formatPrice(grandTotal)}</span>
+                </div>
+                <div className="bg-brand-green/10 w-16 h-16 rounded-2xl flex items-center justify-center">
+                    <ShoppingBag className="w-8 h-8 text-brand-green" />
+                </div>
+            </div>
+
+            {/* Agreement Acceptance */}
+            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50/50 p-5 transition-all hover:bg-white hover:shadow-lg hover:shadow-gray-200/50">
+                <input
+                    type="checkbox"
+                    id="agreement"
+                    checked={isAgreed}
+                    onChange={(e) => setIsAgreed(e.target.checked)}
+                    className="mt-1 h-5 w-5 rounded-md border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
+                />
+                <label htmlFor="agreement" className="text-[11px] leading-relaxed text-gray-500 font-medium cursor-pointer select-none">
+                    আমি তারুণ্য প্রকাশন-এর {' '}
+                    <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
+                    <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
+                    এবং {' '}
+                    <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
+                    -তে সম্মতি দিচ্ছি।
+                </label>
+            </div>
+
+            <button
+                type="submit"
+                form="share-checkout-form"
+                disabled={isSubmitting || !isAgreed}
+                className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-black py-6 rounded-2xl shadow-2xl shadow-brand-green/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-4 group relative overflow-hidden"
+            >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <span className="text-xl">{isSubmitting ? "অর্ডার প্রসেসিং হচ্ছে..." : "অর্ডার কনফার্ম করুন"}</span>
+                {!isSubmitting && <ChevronRight className="w-6 h-6 transform group-hover:translate-x-1 transition-transform" />}
+            </button>
+
+            <div className="mt-8 pt-8 border-t border-gray-100 flex items-center justify-center gap-10">
+                <div className="flex flex-col items-center gap-2">
+                    <Shield className="w-6 h-6 text-brand-green opacity-40" />
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest text-center leading-tight">100% Secure<br />Ordering</span>
+                </div>
+                <div className="w-px h-8 bg-gray-100"></div>
+                <div className="flex flex-col items-center gap-2">
+                    <Truck className="w-6 h-6 text-brand-green opacity-40" />
+                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest text-center leading-tight">Fastest<br />Delivery</span>
+                </div>
+            </div>
+        </section>
+    );
+
+    return (
+        <div className="min-h-screen bg-[#fafafa] pb-24 font-noto-bangla">
+            {/* Modals Container */}
+            <div className="relative z-[9999]">
+                {/* 1. Global Product Details Modal */}
+                {selectedProduct && (
+                    <BookDetailsModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+                )}
+
+                {/* 2. Reading Preview Modal (Look Inside) */}
+                {isLookInsideOpen && products.length === 1 && products[0].pdfFile && (
+                    <div
+                        className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+                        onClick={(e) => { if (e.target === e.currentTarget) setIsLookInsideOpen(false); }}
+                    >
+                        <div
+                            className="bg-white rounded-3xl w-full max-w-4xl h-[85vh] shadow-2xl relative flex flex-col overflow-hidden animate-in zoom-in-95 duration-300"
+                        >
+                            <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50 shrink-0">
+                                <h3 className="text-lg font-bold text-gray-800 mx-2 flex items-center gap-2">
+                                    <BookOpen className="w-5 h-5 text-brand-green" />
+                                    একটু পড়ে দেখুন - {products[0].name}
+                                </h3>
+                                <div className="flex items-center gap-2">
+                                    <a
+                                        href={products[0].pdfFile}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-brand-green border border-brand-green/20 rounded-lg hover:bg-brand-green hover:text-white transition-all mr-2"
+                                    >
+                                        <ExternalLink size={16} />
+                                        <span className="hidden sm:inline">নতুন ট্যাবে খুলুন</span>
+                                    </a>
+                                    <button
+                                        onClick={() => setIsLookInsideOpen(false)}
+                                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                                    >
+                                        <X size={24} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 relative bg-gray-100 overflow-hidden">
+                                {isMobile ? (
+                                    <iframe
+                                        src={`https://docs.google.com/viewer?url=${encodeURIComponent(products[0].pdfFile)}&embedded=true`}
+                                        className="w-full h-full border-none"
+                                        title="Product PDF Preview"
+                                        style={{ overflow: 'hidden' }}
+                                    />
+                                ) : (
+                                    <iframe
+                                        src={`${products[0].pdfFile}#toolbar=0&navpanes=0&scrollbar=0`}
+                                        className="w-full h-full border-none"
+                                        title="Product PDF Preview"
+                                        style={{ overflow: 'hidden' }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {products.length === 1 ? renderSingleProductLayout() : renderMultiProductLayout()}
         </div>
     );
 }
