@@ -258,6 +258,17 @@ export default function ShareCollectionPage() {
     const subTotal = products.reduce((acc, p) => acc + p.numericPrice, 0);
     const grandTotal = subTotal + deliveryFee;
 
+    const deliveryEtaLabel = "সারা বাংলাদেশে: ১-২ দিন";
+    const scrollToOrderForm = () => {
+        document.getElementById("share-checkout-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    const scrollToBooksList = () => {
+        document.getElementById("share-books-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    const scrollToSingleBook = () => {
+        document.getElementById("share-single-hero")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     // 3. Submit Order
@@ -402,17 +413,46 @@ export default function ShareCollectionPage() {
 
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                <span className="bg-red-50 text-red-500 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">⚡ আজকের অফার</span>
+                                <span className="bg-brand-green/10 text-brand-green text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">🚚 ১-২ দিনে ডেলিভারি</span>
+                                <span className="bg-blue-50 text-blue-500 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">💳 COD Available</span>
+                            </div>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="bg-brand-green/10 text-brand-green text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">Shared Collection</span>
                                 <div className="h-px w-8 bg-gray-200"></div>
                                 <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">{products.length} Items</span>
                             </div>
-                            <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
-                                আপনার নতুন <span className="text-brand-green">বই সংগ্রহ</span>
+                            <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight max-w-4xl">
+                                সেরা দামে <span className="text-brand-green">বিশেষ বই সংগ্রহ</span> এখন একসাথে অর্ডার করুন
                             </h1>
-                            <p className="mt-4 text-gray-500 max-w-2xl font-medium leading-relaxed">
-                                আপনার জন্য বিশেষভাবে নির্বাচিত এই বইগুলো নিচে দেয়া হলো। বইয়ের বিস্তারিত দেখতে ছবি বা নামের উপর ক্লিক করুন।
+                            <p className="mt-4 text-gray-500 max-w-3xl font-medium leading-relaxed">
+                                আপনার জন্য বাছাইকৃত বইগুলো দ্রুত অর্ডার করতে নিচে তালিকা দেখুন, ফর্ম পূরণ করুন, এবং খুব সহজে কনফার্ম করুন।
                             </p>
+                            <p className="mt-3 text-xs md:text-sm text-gray-600 font-bold">
+                                ৫,০০০+ পাঠকের পছন্দের বইয়ের সংগ্রহ থেকে নির্বাচিত
+                            </p>
+                            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] md:text-xs text-gray-500 font-bold">
+                                <span className="inline-flex items-center gap-1.5"><BadgeCheck className="w-3.5 h-3.5 text-brand-green" /> ক্যাশ অন ডেলিভারি</span>
+                                <span className="inline-flex items-center gap-1.5"><Shield className="w-3.5 h-3.5 text-brand-green" /> নিরাপদ অর্ডার প্রসেস</span>
+                                <span className="inline-flex items-center gap-1.5"><Truck className="w-3.5 h-3.5 text-brand-green" /> দ্রুত শিপিং</span>
+                            </div>
+                        </div>
+                        <div className="md:pb-1 flex flex-col sm:flex-row md:flex-col gap-3">
+                            <button
+                                type="button"
+                                onClick={scrollToBooksList}
+                                className="bg-white text-brand-green border border-brand-green/25 text-sm font-black px-5 py-3 rounded-xl hover:bg-brand-green/5 transition-colors shadow-sm"
+                            >
+                                বইগুলো দেখুন
+                            </button>
+                            <button
+                                type="button"
+                                onClick={scrollToOrderForm}
+                                className="bg-brand-green text-white text-sm font-black px-5 py-3 rounded-xl hover:bg-brand-green-dark transition-colors shadow-lg shadow-brand-green/20"
+                            >
+                                এখনই অর্ডার করুন
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -424,7 +464,7 @@ export default function ShareCollectionPage() {
                     {/* Left Column */}
                     <div className="space-y-10 pb-32">
                         {/* 1. Items Grid/List */}
-                        <section className="bg-white rounded-[32px] border border-gray-100 p-6 md:p-8 shadow-xl shadow-gray-200/40">
+                        <section id="share-books-list" className="bg-white rounded-[32px] border border-gray-100 p-6 md:p-8 shadow-xl shadow-gray-200/40">
                             <div className="flex items-center justify-between mb-8">
                                 <h2 className="text-xl font-black text-gray-900 flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-2xl bg-brand-green/10 flex items-center justify-center text-brand-green">
@@ -496,20 +536,58 @@ export default function ShareCollectionPage() {
         ].filter(r => r.value && r.value !== 'N/A' && r.value !== 'null');
 
         return (
-            <div className="pb-32">
-                {/* Landing Page Header / Breadcrumb */}
-                <div className="max-w-5xl mx-auto px-4 pb-10">
+            <div className="pb-24">
+                {/* Landing-style top header for single product */}
+                <div className="bg-white border-b border-gray-100 pt-6 pb-7 mb-5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-56 h-56 bg-brand-green/5 rounded-full blur-3xl -mr-24 -mt-24"></div>
+                    <div className="absolute bottom-0 left-0 w-56 h-56 bg-brand-gold/5 rounded-full blur-3xl -ml-24 -mb-24"></div>
+                    <div className="max-w-5xl mx-auto px-4 relative z-10">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
+                            <div>
+                                <div className="flex flex-wrap items-center gap-2 mb-3">
+                                    <span className="bg-red-50 text-red-500 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">⚡ আজকের অফার</span>
+                                    <span className="bg-brand-green/10 text-brand-green text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">🚚 ১-২ দিনে ডেলিভারি</span>
+                                    <span className="bg-blue-50 text-blue-500 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">💳 COD Available</span>
+                                </div>
+                                <h1 className="text-2xl md:text-4xl font-black text-gray-900 leading-tight">
+                                    জনপ্রিয় বইটি এখন <span className="text-brand-green">স্পেশাল অফারে</span>
+                                </h1>
+                                <p className="mt-2.5 text-gray-500 font-medium text-sm md:text-base">
+                                    বইটি দেখে নিন, তারপর অর্ডার ফর্ম পূরণ করে সহজে কনফার্ম করুন।
+                                </p>
+                                <p className="mt-2 text-xs md:text-sm text-gray-600 font-bold">
+                                    ৫,০০০+ পাঠকের পছন্দের সংগ্রহ থেকে নির্বাচিত
+                                </p>
+                            </div>
+                            <div className="flex flex-col sm:flex-row md:flex-col gap-2.5">
+                                <button
+                                    type="button"
+                                    onClick={scrollToSingleBook}
+                                    className="bg-white text-brand-green border border-brand-green/25 text-sm font-black px-4 py-2.5 rounded-xl hover:bg-brand-green/5 transition-colors shadow-sm"
+                                >
+                                    বইটি দেখুন
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={scrollToOrderForm}
+                                    className="bg-brand-green text-white text-sm font-black px-4 py-2.5 rounded-xl hover:bg-brand-green-dark transition-colors shadow-lg shadow-brand-green/20"
+                                >
+                                    অর্ডার ফর্মে যান
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="max-w-5xl mx-auto px-4 space-y-10">
+                <div className="max-w-5xl mx-auto px-3 md:px-4 space-y-6 md:space-y-10">
                     {/* Hero Section */}
-                    <section className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/30 overflow-hidden">
+                    <section id="share-single-hero" className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 shadow-lg md:shadow-xl shadow-gray-200/30 overflow-hidden">
                         <div className="flex flex-col md:flex-row">
                             {/* Gallery Area */}
-                            <div className="md:w-5/12 bg-gray-50/50 p-8 flex items-center justify-center relative">
-                                <div className="absolute top-6 left-6 z-10 flex flex-col gap-2">
-                                    <span className="bg-brand-green text-white text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-green/20">In Stock</span>
-                                    {p.numericPrice < 500 && <span className="bg-brand-gold text-white text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-gold/20">Best Seller</span>}
+                            <div className="md:w-5/12 bg-gray-50/50 p-4 md:p-8 flex items-center justify-center relative">
+                                <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-col gap-1.5 md:gap-2">
+                                    <span className="bg-brand-green text-white text-[9px] md:text-[10px] font-black px-2.5 md:px-3 py-0.5 md:py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-green/20">In Stock</span>
+                                    {p.numericPrice < 500 && <span className="bg-brand-gold text-white text-[9px] md:text-[10px] font-black px-2.5 md:px-3 py-0.5 md:py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-gold/20">Best Seller</span>}
                                 </div>
                                 <div className="w-full aspect-[3/4] relative rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-transform duration-700">
                                     <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
@@ -517,8 +595,8 @@ export default function ShareCollectionPage() {
                             </div>
                             
                             {/* Product Info Area */}
-                            <div className="md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
-                                <div className="flex items-center gap-2 mb-4">
+                            <div className="md:w-7/12 p-4 md:p-12 flex flex-col justify-center">
+                                <div className="flex items-center gap-2 mb-2.5 md:mb-4">
                                     <span className="text-xs font-black text-brand-green uppercase tracking-widest">{p.author}</span>
                                     <div className="h-px w-8 bg-gray-100"></div>
                                     <div className="flex text-brand-gold">
@@ -528,23 +606,23 @@ export default function ShareCollectionPage() {
                                     </div>
                                 </div>
 
-                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6">
+                                <h1 className="text-2xl md:text-4xl font-black text-gray-900 leading-tight mb-4 md:mb-6">
                                     {p.name}
                                 </h1>
 
-                                <div className="flex items-center gap-4 mb-8 flex-wrap">
-                                    <span className="text-4xl font-black text-gray-900">{formatPrice(p.numericPrice)}</span>
+                                <div className="flex items-center gap-3 md:gap-4 mb-5 md:mb-8 flex-wrap">
+                                    <span className="text-[42px] leading-none md:text-4xl font-black text-gray-900">{formatPrice(p.numericPrice)}</span>
                                     {p.hasDiscount && (
                                         <>
-                                            <span className="text-xl text-gray-400 line-through font-bold">{formatPrice(p.originalPrice)}</span>
-                                            <span className="text-red-500 text-xl font-black">
+                                            <span className="text-3xl leading-none md:text-xl text-gray-400 line-through font-bold">{formatPrice(p.originalPrice)}</span>
+                                            <span className="text-red-500 text-[24px] leading-none md:text-xl font-black">
                                                 ({p.discountLabel} ছাড়ে)
                                             </span>
                                         </>
                                     )}
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-10 pb-10 border-b border-gray-50">
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4 mb-6 pb-6 md:mb-10 md:pb-10 border-b border-gray-50">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
                                             <Shield className="w-4 h-4" />
@@ -583,10 +661,10 @@ export default function ShareCollectionPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-row gap-3">
+                                <div className="flex flex-row gap-2.5 md:gap-3">
                                     <button 
                                         onClick={() => document.getElementById('checkout-section').scrollIntoView({ behavior: 'smooth' })}
-                                        className="flex-1 bg-brand-green text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-green/20 hover:bg-brand-green-dark transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
+                                        className="flex-1 bg-brand-green text-white font-bold py-3 rounded-xl shadow-lg shadow-brand-green/20 hover:bg-brand-green-dark transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
                                     >
                                         অর্ডার করুন
                                         <ChevronRight className="w-4 h-4 rotate-90" />
@@ -594,7 +672,7 @@ export default function ShareCollectionPage() {
                                     {p.pdfFile && (
                                         <button 
                                             onClick={() => setIsLookInsideOpen(true)}
-                                            className="flex-1 bg-white text-gray-700 border-2 border-gray-100 font-bold py-3.5 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
+                                            className="flex-1 bg-white text-gray-700 border-2 border-gray-100 font-bold py-3 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm sm:text-base"
                                         >
                                             <FileText className="w-4 h-4 text-brand-green" />
                                             একটু পড়ে দেখুন
@@ -607,9 +685,9 @@ export default function ShareCollectionPage() {
 
 
                     {/* Modern Tabs Section */}
-                    <section className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/20 overflow-hidden">
+                    <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 shadow-lg md:shadow-xl shadow-gray-200/20 overflow-hidden">
                         {/* Tab Switcher */}
-                        <div className="flex border-b border-gray-100 bg-gray-50/30 p-2 gap-2">
+                        <div className="flex border-b border-gray-100 bg-gray-50/30 p-1.5 md:p-2 gap-1.5 md:gap-2">
                             {[
                                 { id: 'description', label: 'সারসংক্ষেপ', icon: Eye },
                                 { id: 'specification', label: 'বইয়ের তথ্য', icon: Info },
@@ -618,7 +696,7 @@ export default function ShareCollectionPage() {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveLandingTab(tab.id)}
-                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-black transition-all ${
+                                    className={`flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3.5 px-2.5 md:px-4 rounded-xl text-xs md:text-sm font-black transition-all ${
                                         activeLandingTab === tab.id
                                             ? 'bg-white text-brand-green shadow-sm ring-1 ring-gray-100'
                                             : 'text-gray-400 hover:text-gray-600 hover:bg-white/50'
@@ -631,10 +709,10 @@ export default function ShareCollectionPage() {
                         </div>
 
                         {/* Tab Content */}
-                        <div className="p-8 md:p-12 min-h-[300px] animate-in fade-in duration-500">
+                        <div className="p-4 md:p-12 min-h-[260px] md:min-h-[300px] animate-in fade-in duration-500">
                             {activeLandingTab === 'description' && (
-                                <div className="space-y-6">
-                                    <h2 className="text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-4">বইয়ের বিবরণ</h2>
+                                <div className="space-y-4 md:space-y-6">
+                                    <h2 className="text-[32px] leading-none md:text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-3 md:pl-4">বইয়ের বিবরণ</h2>
                                     <div 
                                         className="prose prose-brand max-w-none text-gray-600 font-medium leading-[1.8] text-sm md:text-base break-words overflow-hidden" 
                                         dangerouslySetInnerHTML={{ __html: p.description }} 
@@ -643,8 +721,8 @@ export default function ShareCollectionPage() {
                             )}
 
                             {activeLandingTab === 'specification' && (
-                                <div className="space-y-8">
-                                    <h2 className="text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-4">পূর্ণাঙ্গ তথ্যনির্দেশিকা</h2>
+                                <div className="space-y-5 md:space-y-8">
+                                    <h2 className="text-[32px] leading-none md:text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-3 md:pl-4">পূর্ণাঙ্গ তথ্যনির্দেশিকা</h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                                         {specRows.map((row, idx) => (
                                             <div key={idx} className="flex items-center justify-between py-3.5 border-b border-gray-50 group hover:border-brand-green/20 transition-colors">
@@ -726,9 +804,9 @@ export default function ShareCollectionPage() {
                     )}
 
                     {/* Form & Summary Combined for Single Product */}
-                    <div id="checkout-section" className="pt-8">
-                        <h2 className="text-3xl font-black text-gray-900 mb-10 text-center">ডেলিভারি ও অর্ডার সম্পন্ন করুন</h2>
-                        <div className="space-y-10">
+                    <div id="checkout-section" className="pt-4 md:pt-8">
+                        <h2 className="text-[34px] leading-none md:text-3xl font-black text-gray-900 mb-6 md:mb-10 text-center">ডেলিভারি ও অর্ডার সম্পন্ন করুন</h2>
+                        <div className="space-y-6 md:space-y-10">
                             {renderCheckoutForm()}
                             {renderOrderSummary()}
                         </div>
@@ -739,10 +817,10 @@ export default function ShareCollectionPage() {
     };
 
     const renderCheckoutForm = () => (
-        <section className="bg-white rounded-3xl border border-gray-100 p-6 md:p-10 shadow-xl shadow-gray-200/40">
-            <div className="mb-10 flex flex-col md:flex-row md:items-center gap-4 justify-between">
-                <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-brand-gold/10 text-brand-gold">
+        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-10 shadow-lg md:shadow-xl shadow-gray-200/40">
+            <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-4 justify-between">
+                <div className="flex items-center gap-3 md:gap-4">
+                    <div className="h-12 w-12 md:h-14 md:w-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-brand-gold/10 text-brand-gold">
                         <MapPin className="w-7 h-7" />
                     </div>
                     <div>
@@ -756,20 +834,20 @@ export default function ShareCollectionPage() {
                 </div>
             </div>
 
-            <form id="share-checkout-form" onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
+            <form id="share-checkout-form" onSubmit={handleSubmit} className="space-y-5 md:space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                    <div className="space-y-2.5 md:space-y-3">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">আপনার নাম</label>
                         <div className="relative group/input">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
-                            <input required name="firstName" value={formData.firstName} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="যেমন: মো. রহিম উদ্দিন" />
+                            <input required name="firstName" value={formData.firstName} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-xl md:rounded-2xl py-3.5 md:py-4 pl-11 md:pl-12 pr-4 md:pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="যেমন: মো. রহিম উদ্দিন" />
                         </div>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5 md:space-y-3">
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">ফোন নম্বর</label>
                         <div className="relative group/input">
                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within/input:text-brand-green transition-colors" />
-                            <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="১১ ডিজিটের নম্বর" />
+                            <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-xl md:rounded-2xl py-3.5 md:py-4 pl-11 md:pl-12 pr-4 md:pr-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all" placeholder="১১ ডিজিটের নম্বর" />
                         </div>
                     </div>
                 </div>
@@ -782,15 +860,15 @@ export default function ShareCollectionPage() {
                     variant="premium"
                 />
 
-                <div className="space-y-3">
+                <div className="space-y-2.5 md:space-y-3">
                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">বিস্তারিত ঠিকানা</label>
-                    <textarea required name="address" rows={3} value={formData.address} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-2xl py-4 px-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all resize-none" placeholder="বাসা নং, রোড নং, এলাকা এবং পরিচিত কোনো জায়গা..." />
+                    <textarea required name="address" rows={3} value={formData.address} onChange={handleChange} className="w-full bg-gray-50 border border-transparent rounded-xl md:rounded-2xl py-3.5 md:py-4 px-4 md:px-6 text-sm font-bold text-gray-900 focus:bg-white focus:border-brand-green/20 focus:ring-4 focus:ring-brand-green/5 outline-none transition-all resize-none" placeholder="বাসা নং, রোড নং, এলাকা এবং পরিচিত কোনো জায়গা..." />
                 </div>
             </form>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-                <section className="bg-gray-50/50 rounded-3xl border border-gray-100 p-8 flex flex-col">
-                    <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-6 md:mt-10">
+                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-8 flex flex-col">
+                    <h3 className="text-[32px] leading-none md:text-lg font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
                             <Truck className="w-4 h-4" />
                         </div>
@@ -833,8 +911,8 @@ export default function ShareCollectionPage() {
                     </div>
                 </section>
 
-                <section className="bg-gray-50/50 rounded-3xl border border-gray-100 p-8">
-                    <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-3">
+                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-8">
+                    <h3 className="text-[32px] leading-none md:text-lg font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
                             <CreditCard className="w-4 h-4" />
                         </div>
@@ -889,99 +967,101 @@ export default function ShareCollectionPage() {
     );
 
     const renderOrderSummary = () => (
-        <section className="bg-white rounded-3xl border border-gray-100 p-8 md:p-10 shadow-2xl shadow-gray-200/60 relative overflow-hidden">
+        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-10 shadow-lg md:shadow-2xl shadow-gray-200/60 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
 
-            <h2 className="text-2xl font-black text-gray-900 mb-8 relative z-10">অর্ডার সামারি</h2>
+            <h2 className="text-[32px] leading-none md:text-2xl font-black text-gray-900 mb-5 md:mb-8 relative z-10">অর্ডার সামারি</h2>
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-10">
+                {/* Left: item + pricing details */}
+                <div>
+                    {/* Products List (condensed for single product, or regular for multi) */}
+                    <div className={`mb-8 space-y-4 ${products.length > 1 ? 'max-h-[300px] overflow-y-auto pr-2' : ''}`}>
+                        {products.map((p) => (
+                            <div key={p.id} className="flex gap-4 items-center p-3 rounded-2xl bg-gray-50/50 border border-gray-100">
+                                <div className="relative w-12 h-16 rounded-xl overflow-hidden border border-gray-200 shrink-0 shadow-sm">
+                                    <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-xs font-black text-gray-900 leading-tight line-clamp-1">{p.name}</h3>
+                                    <p className="text-brand-green font-black text-sm mt-1">{formatPrice(p.numericPrice)}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
-            {/* Products List (condensed for single product, or regular for multi) */}
-            <div className={`mb-8 space-y-4 ${products.length > 1 ? 'max-h-[300px] overflow-y-auto pr-2' : ''} relative z-10`}>
-                {products.map((p) => (
-                    <div key={p.id} className="flex gap-4 items-center p-3 rounded-2xl bg-gray-50/50 border border-gray-100">
-                        <div className="relative w-12 h-16 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0 shadow-sm">
-                            <Image src={p.image} alt={p.name} fill className="object-cover" unoptimized />
+                    <div className="space-y-4 pb-6 lg:pb-0 lg:pt-1">
+                        <div className="flex justify-between items-center text-gray-500 font-bold">
+                            <span className="text-sm">বইয়ের মোট দাম</span>
+                            <span className="text-gray-900 font-black">{formatPrice(subTotal)}</span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                            <h3 className="text-xs font-black text-gray-900 leading-tight line-clamp-1">{p.name}</h3>
-                            <p className="text-brand-green font-black text-sm mt-1">{formatPrice(p.numericPrice)}</p>
+                        <div className="flex justify-between items-center text-gray-500 font-bold">
+                            <span className="text-sm">ডেলিভারি চার্জ ({
+                                selectedDistrict ? (() => {
+                                    const d = selectedDistrict.toLowerCase().trim();
+                                    const c = (selectedCity || "").toLowerCase().trim();
+                                    if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
+                                        return "সাব-ঢাকা";
+                                    }
+                                    return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
+                                })() : "এলাকা নির্বাচন করুন"
+                            })</span>
+                            {deliveryFee > 0 ? (
+                                <span className="text-gray-900 font-black">{formatPrice(deliveryFee)}</span>
+                            ) : (
+                                <span className="text-brand-gold text-[10px] font-black bg-brand-gold/10 px-2.5 py-1 rounded-lg uppercase tracking-widest border border-brand-gold/20 animate-pulse">জেলা নির্বাচন করুন</span>
+                            )}
+                        </div>
+                        <p className="text-[11px] md:text-xs font-bold text-brand-green bg-brand-green/5 border border-brand-green/15 rounded-lg px-3 py-2">
+                            {deliveryEtaLabel}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Right: CTA + agreement */}
+                <div className="lg:border-l lg:border-gray-100 lg:pl-8">
+                    <div className="flex items-center justify-between mb-6 lg:mb-8">
+                        <div>
+                            <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Bill</span>
+                            <span className="text-3xl md:text-[2rem] font-black text-brand-green tracking-tight">{formatPrice(grandTotal)}</span>
+                        </div>
+                        <div className="bg-brand-green/10 w-14 h-14 rounded-xl flex items-center justify-center">
+                            <ShoppingBag className="w-7 h-7 text-brand-green" />
                         </div>
                     </div>
-                ))}
-            </div>
 
-            <div className="space-y-4 pb-8 border-b border-gray-100 relative z-10">
-                <div className="flex justify-between items-center text-gray-500 font-bold">
-                    <span className="text-sm">বইয়ের মোট দাম</span>
-                    <span className="text-gray-900 font-black">{formatPrice(subTotal)}</span>
-                </div>
-                <div className="flex justify-between items-center text-gray-500 font-bold">
-                    <span className="text-sm">ডেলিভারি চার্জ ({
-                        selectedDistrict ? (() => {
-                            const d = selectedDistrict.toLowerCase().trim();
-                            const c = (selectedCity || "").toLowerCase().trim();
-                            if (d === "gazipur" || d === "narayanganj" || c.includes("savar") || c.includes("keraniganj") || c.includes("gazipur") || c.includes("narayanganj")) {
-                                return "সাব-ঢাকা";
-                            }
-                            return d === "dhaka" ? "ঢাকা সিটি" : "ঢাকার বাইরে";
-                        })() : "এলাকা নির্বাচন করুন"
-                    })</span>
-                    {deliveryFee > 0 ? (
-                        <span className="text-gray-900 font-black">{formatPrice(deliveryFee)}</span>
-                    ) : (
-                        <span className="text-brand-gold text-[10px] font-black bg-brand-gold/10 px-2.5 py-1 rounded-lg uppercase tracking-widest border border-brand-gold/20 animate-pulse">জেলা নির্বাচন করুন</span>
-                    )}
-                </div>
-            </div>
+                    {/* Agreement Acceptance */}
+                    <div className="mb-6 flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50/50 p-5 transition-all hover:bg-white hover:shadow-lg hover:shadow-gray-200/50">
+                        <input
+                            type="checkbox"
+                            id="agreement"
+                            checked={isAgreed}
+                            onChange={(e) => setIsAgreed(e.target.checked)}
+                            className="mt-1 h-5 w-5 rounded-md border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
+                        />
+                        <label htmlFor="agreement" className="text-[11px] leading-relaxed text-gray-500 font-medium cursor-pointer select-none">
+                            আমি তারুণ্য প্রকাশন-এর {' '}
+                            <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
+                            <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
+                            এবং {' '}
+                            <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
+                            -তে সম্মতি দিচ্ছি।
+                        </label>
+                    </div>
 
-            <div className="flex items-center justify-between pt-8 mb-10 relative z-10">
-                <div>
-                    <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Total Bill</span>
-                    <span className="text-4xl font-black text-brand-green tracking-tight">{formatPrice(grandTotal)}</span>
-                </div>
-                <div className="bg-brand-green/10 w-16 h-16 rounded-2xl flex items-center justify-center">
-                    <ShoppingBag className="w-8 h-8 text-brand-green" />
-                </div>
-            </div>
+                    <button
+                        type="submit"
+                        form="share-checkout-form"
+                        disabled={isSubmitting || !isAgreed}
+                        className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-black py-4 rounded-xl shadow-2xl shadow-brand-green/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-3 group relative overflow-hidden"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <span className="text-base md:text-lg">{isSubmitting ? "অর্ডার প্রসেসিং হচ্ছে..." : "অর্ডার কনফার্ম করুন"}</span>
+                        {!isSubmitting && <ChevronRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />}
+                    </button>
+                    <p className="mt-3 text-[11px] text-gray-500 font-semibold text-center">
+                        ক্যাশ অন ডেলিভারি, দ্রুত কনফার্মেশন এবং সাপোর্ট টিম সহায়তা
+                    </p>
 
-            {/* Agreement Acceptance */}
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50/50 p-5 transition-all hover:bg-white hover:shadow-lg hover:shadow-gray-200/50">
-                <input
-                    type="checkbox"
-                    id="agreement"
-                    checked={isAgreed}
-                    onChange={(e) => setIsAgreed(e.target.checked)}
-                    className="mt-1 h-5 w-5 rounded-md border-gray-300 text-brand-green focus:ring-brand-green cursor-pointer shadow-sm"
-                />
-                <label htmlFor="agreement" className="text-[11px] leading-relaxed text-gray-500 font-medium cursor-pointer select-none">
-                    আমি তারুণ্য প্রকাশন-এর {' '}
-                    <Link href="/privacy" className="font-bold text-brand-green hover:underline">গোপনীয়তা নীতি</Link>, {' '}
-                    <Link href="/terms" className="font-bold text-brand-green hover:underline">শর্তাবলী</Link> {' '}
-                    এবং {' '}
-                    <Link href="/warranty" className="font-bold text-brand-green hover:underline">রিটার্ণ ও রিফান্ড পলিসি</Link>
-                    -তে সম্মতি দিচ্ছি।
-                </label>
-            </div>
-
-            <button
-                type="submit"
-                form="share-checkout-form"
-                disabled={isSubmitting || !isAgreed}
-                className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-black py-6 rounded-2xl shadow-2xl shadow-brand-green/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale disabled:active:scale-100 flex items-center justify-center gap-4 group relative overflow-hidden"
-            >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                <span className="text-xl">{isSubmitting ? "অর্ডার প্রসেসিং হচ্ছে..." : "অর্ডার কনফার্ম করুন"}</span>
-                {!isSubmitting && <ChevronRight className="w-6 h-6 transform group-hover:translate-x-1 transition-transform" />}
-            </button>
-
-            <div className="mt-8 pt-8 border-t border-gray-100 flex items-center justify-center gap-10">
-                <div className="flex flex-col items-center gap-2">
-                    <Shield className="w-6 h-6 text-brand-green opacity-40" />
-                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest text-center leading-tight">100% Secure<br />Ordering</span>
-                </div>
-                <div className="w-px h-8 bg-gray-100"></div>
-                <div className="flex flex-col items-center gap-2">
-                    <Truck className="w-6 h-6 text-brand-green opacity-40" />
-                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest text-center leading-tight">Fastest<br />Delivery</span>
                 </div>
             </div>
         </section>
@@ -1052,6 +1132,38 @@ export default function ShareCollectionPage() {
             </div>
 
             {products.length === 1 ? renderSingleProductLayout() : renderMultiProductLayout()}
+
+            {/* Sticky desktop quick nav CTA (scroll to form only) */}
+            {products.length > 0 && (
+                <div className="fixed right-6 bottom-6 z-70 hidden lg:block">
+                    <button
+                        type="button"
+                        onClick={scrollToOrderForm}
+                        className="bg-brand-green text-white font-black text-sm px-5 py-3.5 rounded-xl shadow-2xl shadow-brand-green/30 hover:bg-brand-green-dark transition-colors"
+                    >
+                        অর্ডার ফর্মে যান
+                    </button>
+                </div>
+            )}
+
+            {/* Sticky mobile total + CTA */}
+            {products.length > 0 && (
+                <div className="fixed bottom-0 left-0 right-0 z-80 lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/80 px-4 py-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
+                    <div className="max-w-7xl mx-auto flex items-center gap-3">
+                        <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">মোট মূল্য</p>
+                            <p className="text-xl font-black text-brand-green leading-tight">{formatPrice(grandTotal)}</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={scrollToOrderForm}
+                            className="shrink-0 bg-brand-green hover:bg-brand-green-dark text-white font-black text-sm px-5 py-3 rounded-xl transition-colors"
+                        >
+                            অর্ডার ফর্মে যান
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

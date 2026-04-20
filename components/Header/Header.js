@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -23,7 +23,11 @@ export default function Header({ categories = [] }) {
 
   const { cartCount, openCart } = useCart();
   const { user, openAuthModal } = useAuth();
+  const pathname = usePathname();
   const router = useRouter();
+  const isShareLanding = pathname?.startsWith('/share');
+
+  if (isShareLanding) return null;
 
   const defaultCategories = [];
   const displayCategories = categories && categories.length > 0 ? categories : [];

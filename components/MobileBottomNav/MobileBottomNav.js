@@ -11,6 +11,9 @@ export default function MobileBottomNav() {
     const router = useRouter();
     const { cartCount, openCart } = useCart();
     const { user, openAuthModal } = useAuth();
+    const isShareLanding = pathname?.startsWith('/share');
+
+    if (isShareLanding) return null;
 
     const isActive = (path) => pathname === path;
 

@@ -2,10 +2,15 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { FiPhone, FiMail, FiMapPin, FiFacebook } from 'react-icons/fi';
 import { FaFacebookMessenger, FaWhatsapp } from 'react-icons/fa';
 
 export default function Footer({ categories = [] }) {
+    const pathname = usePathname();
+    const isShareLanding = pathname?.startsWith('/share');
+    if (isShareLanding) return null;
+
     const defaultCategories = [];
     const displayCategories = categories && categories.length > 0 ? categories.slice(0, 5) : [];
 

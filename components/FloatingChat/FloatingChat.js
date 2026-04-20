@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { FiMessageCircle, FiX } from "react-icons/fi";
 import { FaWhatsapp, FaFacebookMessenger } from "react-icons/fa";
 
 export default function FloatingChat() {
+    const pathname = usePathname();
+    const isShareLanding = pathname?.startsWith('/share');
+    if (isShareLanding) return null;
+
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
