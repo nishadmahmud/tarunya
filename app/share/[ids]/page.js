@@ -579,12 +579,12 @@ export default function ShareCollectionPage() {
                     </div>
                 </div>
 
-                <div className="max-w-5xl mx-auto px-3 md:px-4 space-y-6 md:space-y-10">
+                <div className="max-w-5xl mx-auto px-2 md:px-4 space-y-5 md:space-y-10">
                     {/* Hero Section */}
                     <section id="share-single-hero" className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 shadow-lg md:shadow-xl shadow-gray-200/30 overflow-hidden">
                         <div className="flex flex-col md:flex-row">
                             {/* Gallery Area */}
-                            <div className="md:w-5/12 bg-gray-50/50 p-4 md:p-8 flex items-center justify-center relative">
+                            <div className="md:w-5/12 bg-gray-50/50 p-3 md:p-8 flex items-center justify-center relative">
                                 <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-col gap-1.5 md:gap-2">
                                     <span className="bg-brand-green text-white text-[9px] md:text-[10px] font-black px-2.5 md:px-3 py-0.5 md:py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-green/20">In Stock</span>
                                     {p.numericPrice < 500 && <span className="bg-brand-gold text-white text-[9px] md:text-[10px] font-black px-2.5 md:px-3 py-0.5 md:py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-brand-gold/20">Best Seller</span>}
@@ -595,7 +595,7 @@ export default function ShareCollectionPage() {
                             </div>
                             
                             {/* Product Info Area */}
-                            <div className="md:w-7/12 p-4 md:p-12 flex flex-col justify-center">
+                            <div className="md:w-7/12 p-3 md:p-12 flex flex-col justify-center">
                                 <div className="flex items-center gap-2 mb-2.5 md:mb-4">
                                     <span className="text-xs font-black text-brand-green uppercase tracking-widest">{p.author}</span>
                                     <div className="h-px w-8 bg-gray-100"></div>
@@ -709,7 +709,7 @@ export default function ShareCollectionPage() {
                         </div>
 
                         {/* Tab Content */}
-                        <div className="p-4 md:p-12 min-h-[260px] md:min-h-[300px] animate-in fade-in duration-500">
+                        <div className="p-3 md:p-12 min-h-[250px] md:min-h-[300px] animate-in fade-in duration-500">
                             {activeLandingTab === 'description' && (
                                 <div className="space-y-4 md:space-y-6">
                                     <h2 className="text-[32px] leading-none md:text-2xl font-black text-gray-900 border-l-4 border-brand-green pl-3 md:pl-4">বইয়ের বিবরণ</h2>
@@ -817,7 +817,7 @@ export default function ShareCollectionPage() {
     };
 
     const renderCheckoutForm = () => (
-        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-10 shadow-lg md:shadow-xl shadow-gray-200/40">
+        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-3 md:p-10 shadow-lg md:shadow-xl shadow-gray-200/40">
             <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-4 justify-between">
                 <div className="flex items-center gap-3 md:gap-4">
                     <div className="h-12 w-12 md:h-14 md:w-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-brand-gold/10 text-brand-gold">
@@ -866,26 +866,26 @@ export default function ShareCollectionPage() {
                 </div>
             </form>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-6 md:mt-10">
-                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-8 flex flex-col">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-5 md:mt-10">
+                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-3 md:p-8 flex flex-col">
                     <h3 className="text-[32px] leading-none md:text-lg font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500">
                             <Truck className="w-4 h-4" />
                         </div>
                         কুরিয়ার সার্ভিস
                     </h3>
-                    <div className="grid grid-cols-2 gap-3 flex-1">
+                    <div className="grid grid-cols-4 md:grid-cols-2 gap-2 md:gap-3 flex-1">
                         {courierOptions.map((c) => (
                             <button
                                 key={c.id}
                                 onClick={() => setSelectedCourier(c.id)}
-                                className={`relative flex flex-col items-center justify-center cursor-pointer rounded-2xl border-2 p-3 transition-all h-[75px] overflow-hidden ${selectedCourier === c.id
+                                className={`relative flex flex-col items-center justify-center cursor-pointer rounded-xl md:rounded-2xl border-2 p-1.5 md:p-3 transition-all h-[62px] md:h-[75px] overflow-hidden ${selectedCourier === c.id
                                         ? c.selectedBorder + " " + c.bg
                                         : 'border-gray-50 bg-gray-100/50 text-gray-400 hover:border-brand-green/20'
                                     }`}
                             >
                                 {c.logo ? (
-                                    <div className="relative w-full h-full flex items-center justify-center p-1">
+                                    <div className="relative w-full h-full flex items-center justify-center p-0.5 md:p-1">
                                         <Image
                                             src={c.logo}
                                             alt={c.name}
@@ -897,7 +897,7 @@ export default function ShareCollectionPage() {
                                         />
                                     </div>
                                 ) : (
-                                    <span className={`font-black text-[10px] sm:text-[11px] ${selectedCourier === c.id ? 'text-brand-green' : 'text-gray-400'} tracking-tight leading-tight`}>
+                                    <span className={`font-black text-[8px] md:text-[11px] ${selectedCourier === c.id ? 'text-brand-green' : 'text-gray-400'} tracking-tight leading-tight`}>
                                         {c.name}
                                     </span>
                                 )}
@@ -911,7 +911,7 @@ export default function ShareCollectionPage() {
                     </div>
                 </section>
 
-                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-8">
+                <section className="bg-gray-50/50 rounded-2xl md:rounded-3xl border border-gray-100 p-3 md:p-8">
                     <h3 className="text-[32px] leading-none md:text-lg font-black text-gray-900 mb-4 md:mb-6 flex items-center gap-3">
                         <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
                             <CreditCard className="w-4 h-4" />
@@ -967,7 +967,7 @@ export default function ShareCollectionPage() {
     );
 
     const renderOrderSummary = () => (
-        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-4 md:p-10 shadow-lg md:shadow-2xl shadow-gray-200/60 relative overflow-hidden">
+        <section className="bg-white rounded-2xl md:rounded-3xl border border-gray-100 p-3 md:p-10 shadow-lg md:shadow-2xl shadow-gray-200/60 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
 
             <h2 className="text-[32px] leading-none md:text-2xl font-black text-gray-900 mb-5 md:mb-8 relative z-10">অর্ডার সামারি</h2>

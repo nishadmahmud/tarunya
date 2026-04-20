@@ -2,6 +2,7 @@ import Hero from "../components/Hero/Hero";
 // import TrustStats from "../components/TrustStats/TrustStats";
 import ShopCategories from "../components/ShopCategories/ShopCategories";
 import NewArrivals from "../components/NewArrivals/NewArrivals";
+import EbooksSection from "../components/EbooksSection/EbooksSection";
 // import PromoBanners from "../components/PromoBanners/PromoBanners";
 import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
 import UpcomingBooks from "../components/UpcomingBooks/UpcomingBooks";
@@ -30,7 +31,8 @@ import {
   getBookFairBestSellersFromServer,
   getAuthorsList,
   getTopBrands,
-  getUpcomingProductsFromServer
+  getUpcomingProductsFromServer,
+  getEbooksFromServer
 } from "../lib/api";
 
 const isApiConfigured = () => {
@@ -49,6 +51,7 @@ export default async function Home() {
   let authors = [];
   let brands = [];
   let upcomingProducts = [];
+  let ebookProducts = [];
 
   // Skip all API calls if environment is not configured — fallback data in each component will be used
   if (!isApiConfigured()) {
@@ -59,6 +62,7 @@ export default async function Home() {
         <ShopCategories categories={[]} flashSaleProducts={[]} />
         {/* <SeriesBooks /> */}
         <NewArrivals products={[]} />
+        <EbooksSection products={[]} />
         <PopularAuthors authors={[]} />
         {/* <PromoBanners /> */}
         <FeaturedProducts products={[]} />
@@ -97,6 +101,7 @@ export default async function Home() {
   const authorsReq = getAuthorsList();
   const topBrandsReq = getTopBrands();
   const upcomingReq = getUpcomingProductsFromServer();
+  const ebooksReq = getEbooksFromServer();
 
   try {
     const res = await categoriesReq;
@@ -362,10 +367,40 @@ export default async function Home() {
     }
   } catch (error) { console.error("Failed to fetch upcoming products:", error); }
 
+  try {
+    const res = await ebooksReq;
+    const items = res?.success ? (res.data?.data || res.data) : null;
+    if (Array.isArray(items)) {
+      ebookProducts = items.map((p) => {
+        const originalPrice = Number(p.retails_price || 0);
+        const discountValue = Number(p.discount || 0);
+        const discountType = p.discount_type;
+        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
+
+        const discountedPrice = hasDiscount
+          ? (String(discountType).toLowerCase() === 'percentage'
+            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
+            : Math.max(0, originalPrice - discountValue))
+          : originalPrice;
+
+        return {
+          id: p.id,
+          name: p.name,
+          brand: p.brands?.name || p.brand_name || "অন্যান্য",
+          price: toMoney(discountedPrice),
+          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
+          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
+          imageUrl: p.image_path || p.image_path1 || p.image_path2 || p.image_url || "/no-image.svg",
+        };
+      });
+    }
+  } catch (error) { console.error("Failed to fetch ebook products:", error); }
+
   const prefetchProductCandidates = [
     ...newArrivals,
     ...featuredProducts,
     ...bookFairBestSellers,
+    ...ebookProducts,
     ...upcomingProducts,
     ...flashSaleProducts,
   ]
@@ -384,6 +419,7 @@ export default async function Home() {
 
       {/* <SeriesBooks /> */}
       {newArrivals.length > 0 && <NewArrivals products={newArrivals} />}
+      <EbooksSection products={ebookProducts} />
       {categories.length > 0 && <ShopCategories categories={categories} />}
       {authors.length > 0 && <PopularAuthors authors={authors} />}
       {/* <PromoBanners /> */}
