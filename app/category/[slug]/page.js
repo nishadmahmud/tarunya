@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -39,7 +39,7 @@ function mapProduct(p) {
     };
 }
 
-export default function CategoryPage() {
+function CategoryContent() {
     const params = useParams();
     const searchParams = useSearchParams();
 
@@ -395,5 +395,18 @@ export default function CategoryPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function CategoryPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center py-20 bg-white min-h-screen">
+                <div className="w-10 h-10 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-400 font-medium">লোড হচ্ছে...</p>
+            </div>
+        }>
+            <CategoryContent />
+        </Suspense>
     );
 }

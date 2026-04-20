@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { getCategoriesFromServer, getCategoryWiseProducts } from '../../../lib/api';
@@ -39,7 +39,7 @@ function mapProduct(p, catId) {
     };
 }
 
-export default function AllCategoriesPage() {
+function AllCategoriesContent() {
     const searchParams = useSearchParams();
     const urlPage = Math.max(1, parseInt(searchParams?.get('page') || '1', 10));
     
@@ -265,5 +265,18 @@ export default function AllCategoriesPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AllCategoriesPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center py-20 bg-white min-h-screen">
+                <div className="w-10 h-10 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-400 font-medium">বিভাগগুলো লোড হচ্ছে...</p>
+            </div>
+        }>
+            <AllCategoriesContent />
+        </Suspense>
     );
 }
