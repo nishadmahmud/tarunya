@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { getProductById } from '../../../lib/api';
-import EbookReader from '../../../components/Ebooks/EbookReader';
 import { useProductRegistry } from '../../../context/ProductRegistryContext';
 import { FiBookOpen, FiArrowLeft, FiClock, FiLayers, FiGlobe, FiInfo } from 'react-icons/fi';
+
+const EbookReader = dynamic(
+    () => import('../../../components/Ebooks/EbookReader'),
+    { ssr: false }
+);
 
 /**
  * Maps partial product data from the registry to the structure expected by the ebook detail page.
