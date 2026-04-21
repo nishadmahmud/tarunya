@@ -64,12 +64,14 @@ export default function HomepagePrefetchManager({ productCandidates = [], catego
         const schedule = () => {
             if (typeof window !== "undefined" && "requestIdleCallback" in window) {
                 idleId = window.requestIdleCallback(() => {
-                    runPrefetch().catch(() => { /* no-op */ });
-                }, { timeout: 2000 });
+                    timeoutId = window.setTimeout(() => {
+                        runPrefetch().catch(() => { /* no-op */ });
+                    }, 2000); // Wait another 2s even after idle
+                }, { timeout: 5000 });
             } else {
                 timeoutId = window.setTimeout(() => {
                     runPrefetch().catch(() => { /* no-op */ });
-                }, 1200);
+                }, 4000); // 4s delay if no idle callback
             }
         };
 

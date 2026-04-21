@@ -9,28 +9,48 @@ import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
 import { getAuthorById, getProductById, getRelatedProduct, getProductReviews } from '../../../lib/api';
 import { trackViewItem } from '../../../lib/gtm';
+import { useProductRegistry } from '../../../context/ProductRegistryContext';
+
+/**
+ * Maps partial product data from the registry to the structure expected by the detail page.
+ */
+function mapRegistryToProduct(p) {
+    if (!p) return null;
+    return {
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        oldPrice: p.oldPrice,
+        discount: p.discount,
+        images: p.imageUrl ? [p.imageUrl] : ['/no-image.svg'],
+        brand: p.brand || 'N/A',
+        pages: p.pages || 'N/A',
+        description: '', // Fallback until full data loads
+        author: 'N/A',
+        publisher: 'N/A',
+        category: { name: '...', slug: '' }
+    };
+}
 
 export default function ProductDetailsPage() {
     const params = useParams();
+    const { getProduct } = useProductRegistry();
     const slug = typeof params.slug === 'string' ? params.slug : params.slug?.[0] || '';
 
-    // Parse product ID from slug (supports "product-name-12345", "12345", or dummy IDs like "f1")
+    // Parse product ID from slug
     const productId = useMemo(() => {
         if (!slug) return null;
         const decoded = decodeURIComponent(slug).trim();
-
-        // If there's no hyphen, the whole slug is the ID
-        if (!decoded.includes('-')) {
-            return decoded;
-        }
-
-        // Otherwise, it's usually "name-<id>", so take the last part
+        if (!decoded.includes('-')) return decoded;
         const parts = decoded.split('-');
         return parts[parts.length - 1];
     }, [slug]);
 
-    const [productData, setProductData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    // Initialize with registry data if available for instant render
+    const initialData = useMemo(() => getProduct(productId), [productId, getProduct]);
+    
+    const [productData, setProductData] = useState(() => mapRegistryToProduct(initialData));
+    const [isLoading, setIsLoading] = useState(!initialData);
     const [error, setError] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [variantImages, setVariantImages] = useState(null);
@@ -49,7 +69,6 @@ export default function ProductDetailsPage() {
             }
         }
     }, []);
-
     useEffect(() => {
         if (!productId) {
             setIsLoading(false);
@@ -60,7 +79,10 @@ export default function ProductDetailsPage() {
         let cancelled = false;
 
         const load = async () => {
-            setIsLoading(true);
+            // Only show the main loader if we don't have registry data
+            if (!productData) {
+                setIsLoading(true);
+            }
             setError('');
             try {
                 let p;

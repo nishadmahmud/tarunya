@@ -5,14 +5,25 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { useShareSelection } from '../../context/ShareSelectionContext';
+import { useProductRegistry } from '../../context/ProductRegistryContext';
 import { Plus, Check } from 'lucide-react';
 import { getProductById, getProductReviews } from '../../lib/api';
 import { trackSelectItem } from '../../lib/gtm';
+import { useEffect } from 'react';
 
 export default function ProductCard({ product, compact = false, onCardClick = null }) {
     const router = useRouter();
     const hasPrefetchedRef = useRef(false);
     const { toggleSelection, isSelected } = useShareSelection();
+    const { registerProduct } = useProductRegistry();
+
+    // Register product in the global registry whenever it renders
+    useEffect(() => {
+        if (product && product.id) {
+            registerProduct(product);
+        }
+    }, [product, registerProduct]);
+
     const selected = isSelected(product.id);
     const parsedStock = Number(product.current_stock);
     const statusText = String(product.status || "").toLowerCase();
@@ -23,6 +34,7 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
 
     const nameSlug = product.name ? product.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : 'product';
     const slug = product.id ? `${nameSlug}-${product.id}` : nameSlug;
+    const detailRoute = product.isEbook ? `/ebook/${slug}` : `/product/${slug}`;
 
     const handleSelect = (e) => {
         e.preventDefault();
@@ -39,7 +51,7 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
         if (hasPrefetchedRef.current) return;
         hasPrefetchedRef.current = true;
 
-        router.prefetch(`/product/${slug}`);
+        router.prefetch(detailRoute);
 
         const numericId = Number(product.id);
         if (!Number.isNaN(numericId) && numericId > 0) {
@@ -53,7 +65,7 @@ export default function ProductCard({ product, compact = false, onCardClick = nu
     return (
         <div className="relative group">
             <Link
-                href={`/product/${slug}`}
+                href={detailRoute}
                 onClick={handleCardClick}
                 onMouseEnter={prefetchProductDetails}
                 onTouchStart={prefetchProductDetails}

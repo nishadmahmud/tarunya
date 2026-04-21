@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { FiChevronLeft, FiChevronRight, FiBookOpen } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiBookOpen, FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
 import ProductCard from "../Shared/ProductCard";
 
 export default function EbooksSection({ products = [] }) {
@@ -26,16 +27,24 @@ export default function EbooksSection({ products = [] }) {
                             যেকোনো ডিভাইসে পড়ুন আমাদের ডিজিটাল বই সংগ্রহ
                         </p>
                     </div>
-                    {products.length > 0 && (
-                        <div className="hidden md:flex gap-2">
-                            <button onClick={scrollLeft} className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-green text-white hover:bg-brand-green-dark transition-colors shadow-sm">
-                                <FiChevronLeft size={18} />
-                            </button>
-                            <button onClick={scrollRight} className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-green text-white hover:bg-brand-green-dark transition-colors shadow-sm">
-                                <FiChevronRight size={18} />
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-3 md:gap-5">
+                        <Link 
+                            href="/ebooks" 
+                            className="hidden sm:flex items-center gap-2 text-brand-green font-bold text-sm hover:underline transition-all"
+                        >
+                            সভি ই-বুক দেখুন <FiArrowRight />
+                        </Link>
+                        {products.length > 0 && (
+                            <div className="hidden md:flex gap-2">
+                                <button onClick={scrollLeft} className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-green text-white hover:bg-brand-green-dark transition-colors shadow-sm">
+                                    <FiChevronLeft size={18} />
+                                </button>
+                                <button onClick={scrollRight} className="w-9 h-9 rounded-full flex items-center justify-center bg-brand-green text-white hover:bg-brand-green-dark transition-colors shadow-sm">
+                                    <FiChevronRight size={18} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="overflow-hidden relative">
@@ -47,7 +56,8 @@ export default function EbooksSection({ products = [] }) {
                         >
                             {products.map((product, idx) => (
                                 <div key={product.id || idx} className="w-[42%] sm:w-[30%] md:w-[22%] lg:w-[17%] shrink-0 snap-start">
-                                    <ProductCard product={product} />
+                                    {/* Passing isEbook prop to ProductCard to handle routing */}
+                                    <ProductCard product={{ ...product, isEbook: true }} />
                                 </div>
                             ))}
                         </div>
@@ -62,6 +72,16 @@ export default function EbooksSection({ products = [] }) {
                             </p>
                         </div>
                     )}
+                </div>
+
+                {/* Mobile View All Link */}
+                <div className="mt-6 sm:hidden text-center">
+                    <Link 
+                        href="/ebooks" 
+                        className="inline-flex items-center gap-2 text-brand-green font-bold text-sm bg-brand-green/5 px-6 py-2.5 rounded-full"
+                    >
+                        সকল ই-বুক দেখুন <FiArrowRight />
+                    </Link>
                 </div>
             </div>
         </section>

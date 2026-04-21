@@ -1,444 +1,120 @@
-import Hero from "../components/Hero/Hero";
-// import TrustStats from "../components/TrustStats/TrustStats";
-import ShopCategories from "../components/ShopCategories/ShopCategories";
-import NewArrivals from "../components/NewArrivals/NewArrivals";
-import EbooksSection from "../components/EbooksSection/EbooksSection";
-// import PromoBanners from "../components/PromoBanners/PromoBanners";
-import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
-import UpcomingBooks from "../components/UpcomingBooks/UpcomingBooks";
-import BestDeals from "../components/BestDeals/BestDeals";
-import BlogTips from "../components/BlogTips/BlogTips";
-// import CTABanner from "../components/CTABanner/CTABanner";
+import { Suspense } from "react";
 import FAQ from "../components/FAQ/FAQ";
-import BookFairBestSellers from "../components/BookFairBestSellers/BookFairBestSellers";
-// import SeriesBooks from "../components/SeriesBooks/SeriesBooks";
-import PopularAuthors from "../components/PopularAuthors/PopularAuthors";
-import FlashSaleSpotlight from "../components/FlashSaleSpotlight/FlashSaleSpotlight";
-import TopPublishers from "../components/TopPublishers/TopPublishers";
 import HomepagePrefetchManager from "../components/Performance/HomepagePrefetchManager";
-// import AppDownloadBanner from "../components/AppDownloadBanner/AppDownloadBanner";
-// import Testimonials from "../components/Testimonials/Testimonials";
-// import FAQ from "../components/FAQ/FAQ";
+import { 
+  ProductRowSkeleton, 
+  CategorySkeleton, 
+  Skeleton 
+} from "../components/Shared/Skeleton";
 
 import {
-  getSlidersFromServer,
-  getCategoriesFromServer,
-  getNewArrivalsFromServer,
-  getProducts,
-  getBlogs,
-  getBestDealsFromServer,
-  getBestSellersFromServer,
-  getBookFairBestSellersFromServer,
-  getAuthorsList,
-  getTopBrands,
-  getUpcomingProductsFromServer,
-  getEbooksFromServer
-} from "../lib/api";
+  HeroContainer,
+  FlashSaleContainer,
+  NewArrivalsContainer,
+  EbooksContainer,
+  CategoriesContainer,
+  AuthorsContainer,
+  FeaturedContainer,
+  UpcomingContainer,
+  PublishersContainer,
+  BookFairBestSellersContainer,
+  BestDealsContainer,
+  BlogContainer
+} from "./HomeContainers";
 
 const isApiConfigured = () => {
   return !!(process.env.NEXT_PUBLIC_API && process.env.NEXT_PUBLIC_USER_ID);
 };
 
-export default async function Home() {
-  let categories = [];
-  let newArrivals = [];
-  let heroSlides = [];
-  let bestDealsCards = [];
-  let flashSaleProducts = [];
-  let featuredProducts = [];
-  let bookFairBestSellers = [];
-  let blogPosts = [];
-  let authors = [];
-  let brands = [];
-  let upcomingProducts = [];
-  let ebookProducts = [];
+// Loading components for granular sections
+function HeroPlaceholder() {
+  return <Skeleton className="w-full h-[300px] md:h-[500px]" />;
+}
 
-  // Skip all API calls if environment is not configured — fallback data in each component will be used
+function CategoriesPlaceholder() {
+  return (
+    <div className="py-10 max-w-7xl mx-auto px-4 md:px-6">
+      <div className="flex gap-4 md:gap-8 overflow-hidden">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="shrink-0">
+             <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 animate-pulse" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default async function Home() {
   if (!isApiConfigured()) {
+    // Fallback for unconfigured environment
     return (
-      <>
-        <Hero slides={[]} />
-        <TrustStats />
-        <ShopCategories categories={[]} flashSaleProducts={[]} />
-        {/* <SeriesBooks /> */}
-        <NewArrivals products={[]} />
-        <EbooksSection products={[]} />
-        <PopularAuthors authors={[]} />
-        {/* <PromoBanners /> */}
-        <FeaturedProducts products={[]} />
-        <UpcomingBooks products={[]} />
-        <BookFairBestSellers />
-        {/* <PreOrderBooks /> */}
-        <BestDeals deals={[]} />
-        {/* <CuratedReadingLists /> */}
-        {/* <TopPublishers /> */}
-        <BlogTips posts={[]} />
-        <CTABanner />
-        {/* <AppDownloadBanner /> */}
-        {/* <Testimonials /> */}
-        {/* <FAQ /> */}
-      </>
+      <div className="py-20 text-center">
+        <h1 className="text-2xl font-bold">এপিআই কনফিগার করা নেই</h1>
+        <p className="text-gray-500">দয়া করে এপিআই এবং ইউজার আইডি সেট আপ করুন।</p>
+      </div>
     );
   }
 
-  const toMoney = (v) => `৳ ${Number(v || 0).toLocaleString("en-IN")}`;
-  const normalizeDiscount = (discount, type) => {
-    const d = Number(discount || 0);
-    if (!d || d <= 0) return null;
-    return String(type).toLowerCase() === "percentage"
-      ? `-${d}%`
-      : `৳ ${d.toLocaleString("en-IN")}`;
-  };
-
-  // Start homepage API calls in parallel to reduce TTFB for the full page.
-  const categoriesReq = getCategoriesFromServer();
-  const slidersReq = getSlidersFromServer();
-  const newArrivalsReq = getNewArrivalsFromServer();
-  const bestDealsReq = getBestDealsFromServer();
-  const bestSellersReq = getBestSellersFromServer();
-  const bookFairBestReq = getBookFairBestSellersFromServer();
-  const blogsReq = getBlogs();
-  const authorsReq = getAuthorsList();
-  const topBrandsReq = getTopBrands();
-  const upcomingReq = getUpcomingProductsFromServer();
-  const ebooksReq = getEbooksFromServer();
-
-  try {
-    const res = await categoriesReq;
-    if (res?.success && res?.data) categories = res.data;
-  } catch (error) { console.error("Failed to fetch categories:", error); }
-
-  try {
-    const res = await slidersReq;
-    if (res?.success && Array.isArray(res?.sliders)) {
-      heroSlides = res.sliders.flatMap((s, sIdx) => {
-        // Collect all possible images from this slider object
-        let images = [];
-        if (Array.isArray(s.image_path)) {
-          images = s.image_path;
-        } else if (typeof s.image_path === 'string' && s.image_path) {
-          images = [s.image_path];
-        } else if (Array.isArray(s.image_paths)) {
-          images = s.image_paths;
-        } else if (Array.isArray(s.images)) {
-          images = s.images;
-        }
-
-        // If still no images, use fallback
-        if (images.length === 0) {
-          images = ["/images/hero-fallback.jpg"];
-        }
-
-        return images.map((img, imgIdx) => ({
-          id: `${s.id || sIdx}-${imgIdx}`,
-          title: s.title || "",
-          subtitle: s.subtitle || "",
-          badge: s.badge || "নতুন সংযোজন",
-          buttonText: s.button_text || "সংগ্রহ দেখুন",
-          buttonLink: s.link || "/category/all",
-          image: img,
-        }));
-      });
-    }
-  } catch (error) { console.error("Failed to fetch sliders:", error); }
-
-  try {
-    const res = await newArrivalsReq;
-    const items = res?.success ? res?.data?.data : null;
-    if (Array.isArray(items)) {
-      newArrivals = items.slice(0, 10).map((p) => {
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const originalPrice = Number(p.retails_price || 0);
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        return {
-          id: p.id,
-          name: p.name,
-          brand: p.brands?.name || "অন্যান্য",
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_path1 || p.image_path2 || p.image_url || "/no-image.svg",
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch new arrivals:", error); }
-
-  try {
-    const res = await bestDealsReq;
-    const items = res?.success ? res?.data : null;
-    if (Array.isArray(items)) {
-      const sortedItems = [...items].sort((a, b) => {
-        const priceA = Number(a.discounted_price || a.retails_price || 0);
-        const priceB = Number(b.discounted_price || b.retails_price || 0);
-        return priceB - priceA;
-      });
-
-      bestDealsCards = sortedItems.slice(0, 2).map((pp, idx) => {
-        const p = pp;
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        const savingsValue = Math.max(0, originalPrice - discountedPrice);
-
-        const badge = hasDiscount ? (String(discountType).toLowerCase() === 'percentage' ? `-${discountValue}%` : `৳${discountValue} ছাড়`) : (idx === 0 ? "সেরা অফার" : "জনপ্রিয়");
-        const descParts = [];
-        if (p.brands?.name) descParts.push(p.brands.name);
-        if (p.status) descParts.push(p.status);
-        if (savingsValue > 0) descParts.push(`৳ ${savingsValue.toLocaleString("en-IN")} সাশ্রয়`);
-
-        const slugName = pp.name ? pp.name.toLowerCase().replace(/\s+/g, "-") : "product";
-        const slugWithId = pp.id ? `${slugName}-${pp.id}` : slugName;
-
-        return {
-          id: pp.id,
-          title: pp.name,
-          description: descParts.join(" • ") || "সীমিত সময়ের অফার।",
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          savings: savingsValue > 0 ? `৳ ${savingsValue.toLocaleString("en-IN")} সাশ্রয়` : null,
-          imageUrl: p.image_path || p.image_url || "/no-image.svg",
-          badge,
-          link: `/product/${slugWithId}`,
-        };
-      });
-
-      flashSaleProducts = items.filter(p => p.image_path || p.image_url).slice(0, 10).map((p) => {
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        const slugName = p.name ? p.name.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF]+/g, '-').replace(/^-|-$/g, '') : "product";
-        const slugWithId = p.id ? `${slugName}-${p.id}` : slugName;
-
-        return {
-          id: p.id,
-          name: p.name,
-          brand: p.brands?.name || "N/A",
-          description: p.description ? p.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : '',
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_url || "/no-image.svg",
-          slug: slugWithId,
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch best deals:", error); }
-
-  try {
-    const res = await bestSellersReq;
-    const items = res?.success ? (res.data?.data || res.data) : null;
-    if (Array.isArray(items)) {
-      featuredProducts = items.map((p) => {
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        return {
-          id: p.id,
-          name: p.name,
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_url || "/no-image.svg",
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch best sellers:", error); }
-
-  try {
-    const res = await bookFairBestReq;
-    const items = res?.success ? (res.data?.data || res.data) : null;
-    if (Array.isArray(items)) {
-      bookFairBestSellers = items.map((p) => {
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        return {
-          id: p.id,
-          name: p.name,
-          brand: p.brands?.name || "অন্যান্য",
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_url || "/no-image.svg",
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch book fair best sellers:", error); }
-
-  try {
-    const res = await blogsReq;
-    if (res?.success && Array.isArray(res?.data)) {
-      blogPosts = res.data.slice(0, 3).map(b => ({
-        id: b.id,
-        title: b.title,
-        excerpt: b.content ? b.content.replace(/<[^>]+>/g, '').substring(0, 100) + '...' : 'আমাদের সর্বশেষ পোস্ট পড়ুন...',
-        date: new Date(b.created_at || Date.now()).toLocaleDateString('bn-BD', { month: 'long', day: 'numeric', year: 'numeric' }),
-        category: b.category_id || 'সাধারণ',
-        readTime: '৫ মিনিট',
-        image: b.image || "/images/blog-fallback.jpg",
-        slug: b.title ? b.title.toLowerCase().replace(/\s+/g, '-') : String(b.id),
-        id: b.id
-      }));
-    }
-  } catch (error) { console.error("Failed to fetch blogs:", error); }
-
-  try {
-    const res = await authorsReq;
-    if (Array.isArray(res)) {
-      authors = res.filter(a => a.active === 1).slice(0, 12);
-    } else if (res?.success && Array.isArray(res?.data)) {
-      authors = res.data.filter(a => a.active === 1).slice(0, 12);
-    }
-  } catch (error) { console.error("Failed to fetch authors list:", error); }
-
-  try {
-    const res = await topBrandsReq;
-    if (res?.success && Array.isArray(res?.data)) {
-      brands = res.data.slice(0, 12);
-    }
-  } catch (error) { console.error("Failed to fetch brands/publishers:", error); }
-
-  try {
-    const res = await upcomingReq;
-    const items = res?.success ? (res.data?.data || res.data) : null;
-    if (Array.isArray(items)) {
-      upcomingProducts = items.map((p) => {
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        return {
-          id: p.id,
-          name: p.name,
-          brand: p.brands?.name || "অন্যান্য",
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_url || "/no-image.svg",
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch upcoming products:", error); }
-
-  try {
-    const res = await ebooksReq;
-    const items = res?.success ? (res.data?.data || res.data) : null;
-    if (Array.isArray(items)) {
-      ebookProducts = items.map((p) => {
-        const originalPrice = Number(p.retails_price || 0);
-        const discountValue = Number(p.discount || 0);
-        const discountType = p.discount_type;
-        const hasDiscount = discountValue > 0 && String(discountType || '').toLowerCase() !== '0';
-
-        const discountedPrice = hasDiscount
-          ? (String(discountType).toLowerCase() === 'percentage'
-            ? Math.max(0, Math.round(originalPrice * (1 - discountValue / 100)))
-            : Math.max(0, originalPrice - discountValue))
-          : originalPrice;
-
-        return {
-          id: p.id,
-          name: p.name,
-          brand: p.brands?.name || p.brand_name || "অন্যান্য",
-          price: toMoney(discountedPrice),
-          oldPrice: hasDiscount ? toMoney(originalPrice) : null,
-          discount: hasDiscount ? normalizeDiscount(discountValue, discountType) : null,
-          imageUrl: p.image_path || p.image_path1 || p.image_path2 || p.image_url || "/no-image.svg",
-        };
-      });
-    }
-  } catch (error) { console.error("Failed to fetch ebook products:", error); }
-
-  const prefetchProductCandidates = [
-    ...newArrivals,
-    ...featuredProducts,
-    ...bookFairBestSellers,
-    ...ebookProducts,
-    ...upcomingProducts,
-    ...flashSaleProducts,
-  ]
-    .filter((p) => p?.id && p?.name)
-    .map((p) => ({ id: p.id, name: p.name }));
-
-  const prefetchCategoryCandidates = (categories || [])
-    .map((c) => ({ id: c.category_id ?? c.id, name: c.name }))
-    .filter((c) => c?.id && c?.name);
-
   return (
     <>
-      {heroSlides.length > 0 && <Hero slides={heroSlides} />}
-      {flashSaleProducts.length > 0 && <FlashSaleSpotlight products={flashSaleProducts} />}
-      {/* <TrustStats /> */}
+      {/* Priority 1: Hero Slider */}
+      <Suspense fallback={<HeroPlaceholder />}>
+        <HeroContainer />
+      </Suspense>
 
-      {/* <SeriesBooks /> */}
-      {newArrivals.length > 0 && <NewArrivals products={newArrivals} />}
-      <EbooksSection products={ebookProducts} />
-      {categories.length > 0 && <ShopCategories categories={categories} />}
-      {authors.length > 0 && <PopularAuthors authors={authors} />}
-      {/* <PromoBanners /> */}
-      {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
-      <UpcomingBooks products={upcomingProducts} />
-      {brands.length > 0 && <TopPublishers brands={brands} />}
-      {bookFairBestSellers.length > 0 && <BookFairBestSellers products={bookFairBestSellers} />}
-      {/* <PreOrderBooks /> */}
-      {bestDealsCards.length > 0 && <BestDeals deals={bestDealsCards} />}
-      {/* <CuratedReadingLists /> */}
+      {/* Priority 2: High conversion sections */}
+      <Suspense fallback={<ProductRowSkeleton title={false} count={4} />}>
+        <FlashSaleContainer />
+      </Suspense>
 
-      {blogPosts.length > 0 && <BlogTips posts={blogPosts} />}
-      {/* <CTABanner /> */}
-      {/* <AppDownloadBanner /> */}
-      {/* <Testimonials /> */}
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <NewArrivalsContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <EbooksContainer />
+      </Suspense>
+
+      <Suspense fallback={<CategoriesPlaceholder />}>
+        <CategoriesContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <AuthorsContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <FeaturedContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <UpcomingContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <PublishersContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <BookFairBestSellersContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton count={2} />}>
+        <BestDealsContainer />
+      </Suspense>
+
+      <Suspense fallback={<ProductRowSkeleton />}>
+        <BlogContainer />
+      </Suspense>
+
       <FAQ />
-      <HomepagePrefetchManager
-        productCandidates={prefetchProductCandidates}
-        categoryCandidates={prefetchCategoryCandidates}
+
+      {/* Prefetcher moved to bottom with empty candidates for now 
+          (It will catch up later or we can refine its data source) */}
+      <HomepagePrefetchManager 
+        productCandidates={[]} 
+        categoryCandidates={[]} 
       />
     </>
   );
